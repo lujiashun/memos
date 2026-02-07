@@ -37,6 +37,8 @@ func (s *Store) UpsertInstanceSetting(ctx context.Context, upsert *storepb.Insta
 		valueBytes, err = protojson.Marshal(upsert.GetStorageSetting())
 	} else if upsert.Key == storepb.InstanceSettingKey_MEMO_RELATED {
 		valueBytes, err = protojson.Marshal(upsert.GetMemoRelatedSetting())
+	} else if upsert.Key == storepb.InstanceSettingKey_OPENAI {
+		valueBytes, err = protojson.Marshal(upsert.GetOpenaiSetting())
 	} else {
 		return nil, errors.Errorf("unsupported instance setting key: %v", upsert.Key)
 	}
@@ -202,6 +204,25 @@ func (s *Store) GetInstanceStorageSetting(ctx context.Context) (*storepb.Instanc
 	return instanceStorageSetting, nil
 }
 
+func (s *Store) GetInstanceOpenAISetting(ctx context.Context) (*storepb.InstanceOpenAISetting, error) {
+	instanceSetting, err := s.GetInstanceSetting(ctx, &FindInstanceSetting{
+		Name: storepb.InstanceSettingKey_OPENAI.String(),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get instance openai setting")
+	}
+
+	instanceOpenAISetting := &storepb.InstanceOpenAISetting{}
+	if instanceSetting != nil {
+		instanceOpenAISetting = instanceSetting.GetOpenaiSetting()
+	}
+	s.instanceSettingCache.Set(ctx, storepb.InstanceSettingKey_OPENAI.String(), &storepb.InstanceSetting{
+		Key:   storepb.InstanceSettingKey_OPENAI,
+		Value: &storepb.InstanceSetting_OpenaiSetting{OpenaiSetting: instanceOpenAISetting},
+	})
+	return instanceOpenAISetting, nil
+}
+
 func convertInstanceSettingFromRaw(instanceSettingRaw *InstanceSetting) (*storepb.InstanceSetting, error) {
 	instanceSetting := &storepb.InstanceSetting{
 		Key: storepb.InstanceSettingKey(storepb.InstanceSettingKey_value[instanceSettingRaw.Name]),
@@ -231,6 +252,12 @@ func convertInstanceSettingFromRaw(instanceSettingRaw *InstanceSetting) (*storep
 			return nil, err
 		}
 		instanceSetting.Value = &storepb.InstanceSetting_MemoRelatedSetting{MemoRelatedSetting: memoRelatedSetting}
+	case storepb.InstanceSettingKey_OPENAI.String():
+		openaiSetting := &storepb.InstanceOpenAISetting{}
+		if err := protojsonUnmarshaler.Unmarshal([]byte(instanceSettingRaw.Value), openaiSetting); err != nil {
+			return nil, err
+		}
+		instanceSetting.Value = &storepb.InstanceSetting_OpenaiSetting{OpenaiSetting: openaiSetting}
 	default:
 		// Skip unsupported instance setting key.
 		return nil, nil

@@ -11,6 +11,8 @@ import {
   InstanceSetting_Key,
   InstanceSetting_MemoRelatedSetting,
   InstanceSetting_MemoRelatedSettingSchema,
+  InstanceSetting_OpenAISetting,
+  InstanceSetting_OpenAISettingSchema,
   InstanceSetting_StorageSetting,
   InstanceSetting_StorageSettingSchema,
 } from "@/types/proto/api/v1/instance_service_pb";
@@ -33,6 +35,7 @@ interface InstanceContextValue extends InstanceState {
   generalSetting: InstanceSetting_GeneralSetting;
   memoRelatedSetting: InstanceSetting_MemoRelatedSetting;
   storageSetting: InstanceSetting_StorageSetting;
+  openaiSetting: InstanceSetting_OpenAISetting;
   initialize: () => Promise<void>;
   fetchSetting: (key: InstanceSetting_Key) => Promise<void>;
   updateSetting: (setting: InstanceSetting) => Promise<void>;
@@ -71,6 +74,14 @@ export function InstanceProvider({ children }: { children: ReactNode }) {
       return setting.value.value;
     }
     return create(InstanceSetting_StorageSettingSchema, {});
+  }, [state.settings]);
+
+  const openaiSetting = useMemo((): InstanceSetting_OpenAISetting => {
+    const setting = state.settings.find((s) => s.name === `${instanceSettingNamePrefix}OPENAI`);
+    if (setting?.value.case === "openaiSetting") {
+      return setting.value.value;
+    }
+    return create(InstanceSetting_OpenAISettingSchema, {});
   }, [state.settings]);
 
   const initialize = useCallback(async () => {
@@ -133,11 +144,12 @@ export function InstanceProvider({ children }: { children: ReactNode }) {
       generalSetting,
       memoRelatedSetting,
       storageSetting,
+      openaiSetting,
       initialize,
       fetchSetting,
       updateSetting,
     }),
-    [state, generalSetting, memoRelatedSetting, storageSetting, initialize, fetchSetting, updateSetting],
+    [state, generalSetting, memoRelatedSetting, storageSetting, openaiSetting, initialize, fetchSetting, updateSetting],
   );
 
   return <InstanceContext.Provider value={value}>{children}</InstanceContext.Provider>;

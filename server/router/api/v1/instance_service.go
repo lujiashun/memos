@@ -46,6 +46,8 @@ func (s *APIV1Service) GetInstanceSetting(ctx context.Context, request *v1pb.Get
 		_, err = s.Store.GetInstanceMemoRelatedSetting(ctx)
 	case storepb.InstanceSettingKey_STORAGE:
 		_, err = s.Store.GetInstanceStorageSetting(ctx)
+	case storepb.InstanceSettingKey_OPENAI:
+		_, err = s.Store.GetInstanceOpenAISetting(ctx)
 	default:
 		return nil, status.Errorf(codes.InvalidArgument, "unsupported instance setting key: %v", instanceSettingKey)
 	}
@@ -63,8 +65,8 @@ func (s *APIV1Service) GetInstanceSetting(ctx context.Context, request *v1pb.Get
 		return nil, status.Errorf(codes.NotFound, "instance setting not found")
 	}
 
-	// For storage setting, only admin can get it.
-	if instanceSetting.Key == storepb.InstanceSettingKey_STORAGE {
+	// For storage setting and openai setting, only admin can get it.
+	if instanceSetting.Key == storepb.InstanceSettingKey_STORAGE || instanceSetting.Key == storepb.InstanceSettingKey_OPENAI {
 		user, err := s.fetchCurrentUser(ctx)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to get current user: %v", err)
@@ -121,6 +123,10 @@ func convertInstanceSettingFromStore(setting *storepb.InstanceSetting) *v1pb.Ins
 		instanceSetting.Value = &v1pb.InstanceSetting_MemoRelatedSetting_{
 			MemoRelatedSetting: convertInstanceMemoRelatedSettingFromStore(setting.GetMemoRelatedSetting()),
 		}
+	case *storepb.InstanceSetting_OpenaiSetting:
+		instanceSetting.Value = &v1pb.InstanceSetting_OpenaiSetting{
+			OpenaiSetting: convertInstanceOpenAISettingFromStore(setting.GetOpenaiSetting()),
+		}
 	}
 	return instanceSetting
 }
@@ -145,6 +151,10 @@ func convertInstanceSettingToStore(setting *v1pb.InstanceSetting) *storepb.Insta
 	case storepb.InstanceSettingKey_MEMO_RELATED:
 		instanceSetting.Value = &storepb.InstanceSetting_MemoRelatedSetting{
 			MemoRelatedSetting: convertInstanceMemoRelatedSettingToStore(setting.GetMemoRelatedSetting()),
+		}
+	case storepb.InstanceSettingKey_OPENAI:
+		instanceSetting.Value = &storepb.InstanceSetting_OpenaiSetting{
+			OpenaiSetting: convertInstanceOpenAISettingToStore(setting.GetOpenaiSetting()),
 		}
 	default:
 		// Keep the default GeneralSetting value
@@ -282,4 +292,26 @@ func (s *APIV1Service) GetInstanceAdmin(ctx context.Context) (*v1pb.User, error)
 	}
 
 	return convertUserFromStore(user), nil
+}
+
+func convertInstanceOpenAISettingFromStore(setting *storepb.InstanceOpenAISetting) *v1pb.InstanceSetting_OpenAISetting {
+	if setting == nil {
+		return nil
+	}
+	return &v1pb.InstanceSetting_OpenAISetting{
+		ApiKey:  setting.ApiKey,
+		BaseUrl: setting.BaseUrl,
+		Model:   setting.Model,
+	}
+}
+
+func convertInstanceOpenAISettingToStore(setting *v1pb.InstanceSetting_OpenAISetting) *storepb.InstanceOpenAISetting {
+	if setting == nil {
+		return nil
+	}
+	return &storepb.InstanceOpenAISetting{
+		ApiKey:  setting.ApiKey,
+		BaseUrl: setting.BaseUrl,
+		Model:   setting.Model,
+	}
 }

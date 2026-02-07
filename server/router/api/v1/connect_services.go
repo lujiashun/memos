@@ -488,3 +488,11 @@ func (s *ConnectServiceHandler) DeleteIdentityProvider(ctx context.Context, req 
 	}
 	return connect.NewResponse(resp), nil
 }
+
+func (s *ConnectServiceHandler) GetDailyReview(ctx context.Context, req *connect.Request[v1pb.GetDailyReviewRequest]) (*connect.Response[v1pb.GetDailyReviewResponse], error) {
+	resp, err := s.APIV1Service.GetDailyReview(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}

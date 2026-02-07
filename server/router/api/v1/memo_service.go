@@ -1,9 +1,13 @@
 package v1
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
+	"net/http"
 	"strings"
 	"time"
 
@@ -841,4 +845,119 @@ func (*APIV1Service) parseMemoOrderBy(orderBy string, memoFind *store.FindMemo) 
 	}
 
 	return nil
+}
+
+func (s *APIV1Service) GetDailyReview(ctx context.Context, request *v1pb.GetDailyReviewRequest) (*v1pb.GetDailyReviewResponse, error) {
+	user, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user")
+	}
+	if user == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+
+	openaiSetting, err := s.Store.GetInstanceOpenAISetting(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get openai setting")
+	}
+	if openaiSetting == nil || openaiSetting.ApiKey == "" {
+		return nil, status.Errorf(codes.FailedPrecondition, "openai setting not found or api key is empty")
+	}
+
+	loc, err := time.LoadLocation(request.Timezone)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid timezone")
+	}
+	date, err := time.ParseInLocation("2006-01-02", request.Date, loc)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid date format")
+	}
+	startTime := date.Unix()
+	endTime := date.Add(24 * time.Hour).Unix()
+
+	filters := []string{
+		fmt.Sprintf("created_ts >= %d", startTime),
+		fmt.Sprintf("created_ts < %d", endTime),
+	}
+	normalRowStatus := store.Normal
+	memos, err := s.Store.ListMemos(ctx, &store.FindMemo{
+		CreatorID: &user.ID,
+		RowStatus: &normalRowStatus,
+		Filters:   filters,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list memos")
+	}
+
+	if len(memos) == 0 {
+		return &v1pb.GetDailyReviewResponse{Content: "No memos found for this day."}, nil
+	}
+
+	content, err := s.generateReviewFromOpenAI(ctx, openaiSetting, memos)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to generate review: %v", err)
+	}
+
+	return &v1pb.GetDailyReviewResponse{Content: content}, nil
+}
+
+func (s *APIV1Service) generateReviewFromOpenAI(ctx context.Context, setting *storepb.InstanceOpenAISetting, memos []*store.Memo) (string, error) {
+	var sb strings.Builder
+	sb.WriteString("Please review the following memos from today and generate a concise daily summary:\n\n")
+	for _, memo := range memos {
+		sb.WriteString(fmt.Sprintf("- %s\n", memo.Content))
+	}
+	prompt := sb.String()
+
+	requestBody, err := json.Marshal(map[string]interface{}{
+		"model": setting.Model,
+		"messages": []map[string]string{
+			{"role": "user", "content": prompt},
+		},
+	})
+	if err != nil {
+		return "", err
+	}
+
+	baseUrl := setting.BaseUrl
+	if baseUrl == "" {
+		baseUrl = "https://api.openai.com/v1"
+	}
+	url := fmt.Sprintf("%s/chat/completions", strings.TrimRight(baseUrl, "/"))
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(requestBody))
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", setting.ApiKey))
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return "", fmt.Errorf("openai api failed with status %d: %s", resp.StatusCode, string(body))
+	}
+
+	var result struct {
+		Choices []struct {
+			Message struct {
+				Content string `json:"content"`
+			} `json:"message"`
+		} `json:"choices"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", err
+	}
+
+	if len(result.Choices) == 0 {
+		return "", fmt.Errorf("no choices returned from openai")
+	}
+
+	return result.Choices[0].Message.Content, nil
 }

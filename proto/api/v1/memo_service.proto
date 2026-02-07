@@ -103,6 +103,13 @@ service MemoService {
     option (google.api.http) = {delete: "/api/v1/{name=memos/*/reactions/*}"};
     option (google.api.method_signature) = "name";
   }
+  // GetDailyReview generates a daily review for the requested date.
+  rpc GetDailyReview(GetDailyReviewRequest) returns (GetDailyReviewResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/memos:daily_review"
+      body: "*"
+    };
+  }
 }
 
 enum Visibility {
@@ -508,4 +515,15 @@ message DeleteMemoReactionRequest {
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = {type: "memos.api.v1/Reaction"}
   ];
+}
+
+message GetDailyReviewRequest {
+  // date is the date string in "YYYY-MM-DD" format.
+  string date = 1; 
+  // timezone is the timezone name (e.g. "Asia/Shanghai").
+  string timezone = 2;
+}
+
+message GetDailyReviewResponse {
+  string content = 1;
 }

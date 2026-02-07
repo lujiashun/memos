@@ -1054,6 +1054,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/memos:daily_review:
+        post:
+            tags:
+                - MemoService
+            description: GetDailyReview generates a daily review for the requested date.
+            operationId: MemoService_GetDailyReview
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetDailyReviewRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetDailyReviewResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users:
         get:
             tags:
@@ -2087,6 +2112,20 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/User'
                     description: The authenticated user's information.
+        GetDailyReviewRequest:
+            type: object
+            properties:
+                date:
+                    type: string
+                    description: date is the date string in "YYYY-MM-DD" format.
+                timezone:
+                    type: string
+                    description: timezone is the timezone name (e.g. "Asia/Shanghai").
+        GetDailyReviewResponse:
+            type: object
+            properties:
+                content:
+                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -2162,6 +2201,8 @@ components:
                     $ref: '#/components/schemas/InstanceSetting_StorageSetting'
                 memoRelatedSetting:
                     $ref: '#/components/schemas/InstanceSetting_MemoRelatedSetting'
+                openaiSetting:
+                    $ref: '#/components/schemas/InstanceSetting_OpenAISetting'
             description: An instance setting resource.
         InstanceSetting_GeneralSetting:
             type: object
@@ -2218,6 +2259,16 @@ components:
                         type: string
                     description: reactions is the list of reactions.
             description: Memo-related instance settings and policies.
+        InstanceSetting_OpenAISetting:
+            type: object
+            properties:
+                apiKey:
+                    type: string
+                baseUrl:
+                    type: string
+                model:
+                    type: string
+            description: OpenAI related instance settings.
         InstanceSetting_StorageSetting:
             type: object
             properties:

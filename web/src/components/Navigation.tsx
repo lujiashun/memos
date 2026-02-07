@@ -1,5 +1,6 @@
-import { BellIcon, EarthIcon, LibraryIcon, PaperclipIcon, UserCircleIcon } from "lucide-react";
+import { BellIcon, EarthIcon, LibraryIcon, PaperclipIcon, SparklesIcon, UserCircleIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import DailyReviewDialog from "@/components/DailyReviewDialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useNotifications } from "@/hooks/useUserQueries";
@@ -112,6 +113,36 @@ const Navigation = (props: Props) => {
             {!props.collapsed && <span className="ml-3 truncate">{navLink.title}</span>}
           </NavLink>
         ))}
+        {currentUser && (
+          <DailyReviewDialog
+            trigger={
+              <div
+                className={cn(
+                  "px-2 py-2 rounded-2xl border flex flex-row items-center text-lg text-sidebar-foreground transition-colors border-transparent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-accent-border opacity-80 cursor-pointer",
+                  props.collapsed ? "" : "w-full px-4",
+                )}
+              >
+                {props.collapsed ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <SparklesIcon className="w-6 h-auto shrink-0" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>Daily Review</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <SparklesIcon className="w-6 h-auto shrink-0" />
+                )}
+                {!props.collapsed && <span className="ml-3 truncate">Daily Review</span>}
+              </div>
+            }
+          />
+        )}
       </div>
       {currentUser && (
         <div className={cn("w-full flex flex-col justify-end", props.collapsed ? "items-center" : "items-start pl-3")}>
