@@ -311,6 +311,7 @@
       "title": "Memo related settings"
     },
     "my-account": "My Account",
+    "openai": "AI",
     "preference": "Preferences",
     "preference-section": {
       "default-memo-sort-option": "Memo display time",
