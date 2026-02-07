@@ -5,6 +5,7 @@ import (
 	"embed"
 	"io/fs"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -35,9 +36,9 @@ func (*FrontendService) Serve(_ context.Context, e *echo.Echo) {
 		if util.HasPrefixes(c.Path(), "/api", "/memos.api.v1") {
 			return true
 		}
-		// For index.html and root path, set no-cache headers to prevent browser caching
-		// This prevents sensitive data from being accessible via browser back button after logout
-		if c.Path() == "/" || c.Path() == "/index.html" {
+		// For SPA HTML routes, set no-cache headers to prevent browser caching.
+		// This prevents sensitive data from being accessible via browser back button after logout.
+		if c.Path() == "/" || c.Path() == "/index.html" || !strings.Contains(c.Path(), ".") {
 			c.Response().Header().Set(echo.HeaderCacheControl, "no-cache, no-store, must-revalidate")
 			c.Response().Header().Set("Pragma", "no-cache")
 			c.Response().Header().Set("Expires", "0")

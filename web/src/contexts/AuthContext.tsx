@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
-import { clearAccessToken } from "@/auth-state";
+import { clearAccessToken, getAccessToken } from "@/auth-state";
 import { authServiceClient, shortcutServiceClient, userServiceClient } from "@/connect";
 import { userKeys } from "@/hooks/useUserQueries";
 import type { Shortcut } from "@/types/proto/api/v1/shortcut_service_pb";
@@ -53,6 +53,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const initialize = useCallback(async () => {
     setState((prev) => ({ ...prev, isLoading: true }));
     try {
+      const isAuthRoute = window.location.pathname.startsWith("/auth");
+      const accessToken = getAccessToken();
+      if (isAuthRoute && !accessToken) {
+        setState({
+          currentUser: undefined,
+          userGeneralSetting: undefined,
+          userWebhooksSetting: undefined,
+          shortcuts: [],
+          isInitialized: true,
+          isLoading: false,
+        });
+        return;
+      }
+
       const { user: currentUser } = await authServiceClient.getCurrentUser({});
 
       if (!currentUser) {

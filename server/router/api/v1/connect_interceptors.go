@@ -114,6 +114,15 @@ func (*LoggingInterceptor) WrapStreamingHandler(next connect.StreamingHandlerFun
 }
 
 func (in *LoggingInterceptor) log(procedure string, err error) {
+	// Skip noisy, frequent instance info polling logs when successful.
+	if err == nil {
+		switch procedure {
+		case "/memos.api.v1.InstanceService/GetInstanceProfile",
+			"/memos.api.v1.InstanceService/GetInstanceSetting":
+			return
+		}
+	}
+
 	level, msg := in.classifyError(err)
 	attrs := []slog.Attr{slog.String("method", procedure)}
 	if err != nil {

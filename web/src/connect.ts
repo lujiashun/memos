@@ -1,7 +1,7 @@
 import { timestampDate } from "@bufbuild/protobuf/wkt";
 import { Code, ConnectError, createClient, type Interceptor } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
-import { getAccessToken, setAccessToken } from "./auth-state";
+import { clearAccessToken, getAccessToken, setAccessToken } from "./auth-state";
 import { ActivityService } from "./types/proto/api/v1/activity_service_pb";
 import { AttachmentService } from "./types/proto/api/v1/attachment_service_pb";
 import { AuthService } from "./types/proto/api/v1/auth_service_pb";
@@ -103,6 +103,19 @@ const authInterceptor: Interceptor = (next) => async (req) => {
       throw error;
     }
 
+    // If there's no access token, don't attempt refresh.
+    // This avoids refresh-token spam on public routes for unauthenticated users.
+    if (!token) {
+      throw error;
+    }
+
+    // Don't try to refresh when probing auth state or on auth routes.
+    // This prevents repeated refresh attempts on login/signup pages.
+    if (req.url.includes("/memos.api.v1.AuthService/GetCurrentUser") || window.location.pathname.startsWith("/auth")) {
+      clearAccessToken();
+      throw error;
+    }
+
     try {
       await tokenRefreshManager.refresh(refreshAccessToken);
 
@@ -115,6 +128,8 @@ const authInterceptor: Interceptor = (next) => async (req) => {
       req.header.set(RETRY_HEADER, RETRY_HEADER_VALUE);
       return await next(req);
     } catch (refreshError) {
+      // Refresh failed -> token is invalid or missing. Clear it to prevent loops.
+      clearAccessToken();
       redirectOnAuthFailure();
       throw refreshError;
     }

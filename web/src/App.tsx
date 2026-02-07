@@ -22,7 +22,7 @@ const App = () => {
 
   // Redirect to sign up page if instance not initialized (no admin account exists yet)
   useEffect(() => {
-    if (!instanceProfile.admin) {
+    if (!instanceProfile.admin && window.location.pathname !== "/auth/signup") {
       navigateTo("/auth/signup");
     }
   }, [instanceProfile.admin, navigateTo]);
