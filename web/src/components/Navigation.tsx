@@ -1,4 +1,4 @@
-import { BellIcon, EarthIcon, LibraryIcon, PaperclipIcon, SparklesIcon, UserCircleIcon } from "lucide-react";
+import { BellIcon, BrainIcon, EarthIcon, LibraryIcon, PaperclipIcon, SparklesIcon, UserCircleIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import DailyReviewDialog from "@/components/DailyReviewDialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -47,6 +47,12 @@ const Navigation = (props: Props) => {
     title: t("common.attachments"),
     icon: <PaperclipIcon className="w-6 h-auto shrink-0" />,
   };
+  const insightNavLink: NavLinkItem = {
+    id: "header-insight",
+    path: Routes.INSIGHT,
+    title: t("insight.title"),
+    icon: <BrainIcon className="w-6 h-auto shrink-0" />,
+  };
   const unreadCount = notifications.filter((n) => n.status === UserNotification_Status.UNREAD).length;
   const inboxNavLink: NavLinkItem = {
     id: "header-inbox",
@@ -71,7 +77,7 @@ const Navigation = (props: Props) => {
   };
 
   const navLinks: NavLinkItem[] = currentUser
-    ? [homeNavLink, exploreNavLink, attachmentsNavLink, inboxNavLink]
+    ? [homeNavLink, exploreNavLink, attachmentsNavLink, insightNavLink, inboxNavLink]
     : [exploreNavLink, signInNavLink];
 
   return (

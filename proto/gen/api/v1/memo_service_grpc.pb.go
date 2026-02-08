@@ -35,6 +35,7 @@ const (
 	MemoService_UpsertMemoReaction_FullMethodName  = "/memos.api.v1.MemoService/UpsertMemoReaction"
 	MemoService_DeleteMemoReaction_FullMethodName  = "/memos.api.v1.MemoService/DeleteMemoReaction"
 	MemoService_GetDailyReview_FullMethodName      = "/memos.api.v1.MemoService/GetDailyReview"
+	MemoService_GetMemoInsight_FullMethodName      = "/memos.api.v1.MemoService/GetMemoInsight"
 )
 
 // MemoServiceClient is the client API for MemoService service.
@@ -71,6 +72,8 @@ type MemoServiceClient interface {
 	DeleteMemoReaction(ctx context.Context, in *DeleteMemoReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// GetDailyReview generates a daily review for the requested date.
 	GetDailyReview(ctx context.Context, in *GetDailyReviewRequest, opts ...grpc.CallOption) (*GetDailyReviewResponse, error)
+	// GetMemoInsight generates a insight for the requested memos.
+	GetMemoInsight(ctx context.Context, in *GetMemoInsightRequest, opts ...grpc.CallOption) (*GetMemoInsightResponse, error)
 }
 
 type memoServiceClient struct {
@@ -231,6 +234,16 @@ func (c *memoServiceClient) GetDailyReview(ctx context.Context, in *GetDailyRevi
 	return out, nil
 }
 
+func (c *memoServiceClient) GetMemoInsight(ctx context.Context, in *GetMemoInsightRequest, opts ...grpc.CallOption) (*GetMemoInsightResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMemoInsightResponse)
+	err := c.cc.Invoke(ctx, MemoService_GetMemoInsight_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MemoServiceServer is the server API for MemoService service.
 // All implementations must embed UnimplementedMemoServiceServer
 // for forward compatibility.
@@ -265,6 +278,8 @@ type MemoServiceServer interface {
 	DeleteMemoReaction(context.Context, *DeleteMemoReactionRequest) (*emptypb.Empty, error)
 	// GetDailyReview generates a daily review for the requested date.
 	GetDailyReview(context.Context, *GetDailyReviewRequest) (*GetDailyReviewResponse, error)
+	// GetMemoInsight generates a insight for the requested memos.
+	GetMemoInsight(context.Context, *GetMemoInsightRequest) (*GetMemoInsightResponse, error)
 	mustEmbedUnimplementedMemoServiceServer()
 }
 
@@ -319,6 +334,9 @@ func (UnimplementedMemoServiceServer) DeleteMemoReaction(context.Context, *Delet
 }
 func (UnimplementedMemoServiceServer) GetDailyReview(context.Context, *GetDailyReviewRequest) (*GetDailyReviewResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDailyReview not implemented")
+}
+func (UnimplementedMemoServiceServer) GetMemoInsight(context.Context, *GetMemoInsightRequest) (*GetMemoInsightResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMemoInsight not implemented")
 }
 func (UnimplementedMemoServiceServer) mustEmbedUnimplementedMemoServiceServer() {}
 func (UnimplementedMemoServiceServer) testEmbeddedByValue()                     {}
@@ -611,6 +629,24 @@ func _MemoService_GetDailyReview_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MemoService_GetMemoInsight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMemoInsightRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MemoServiceServer).GetMemoInsight(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MemoService_GetMemoInsight_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MemoServiceServer).GetMemoInsight(ctx, req.(*GetMemoInsightRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MemoService_ServiceDesc is the grpc.ServiceDesc for MemoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -677,6 +713,10 @@ var MemoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDailyReview",
 			Handler:    _MemoService_GetDailyReview_Handler,
+		},
+		{
+			MethodName: "GetMemoInsight",
+			Handler:    _MemoService_GetMemoInsight_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

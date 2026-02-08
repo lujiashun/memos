@@ -74,6 +74,9 @@ const (
 	// MemoServiceGetDailyReviewProcedure is the fully-qualified name of the MemoService's
 	// GetDailyReview RPC.
 	MemoServiceGetDailyReviewProcedure = "/memos.api.v1.MemoService/GetDailyReview"
+	// MemoServiceGetMemoInsightProcedure is the fully-qualified name of the MemoService's
+	// GetMemoInsight RPC.
+	MemoServiceGetMemoInsightProcedure = "/memos.api.v1.MemoService/GetMemoInsight"
 )
 
 // MemoServiceClient is a client for the memos.api.v1.MemoService service.
@@ -108,6 +111,8 @@ type MemoServiceClient interface {
 	DeleteMemoReaction(context.Context, *connect.Request[v1.DeleteMemoReactionRequest]) (*connect.Response[emptypb.Empty], error)
 	// GetDailyReview generates a daily review for the requested date.
 	GetDailyReview(context.Context, *connect.Request[v1.GetDailyReviewRequest]) (*connect.Response[v1.GetDailyReviewResponse], error)
+	// GetMemoInsight generates a insight for the requested memos.
+	GetMemoInsight(context.Context, *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error)
 }
 
 // NewMemoServiceClient constructs a client for the memos.api.v1.MemoService service. By default, it
@@ -211,6 +216,12 @@ func NewMemoServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(memoServiceMethods.ByName("GetDailyReview")),
 			connect.WithClientOptions(opts...),
 		),
+		getMemoInsight: connect.NewClient[v1.GetMemoInsightRequest, v1.GetMemoInsightResponse](
+			httpClient,
+			baseURL+MemoServiceGetMemoInsightProcedure,
+			connect.WithSchema(memoServiceMethods.ByName("GetMemoInsight")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -231,6 +242,7 @@ type memoServiceClient struct {
 	upsertMemoReaction  *connect.Client[v1.UpsertMemoReactionRequest, v1.Reaction]
 	deleteMemoReaction  *connect.Client[v1.DeleteMemoReactionRequest, emptypb.Empty]
 	getDailyReview      *connect.Client[v1.GetDailyReviewRequest, v1.GetDailyReviewResponse]
+	getMemoInsight      *connect.Client[v1.GetMemoInsightRequest, v1.GetMemoInsightResponse]
 }
 
 // CreateMemo calls memos.api.v1.MemoService.CreateMemo.
@@ -308,6 +320,11 @@ func (c *memoServiceClient) GetDailyReview(ctx context.Context, req *connect.Req
 	return c.getDailyReview.CallUnary(ctx, req)
 }
 
+// GetMemoInsight calls memos.api.v1.MemoService.GetMemoInsight.
+func (c *memoServiceClient) GetMemoInsight(ctx context.Context, req *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error) {
+	return c.getMemoInsight.CallUnary(ctx, req)
+}
+
 // MemoServiceHandler is an implementation of the memos.api.v1.MemoService service.
 type MemoServiceHandler interface {
 	// CreateMemo creates a memo.
@@ -340,6 +357,8 @@ type MemoServiceHandler interface {
 	DeleteMemoReaction(context.Context, *connect.Request[v1.DeleteMemoReactionRequest]) (*connect.Response[emptypb.Empty], error)
 	// GetDailyReview generates a daily review for the requested date.
 	GetDailyReview(context.Context, *connect.Request[v1.GetDailyReviewRequest]) (*connect.Response[v1.GetDailyReviewResponse], error)
+	// GetMemoInsight generates a insight for the requested memos.
+	GetMemoInsight(context.Context, *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error)
 }
 
 // NewMemoServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -439,6 +458,12 @@ func NewMemoServiceHandler(svc MemoServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(memoServiceMethods.ByName("GetDailyReview")),
 		connect.WithHandlerOptions(opts...),
 	)
+	memoServiceGetMemoInsightHandler := connect.NewUnaryHandler(
+		MemoServiceGetMemoInsightProcedure,
+		svc.GetMemoInsight,
+		connect.WithSchema(memoServiceMethods.ByName("GetMemoInsight")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.MemoService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case MemoServiceCreateMemoProcedure:
@@ -471,6 +496,8 @@ func NewMemoServiceHandler(svc MemoServiceHandler, opts ...connect.HandlerOption
 			memoServiceDeleteMemoReactionHandler.ServeHTTP(w, r)
 		case MemoServiceGetDailyReviewProcedure:
 			memoServiceGetDailyReviewHandler.ServeHTTP(w, r)
+		case MemoServiceGetMemoInsightProcedure:
+			memoServiceGetMemoInsightHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -538,4 +565,8 @@ func (UnimplementedMemoServiceHandler) DeleteMemoReaction(context.Context, *conn
 
 func (UnimplementedMemoServiceHandler) GetDailyReview(context.Context, *connect.Request[v1.GetDailyReviewRequest]) (*connect.Response[v1.GetDailyReviewResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.MemoService.GetDailyReview is not implemented"))
+}
+
+func (UnimplementedMemoServiceHandler) GetMemoInsight(context.Context, *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.MemoService.GetMemoInsight is not implemented"))
 }

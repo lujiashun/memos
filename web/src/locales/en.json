@@ -117,6 +117,14 @@
     "tue": "Tue",
     "wed": "Wed"
   },
+  "insight": {
+    "title": "Default Insight",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "tags": "Tags (comma separated)",
+    "generate": "Generate Insight",
+    "result": "Insight Result"
+  },
   "editor": {
     "add-your-comment-here": "Add your comment here...",
     "any-thoughts": "Any thoughts...",
@@ -312,6 +320,7 @@
     },
     "my-account": "My Account",
     "openai": "AI",
+    "ai-service": "AI",
     "preference": "Preferences",
     "preference-section": {
       "default-memo-sort-option": "Memo display time",
@@ -464,5 +473,13 @@
     "select-visibility": "Visibility",
     "tags": "Tags",
     "upload-attachment": "Upload Attachment(s)"
+  },
+  "insight": {
+    "title": "Default Insight",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "tags": "Tags",
+    "generate": "Generate Insight",
+    "result": "Insight Result"
   }
 }

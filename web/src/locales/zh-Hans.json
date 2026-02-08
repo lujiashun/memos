@@ -117,6 +117,14 @@
     "tue": "二",
     "wed": "三"
   },
+  "insight": {
+    "title": "默认洞察",
+    "start-date": "开始日期",
+    "end-date": "结束日期",
+    "tags": "标签 (逗号分隔)",
+    "generate": "生成洞察",
+    "result": "洞察结果"
+  },
   "editor": {
     "add-your-comment-here": "请输入您的评论...",
     "any-thoughts": "此刻的想法...",
@@ -313,6 +321,7 @@
     },
     "my-account": "我的账号",
     "openai": "AI",
+    "ai-service": "AI",
     "preference": "偏好设置",
     "preference-section": {
       "default-memo-sort-option": "备忘录显示时间",
@@ -465,5 +474,13 @@
     "select-visibility": "浏览权限",
     "tags": "标签",
     "upload-attachment": "上传附件"
+  },
+  "insight": {
+    "title": "默认洞察",
+    "start-date": "开始日期",
+    "end-date": "结束日期",
+    "tags": "标签",
+    "generate": "生成洞察",
+    "result": "洞察结果"
   }
 }

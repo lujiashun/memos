@@ -9,6 +9,7 @@ const AdminSignIn = lazy(() => import("@/pages/AdminSignIn"));
 const Archived = lazy(() => import("@/pages/Archived"));
 const AuthCallback = lazy(() => import("@/pages/AuthCallback"));
 const Explore = lazy(() => import("@/pages/Explore"));
+const Insight = lazy(() => import("@/pages/Insight"));
 const Inboxes = lazy(() => import("@/pages/Inboxes"));
 const MemoDetail = lazy(() => import("@/pages/MemoDetail"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Home /> },
               { path: Routes.EXPLORE, element: <Explore /> },
+              { path: Routes.INSIGHT, element: <Insight /> },
               { path: Routes.ARCHIVED, element: <Archived /> },
               { path: "u/:username", element: <UserProfile /> },
             ],

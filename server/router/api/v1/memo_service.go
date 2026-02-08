@@ -961,3 +961,51 @@ func (s *APIV1Service) generateReviewFromOpenAI(ctx context.Context, setting *st
 
 	return result.Choices[0].Message.Content, nil
 }
+
+func (s *APIV1Service) GetMemoInsight(ctx context.Context, request *v1pb.GetMemoInsightRequest) (*v1pb.GetMemoInsightResponse, error) {
+	user, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user")
+	}
+	if user == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+
+	openaiSetting, err := s.Store.GetInstanceOpenAISetting(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get openai setting")
+	}
+	if openaiSetting == nil || openaiSetting.ApiKey == "" {
+		return nil, status.Errorf(codes.FailedPrecondition, "openai setting not found or api key is empty")
+	}
+
+	state := store.Normal
+	memoFind := &store.FindMemo{
+		CreatorID:       &user.ID,
+		RowStatus:       &state,
+		ExcludeComments: true,
+	}
+
+	if request.Filter != "" {
+		if err := s.validateFilter(ctx, request.Filter); err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid filter: %v", err)
+		}
+		memoFind.Filters = append(memoFind.Filters, request.Filter)
+	}
+
+	memos, err := s.Store.ListMemos(ctx, memoFind)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list memos")
+	}
+
+	if len(memos) == 0 {
+		return &v1pb.GetMemoInsightResponse{Content: "No memos found matching the criteria."}, nil
+	}
+
+	content, err := s.generateReviewFromOpenAI(ctx, openaiSetting, memos)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to generate insight: %v", err)
+	}
+
+	return &v1pb.GetMemoInsightResponse{Content: content}, nil
+}

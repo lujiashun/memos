@@ -62,7 +62,7 @@ const OpenAISection = () => {
   };
 
   return (
-    <SettingSection title={t("setting.openai")}>
+    <SettingSection title={t("setting.ai-service")}>
       <SettingGroup>
         <SettingRow
           title="API Key"

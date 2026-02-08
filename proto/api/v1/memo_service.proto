@@ -110,6 +110,13 @@ service MemoService {
       body: "*"
     };
   }
+  // GetMemoInsight generates a insight for the requested memos.
+  rpc GetMemoInsight(GetMemoInsightRequest) returns (GetMemoInsightResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/memos:insight"
+      body: "*"
+    };
+  }
 }
 
 enum Visibility {
@@ -525,5 +532,15 @@ message GetDailyReviewRequest {
 }
 
 message GetDailyReviewResponse {
+  string content = 1;
+}
+
+message GetMemoInsightRequest {
+  // Optional. Filter to apply to the list results.
+  // Filter is a CEL expression to filter memos.
+  string filter = 1 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message GetMemoInsightResponse {
   string content = 1;
 }

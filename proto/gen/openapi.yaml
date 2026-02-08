@@ -1079,6 +1079,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/memos:insight:
+        post:
+            tags:
+                - MemoService
+            description: GetMemoInsight generates a insight for the requested memos.
+            operationId: MemoService_GetMemoInsight
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetMemoInsightRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetMemoInsightResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users:
         get:
             tags:
@@ -2122,6 +2147,19 @@ components:
                     type: string
                     description: timezone is the timezone name (e.g. "Asia/Shanghai").
         GetDailyReviewResponse:
+            type: object
+            properties:
+                content:
+                    type: string
+        GetMemoInsightRequest:
+            type: object
+            properties:
+                filter:
+                    type: string
+                    description: |-
+                        Optional. Filter to apply to the list results.
+                         Filter is a CEL expression to filter memos.
+        GetMemoInsightResponse:
             type: object
             properties:
                 content:

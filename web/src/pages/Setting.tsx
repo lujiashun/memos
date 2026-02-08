@@ -19,14 +19,14 @@ import { InstanceSetting_Key } from "@/types/proto/api/v1/instance_service_pb";
 import { User_Role } from "@/types/proto/api/v1/user_service_pb";
 import { useTranslate } from "@/utils/i18n";
 
-type SettingSection = "my-account" | "preference" | "member" | "system" | "memo-related" | "storage" | "sso" | "openai";
+type SettingSection = "my-account" | "preference" | "member" | "system" | "memo-related" | "storage" | "sso" | "ai-service";
 
 interface State {
   selectedSection: SettingSection;
 }
 
 const BASIC_SECTIONS: SettingSection[] = ["my-account", "preference"];
-const ADMIN_SECTIONS: SettingSection[] = ["member", "system", "memo-related", "storage", "sso", "openai"];
+const ADMIN_SECTIONS: SettingSection[] = ["member", "system", "memo-related", "storage", "sso", "ai-service"];
 const SECTION_ICON_MAP: Record<SettingSection, LucideIcon> = {
   "my-account": UserIcon,
   preference: CogIcon,
@@ -35,7 +35,7 @@ const SECTION_ICON_MAP: Record<SettingSection, LucideIcon> = {
   "memo-related": LibraryIcon,
   storage: DatabaseIcon,
   sso: KeyIcon,
-  openai: BotIcon,
+  "ai-service": BotIcon,
 };
 
 const Setting = () => {
@@ -156,7 +156,7 @@ const Setting = () => {
               <StorageSection />
             ) : state.selectedSection === "sso" ? (
               <SSOSection />
-            ) : state.selectedSection === "openai" ? (
+            ) : state.selectedSection === "ai-service" ? (
               <OpenAISection />
             ) : null}
           </div>
