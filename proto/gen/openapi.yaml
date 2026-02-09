@@ -2159,6 +2159,9 @@ components:
                     description: |-
                         Optional. Filter to apply to the list results.
                          Filter is a CEL expression to filter memos.
+                prompt:
+                    type: string
+                    description: Optional. The prompt to use for the insight generation.
         GetMemoInsightResponse:
             type: object
             properties:
@@ -3060,6 +3063,9 @@ components:
                         The preferred theme of the user.
                          This references a CSS file in the web/public/themes/ directory.
                          If not set, the default theme will be used.
+                memoInsightPrompt:
+                    type: string
+                    description: The default prompt for memo insights.
             description: General user settings configuration.
         UserSetting_WebhooksSetting:
             type: object

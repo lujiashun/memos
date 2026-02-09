@@ -475,10 +475,12 @@
     "upload-attachment": "Upload Attachment(s)"
   },
   "insight": {
-    "title": "Default Insight",
+    "title": "Deep Insight",
     "start-date": "Start Date",
     "end-date": "End Date",
     "tags": "Tags",
+    "prompt": "Prompt",
+    "customize-prompt": "Customize Prompt",
     "generate": "Generate Insight",
     "result": "Insight Result"
   }

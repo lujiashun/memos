@@ -539,6 +539,8 @@ message GetMemoInsightRequest {
   // Optional. Filter to apply to the list results.
   // Filter is a CEL expression to filter memos.
   string filter = 1 [(google.api.field_behavior) = OPTIONAL];
+  // Optional. The prompt to use for the insight generation.
+  string prompt = 2 [(google.api.field_behavior) = OPTIONAL];
 }
 
 message GetMemoInsightResponse {

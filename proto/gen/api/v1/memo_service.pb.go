@@ -1774,7 +1774,9 @@ type GetMemoInsightRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Optional. Filter to apply to the list results.
 	// Filter is a CEL expression to filter memos.
-	Filter        string `protobuf:"bytes,1,opt,name=filter,proto3" json:"filter,omitempty"`
+	Filter string `protobuf:"bytes,1,opt,name=filter,proto3" json:"filter,omitempty"`
+	// Optional. The prompt to use for the insight generation.
+	Prompt        string `protobuf:"bytes,2,opt,name=prompt,proto3" json:"prompt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1812,6 +1814,13 @@ func (*GetMemoInsightRequest) Descriptor() ([]byte, []int) {
 func (x *GetMemoInsightRequest) GetFilter() string {
 	if x != nil {
 		return x.Filter
+	}
+	return ""
+}
+
+func (x *GetMemoInsightRequest) GetPrompt() string {
+	if x != nil {
+		return x.Prompt
 	}
 	return ""
 }
@@ -2141,9 +2150,10 @@ const file_api_v1_memo_service_proto_rawDesc = "" +
 	"\x04date\x18\x01 \x01(\tR\x04date\x12\x1a\n" +
 	"\btimezone\x18\x02 \x01(\tR\btimezone\"2\n" +
 	"\x16GetDailyReviewResponse\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"4\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent\"Q\n" +
 	"\x15GetMemoInsightRequest\x12\x1b\n" +
-	"\x06filter\x18\x01 \x01(\tB\x03\xe0A\x01R\x06filter\"2\n" +
+	"\x06filter\x18\x01 \x01(\tB\x03\xe0A\x01R\x06filter\x12\x1b\n" +
+	"\x06prompt\x18\x02 \x01(\tB\x03\xe0A\x01R\x06prompt\"2\n" +
 	"\x16GetMemoInsightResponse\x12\x18\n" +
 	"\acontent\x18\x01 \x01(\tR\acontent*P\n" +
 	"\n" +

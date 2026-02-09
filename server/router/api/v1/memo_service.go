@@ -893,7 +893,7 @@ func (s *APIV1Service) GetDailyReview(ctx context.Context, request *v1pb.GetDail
 		return &v1pb.GetDailyReviewResponse{Content: "No memos found for this day."}, nil
 	}
 
-	content, err := s.generateReviewFromOpenAI(ctx, openaiSetting, memos)
+	content, err := s.generateReviewFromOpenAI(ctx, openaiSetting, memos, "Please review the following memos from today and generate a concise daily summary:")
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to generate review: %v", err)
 	}
@@ -901,9 +901,12 @@ func (s *APIV1Service) GetDailyReview(ctx context.Context, request *v1pb.GetDail
 	return &v1pb.GetDailyReviewResponse{Content: content}, nil
 }
 
-func (s *APIV1Service) generateReviewFromOpenAI(ctx context.Context, setting *storepb.InstanceOpenAISetting, memos []*store.Memo) (string, error) {
+func (s *APIV1Service) generateReviewFromOpenAI(ctx context.Context, setting *storepb.InstanceOpenAISetting, memos []*store.Memo, instruction string) (string, error) {
 	var sb strings.Builder
-	sb.WriteString("Please review the following memos from today and generate a concise daily summary:\n\n")
+	if instruction == "" {
+		instruction = "Please review the following memos and generate a concise summary:"
+	}
+	sb.WriteString(instruction + "\n\n")
 	for _, memo := range memos {
 		sb.WriteString(fmt.Sprintf("- %s\n", memo.Content))
 	}
@@ -1002,7 +1005,7 @@ func (s *APIV1Service) GetMemoInsight(ctx context.Context, request *v1pb.GetMemo
 		return &v1pb.GetMemoInsightResponse{Content: "No memos found matching the criteria."}, nil
 	}
 
-	content, err := s.generateReviewFromOpenAI(ctx, openaiSetting, memos)
+	content, err := s.generateReviewFromOpenAI(ctx, openaiSetting, memos, request.Prompt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to generate insight: %v", err)
 	}

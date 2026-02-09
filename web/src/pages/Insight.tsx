@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { CopyIcon, LoaderIcon, SparklesIcon } from "lucide-react";
+import { ChevronDown, ChevronRight, CopyIcon, LoaderIcon, SparklesIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { create } from "@bufbuild/protobuf";
 import { memoServiceClient } from "@/connect";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUpdateUserGeneralSetting } from "@/hooks/useUserQueries";
 import { GetMemoInsightRequestSchema } from "@/types/proto/api/v1/memo_service_pb";
 import MemoContent from "@/components/MemoContent";
 import MobileHeader from "@/components/MobileHeader";
@@ -13,11 +16,39 @@ import { useTranslate } from "@/utils/i18n";
 
 const Insight = () => {
   const t = useTranslate();
+  const { currentUser, userGeneralSetting, refetchSettings } = useAuth();
+  const { mutateAsync: updateGeneralSetting } = useUpdateUserGeneralSetting(currentUser?.name);
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [endDate, setEndDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [tags, setTags] = useState("");
+  const DEFAULT_PROMPT = "Please review the following memos and generate a concise summary:";
+  const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
+  const [showPrompt, setShowPrompt] = useState(false);
   const [insight, setInsight] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const savedPrompt = userGeneralSetting?.memoInsightPrompt || localStorage.getItem("insight-custom-prompt") || DEFAULT_PROMPT;
+    setPrompt(savedPrompt);
+  }, [userGeneralSetting?.memoInsightPrompt]);
+
+  const handleSavePrompt = async () => {
+    localStorage.setItem("insight-custom-prompt", prompt);
+    if (currentUser?.name) {
+      try {
+        await updateGeneralSetting({
+          generalSetting: { memoInsightPrompt: prompt },
+          updateMask: ["memo_insight_prompt"],
+        });
+        await refetchSettings();
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to save prompt");
+        return;
+      }
+    }
+    toast.success("Prompt saved");
+  };
 
   const handleGenerate = async () => {
     setIsLoading(true);
@@ -45,6 +76,7 @@ const Insight = () => {
       const response = await memoServiceClient.getMemoInsight(
         create(GetMemoInsightRequestSchema, {
           filter: filter,
+          prompt: prompt,
         }),
       );
       setInsight(response.content);
@@ -89,6 +121,30 @@ const Insight = () => {
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
               />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div
+                className="flex items-center gap-1 cursor-pointer select-none"
+                onClick={() => setShowPrompt(!showPrompt)}
+              >
+                {showPrompt ? <ChevronDown className="w-4 h-4 ml-[-4px]" /> : <ChevronRight className="w-4 h-4 ml-[-4px]" />}
+                <label className="text-sm font-medium cursor-pointer">{t("insight.customize-prompt")}</label>
+              </div>
+              {showPrompt && (
+                <div className="flex flex-col gap-2">
+                  <Textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder={t("insight.prompt")}
+                    className="min-h-[100px]"
+                  />
+                  <div className="flex justify-end">
+                    <Button variant="outline" size="sm" onClick={handleSavePrompt}>
+                      {t("common.save")}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             <Button onClick={handleGenerate} disabled={isLoading} className="w-full">
               {isLoading ? (

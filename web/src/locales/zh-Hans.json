@@ -476,10 +476,12 @@
     "upload-attachment": "上传附件"
   },
   "insight": {
-    "title": "默认洞察",
+    "title": "深度洞察",
     "start-date": "开始日期",
     "end-date": "结束日期",
     "tags": "标签",
+    "prompt": "提示词",
+    "customize-prompt": "自定义提示词",
     "generate": "生成洞察",
     "result": "洞察结果"
   }

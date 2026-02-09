@@ -2398,9 +2398,11 @@ type UserSetting_GeneralSetting struct {
 	// The preferred theme of the user.
 	// This references a CSS file in the web/public/themes/ directory.
 	// If not set, the default theme will be used.
-	Theme         string `protobuf:"bytes,4,opt,name=theme,proto3" json:"theme,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Theme string `protobuf:"bytes,4,opt,name=theme,proto3" json:"theme,omitempty"`
+	// The default prompt for memo insights.
+	MemoInsightPrompt string `protobuf:"bytes,5,opt,name=memo_insight_prompt,json=memoInsightPrompt,proto3" json:"memo_insight_prompt,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *UserSetting_GeneralSetting) Reset() {
@@ -2450,6 +2452,13 @@ func (x *UserSetting_GeneralSetting) GetMemoVisibility() string {
 func (x *UserSetting_GeneralSetting) GetTheme() string {
 	if x != nil {
 		return x.Theme
+	}
+	return ""
+}
+
+func (x *UserSetting_GeneralSetting) GetMemoInsightPrompt() string {
+	if x != nil {
+		return x.MemoInsightPrompt
 	}
 	return ""
 }
@@ -2581,15 +2590,16 @@ const file_api_v1_user_service_proto_rawDesc = "" +
 	"\x11memos.api.v1/UserR\x04name\"\x19\n" +
 	"\x17ListAllUserStatsRequest\"I\n" +
 	"\x18ListAllUserStatsResponse\x12-\n" +
-	"\x05stats\x18\x01 \x03(\v2\x17.memos.api.v1.UserStatsR\x05stats\"\xb0\x04\n" +
+	"\x05stats\x18\x01 \x03(\v2\x17.memos.api.v1.UserStatsR\x05stats\"\xe6\x04\n" +
 	"\vUserSetting\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tB\x03\xe0A\bR\x04name\x12S\n" +
 	"\x0fgeneral_setting\x18\x02 \x01(\v2(.memos.api.v1.UserSetting.GeneralSettingH\x00R\x0egeneralSetting\x12V\n" +
-	"\x10webhooks_setting\x18\x05 \x01(\v2).memos.api.v1.UserSetting.WebhooksSettingH\x00R\x0fwebhooksSetting\x1av\n" +
+	"\x10webhooks_setting\x18\x05 \x01(\v2).memos.api.v1.UserSetting.WebhooksSettingH\x00R\x0fwebhooksSetting\x1a\xab\x01\n" +
 	"\x0eGeneralSetting\x12\x1b\n" +
 	"\x06locale\x18\x01 \x01(\tB\x03\xe0A\x01R\x06locale\x12,\n" +
 	"\x0fmemo_visibility\x18\x03 \x01(\tB\x03\xe0A\x01R\x0ememoVisibility\x12\x19\n" +
-	"\x05theme\x18\x04 \x01(\tB\x03\xe0A\x01R\x05theme\x1aH\n" +
+	"\x05theme\x18\x04 \x01(\tB\x03\xe0A\x01R\x05theme\x123\n" +
+	"\x13memo_insight_prompt\x18\x05 \x01(\tB\x03\xe0A\x01R\x11memoInsightPrompt\x1aH\n" +
 	"\x0fWebhooksSetting\x125\n" +
 	"\bwebhooks\x18\x01 \x03(\v2\x19.memos.api.v1.UserWebhookR\bwebhooks\"5\n" +
 	"\x03Key\x12\x13\n" +
