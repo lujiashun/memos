@@ -4,7 +4,7 @@ import { type MemoFilter, stringifyFilters, useMemoFilterContext } from "@/conte
 import useNavigateTo from "@/hooks/useNavigateTo";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/router";
-import { useMemoViewContext } from "../MemoView/MemoViewContext";
+import { useOptionalMemoViewContext } from "../MemoView/MemoViewContext";
 
 interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   node?: Element; // AST node from react-markdown
@@ -13,7 +13,8 @@ interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const Tag: React.FC<TagProps> = ({ "data-tag": dataTag, children, className, ...props }) => {
-  const { parentPage } = useMemoViewContext();
+  const memoViewContext = useOptionalMemoViewContext();
+  const parentPage = memoViewContext?.parentPage ?? Routes.ROOT;
   const location = useLocation();
   const navigateTo = useNavigateTo();
   const { getFiltersByFactor, removeFilter, addFilter } = useMemoFilterContext();

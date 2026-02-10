@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { create } from "@bufbuild/protobuf";
 import { format } from "date-fns";
 import { ChevronDown, ChevronRight, CopyIcon, LoaderIcon, SparklesIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import MemoContent from "@/components/MemoContent";
+import MobileHeader from "@/components/MobileHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { create } from "@bufbuild/protobuf";
 import { memoServiceClient } from "@/connect";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUpdateUserGeneralSetting } from "@/hooks/useUserQueries";
 import { GetMemoInsightRequestSchema } from "@/types/proto/api/v1/memo_service_pb";
-import MemoContent from "@/components/MemoContent";
-import MobileHeader from "@/components/MobileHeader";
 import { useTranslate } from "@/utils/i18n";
 
 const Insight = () => {
@@ -64,7 +64,10 @@ const Insight = () => {
         conditions.push(`created_ts < ${endTs}`);
       }
       if (tags.trim()) {
-        const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean);
+        const tagList = tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
         if (tagList.length > 0) {
           const tagListString = tagList.map((t) => `"${t}"`).join(", ");
           conditions.push(`tag in [${tagListString}]`);
@@ -98,35 +101,19 @@ const Insight = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium">{t("insight.start-date")}</label>
-                <Input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
+                <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium">{t("insight.end-date")}</label>
-                <Input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
+                <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
               </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">{t("insight.tags")}</label>
-              <Input
-                type="text"
-                placeholder="tag1, tag2"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-              />
+              <Input type="text" placeholder="tag1, tag2" value={tags} onChange={(e) => setTags(e.target.value)} />
             </div>
             <div className="flex flex-col gap-2">
-              <div
-                className="flex items-center gap-1 cursor-pointer select-none"
-                onClick={() => setShowPrompt(!showPrompt)}
-              >
+              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => setShowPrompt(!showPrompt)}>
                 {showPrompt ? <ChevronDown className="w-4 h-4 ml-[-4px]" /> : <ChevronRight className="w-4 h-4 ml-[-4px]" />}
                 <label className="text-sm font-medium cursor-pointer">{t("insight.customize-prompt")}</label>
               </div>
@@ -147,26 +134,26 @@ const Insight = () => {
               )}
             </div>
             <Button onClick={handleGenerate} disabled={isLoading} className="w-full">
-              {isLoading ? (
-                <LoaderIcon className="w-5 h-5 animate-spin" />
-              ) : (
-                <SparklesIcon className="w-5 h-5 mr-2" />
-              )}
+              {isLoading ? <LoaderIcon className="w-5 h-5 animate-spin" /> : <SparklesIcon className="w-5 h-5 mr-2" />}
               {t("insight.generate")}
             </Button>
           </div>
 
           {insight && (
             <div className="p-4 border rounded-lg bg-white dark:bg-zinc-800">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold">{t("insight.result")}</h2>
-                    <Button variant="ghost" size="sm" onClick={() => {
-                        navigator.clipboard.writeText(insight);
-                        toast.success("Copied to clipboard");
-                    }}>
-                        <CopyIcon className="w-4 h-4" />
-                    </Button>
-                </div>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">{t("insight.result")}</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(insight);
+                    toast.success("Copied to clipboard");
+                  }}
+                >
+                  <CopyIcon className="w-4 h-4" />
+                </Button>
+              </div>
               <MemoContent content={insight} />
             </div>
           )}

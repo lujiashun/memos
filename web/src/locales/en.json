@@ -47,13 +47,10 @@
     "explore": "Explore",
     "file": "File",
     "filter": "Filter",
-    "home": "Home",
-    "image": "Image",
-    "in": "In",
     "inbox": "Inbox",
     "input": "Input",
     "language": "Language",
-    "last-updated-at": "Last updated at",
+    "last-updated-at": "Last Updated At",
     "layout": "Layout",
     "learn-more": "Learn more",
     "link": "Link",
@@ -116,14 +113,6 @@
     "thu": "Thu",
     "tue": "Tue",
     "wed": "Wed"
-  },
-  "insight": {
-    "title": "Default Insight",
-    "start-date": "Start Date",
-    "end-date": "End Date",
-    "tags": "Tags (comma separated)",
-    "generate": "Generate Insight",
-    "result": "Insight Result"
   },
   "editor": {
     "add-your-comment-here": "Add your comment here...",

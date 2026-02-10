@@ -19,8 +19,12 @@ export interface MemoViewContextValue {
 
 export const MemoViewContext = createContext<MemoViewContextValue | null>(null);
 
+export const useOptionalMemoViewContext = (): MemoViewContextValue | null => {
+  return useContext(MemoViewContext);
+};
+
 export const useMemoViewContext = (): MemoViewContextValue => {
-  const context = useContext(MemoViewContext);
+  const context = useOptionalMemoViewContext();
   if (!context) {
     throw new Error("useMemoViewContext must be used within MemoViewContext.Provider");
   }

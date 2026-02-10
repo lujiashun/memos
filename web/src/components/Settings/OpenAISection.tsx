@@ -1,7 +1,7 @@
 import { create } from "@bufbuild/protobuf";
 import { isEqual } from "lodash-es";
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useInstance } from "@/contexts/InstanceContext";
@@ -55,20 +55,18 @@ const OpenAISection = () => {
         }),
       );
       await fetchSetting(InstanceSetting_Key.OPENAI);
-      toast.success(t("common.saved"));
+      toast.success(t("message.update-succeed"));
     } catch (error) {
-      handleError(error);
+      handleError(error, toast.error, {
+        context: "OpenAI",
+      });
     }
   };
 
   return (
     <SettingSection title={t("setting.ai-service")}>
       <SettingGroup>
-        <SettingRow
-          title="API Key"
-          description="The API key for OpenAI service"
-          className=""
-        >
+        <SettingRow label="API Key" description="The API key for OpenAI service" className="">
           <Input
             className="w-full"
             type="password"
@@ -77,10 +75,7 @@ const OpenAISection = () => {
             onChange={(e) => updatePartialSetting({ apiKey: e.target.value })}
           />
         </SettingRow>
-        <SettingRow
-          title="Base URL"
-          description="The base URL for OpenAI service (optional)"
-        >
+        <SettingRow label="Base URL" description="The base URL for OpenAI service (optional)">
           <Input
             className="w-full"
             value={openaiSetting.baseUrl}
@@ -88,10 +83,7 @@ const OpenAISection = () => {
             onChange={(e) => updatePartialSetting({ baseUrl: e.target.value })}
           />
         </SettingRow>
-        <SettingRow
-          title="Model"
-          description="The model to use (e.g. gpt-4, gpt-3.5-turbo)"
-        >
+        <SettingRow label="Model" description="The model to use (e.g. gpt-4, gpt-3.5-turbo)">
           <Input
             className="w-full"
             value={openaiSetting.model}

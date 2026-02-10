@@ -39,7 +39,7 @@ const DailyReviewDialog = ({ trigger }: Props) => {
 
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    toast.success(t("common.copied"));
+    toast.success(t("message.copied"));
   };
 
   return (
@@ -73,18 +73,18 @@ const DailyReviewDialog = ({ trigger }: Props) => {
             </div>
           )}
           {content && (
-             <div className="w-full">
-                 <MemoContent content={content} />
-             </div>
+            <div className="w-full">
+              <MemoContent content={content} />
+            </div>
           )}
         </div>
         {content && (
-            <div className="flex justify-end gap-2 pt-4 border-t">
-                <Button variant="outline" onClick={copyContent}>
-                    <CopyIcon className="w-4 h-4 mr-2" />
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button variant="outline" onClick={copyContent}>
+              <CopyIcon className="w-4 h-4 mr-2" />
               {t("common.copy")}
-                </Button>
-            </div>
+            </Button>
+          </div>
         )}
       </DialogContent>
     </Dialog>

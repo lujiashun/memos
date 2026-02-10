@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useUpdateMemo } from "@/hooks/useMemoQueries";
 import { toggleTaskAtIndex } from "@/utils/markdown-manipulation";
-import { useMemoViewContext, useMemoViewDerived } from "../MemoView/MemoViewContext";
+import { useOptionalMemoViewContext } from "../MemoView/MemoViewContext";
 import { TASK_LIST_ITEM_CLASS } from "./constants";
 import type { ReactMarkdownProps } from "./markdown/types";
 
@@ -11,8 +11,9 @@ interface TaskListItemProps extends React.InputHTMLAttributes<HTMLInputElement>,
 }
 
 export const TaskListItem: React.FC<TaskListItemProps> = ({ checked, node: _node, ...props }) => {
-  const { memo } = useMemoViewContext();
-  const { readonly } = useMemoViewDerived();
+  const memoViewContext = useOptionalMemoViewContext();
+  const memo = memoViewContext?.memo;
+  const readonly = memoViewContext?.readonly ?? true;
   const checkboxRef = useRef<HTMLButtonElement>(null);
   const { mutate: updateMemo } = useUpdateMemo();
 
