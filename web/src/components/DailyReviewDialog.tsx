@@ -1,4 +1,5 @@
 import { create } from "@bufbuild/protobuf";
+import { ConnectError } from "@connectrpc/connect";
 import { format } from "date-fns";
 import { CopyIcon, LoaderIcon, SparklesIcon } from "lucide-react";
 import { useState } from "react";
@@ -7,6 +8,7 @@ import MemoContent from "@/components/MemoContent";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { memoServiceClient } from "@/connect";
+import { handleError } from "@/lib/error";
 import { GetDailyReviewRequestSchema } from "@/types/proto/api/v1/memo_service_pb";
 import { useTranslate } from "@/utils/i18n";
 
@@ -31,7 +33,14 @@ const DailyReviewDialog = ({ trigger }: Props) => {
       setContent(response.content);
     } catch (error) {
       console.error(error);
-      toast.error(t("daily-review.fetch-failed"));
+      if (error instanceof ConnectError) {
+        const message = ("rawMessage" in error && typeof error.rawMessage === "string" && error.rawMessage) || error.message;
+        toast.error(message || t("daily-review.fetch-failed"));
+      } else {
+        handleError(error, toast.error, {
+          fallbackMessage: t("daily-review.fetch-failed"),
+        });
+      }
     } finally {
       setIsLoading(false);
     }

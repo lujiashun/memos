@@ -861,7 +861,7 @@ func (s *APIV1Service) GetDailyReview(ctx context.Context, request *v1pb.GetDail
 		return nil, status.Errorf(codes.Internal, "failed to get openai setting")
 	}
 	if openaiSetting == nil || openaiSetting.ApiKey == "" {
-		return nil, status.Errorf(codes.FailedPrecondition, "openai setting not found or api key is empty")
+		return nil, status.Errorf(codes.FailedPrecondition, "openai api key is not configured; please set it in Settings → AI")
 	}
 
 	loc, err := time.LoadLocation(request.Timezone)
@@ -912,8 +912,13 @@ func (s *APIV1Service) generateReviewFromOpenAI(ctx context.Context, setting *st
 	}
 	prompt := sb.String()
 
+	model := strings.TrimSpace(setting.Model)
+	if model == "" {
+		model = "gpt-3.5-turbo"
+	}
+
 	requestBody, err := json.Marshal(map[string]interface{}{
-		"model": setting.Model,
+		"model": model,
 		"messages": []map[string]string{
 			{"role": "user", "content": prompt},
 		},
