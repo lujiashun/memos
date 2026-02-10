@@ -30,8 +30,8 @@ const DailyReviewDialog = ({ trigger }: Props) => {
       );
       setContent(response.content);
     } catch (error) {
-        console.error(error);
-        toast.error("Failed to fetch daily review. Please check your OpenAI settings.");
+      console.error(error);
+      toast.error(t("daily-review.fetch-failed"));
     } finally {
       setIsLoading(false);
     }
@@ -46,30 +46,30 @@ const DailyReviewDialog = ({ trigger }: Props) => {
     <Dialog>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="ghost" size="icon" title="Daily Review">
+          <Button variant="ghost" size="icon" title={t("daily-review.title")}>
             <SparklesIcon className="w-5 h-5" />
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Daily Review</DialogTitle>
+          <DialogTitle>{t("daily-review.title")}</DialogTitle>
           <DialogDescription>{format(new Date(), "yyyy-MM-dd")}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-auto min-h-[200px] p-2">
           {!content && !isLoading && (
             <div className="flex flex-col items-center justify-center h-full gap-4 py-10">
-              <p className="text-muted-foreground">Generate a summary of your memos for today using AI.</p>
+              <p className="text-muted-foreground">{t("daily-review.empty")}</p>
               <Button onClick={handleFetchReview}>
                 <SparklesIcon className="w-4 h-4 mr-2" />
-                Generate Review
+                {t("daily-review.generate")}
               </Button>
             </div>
           )}
           {isLoading && (
             <div className="flex flex-col items-center justify-center h-full gap-2 py-10">
               <LoaderIcon className="w-8 h-8 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Generating review...</p>
+              <p className="text-sm text-muted-foreground">{t("daily-review.generating")}</p>
             </div>
           )}
           {content && (
@@ -82,7 +82,7 @@ const DailyReviewDialog = ({ trigger }: Props) => {
             <div className="flex justify-end gap-2 pt-4 border-t">
                 <Button variant="outline" onClick={copyContent}>
                     <CopyIcon className="w-4 h-4 mr-2" />
-                    Copy
+              {t("common.copy")}
                 </Button>
             </div>
         )}

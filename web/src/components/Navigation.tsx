@@ -137,14 +137,14 @@ const Navigation = (props: Props) => {
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="right">
-                        <p>Daily Review</p>
+                        <p>{t("daily-review.title")}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 ) : (
                   <SparklesIcon className="w-6 h-auto shrink-0" />
                 )}
-                {!props.collapsed && <span className="ml-3 truncate">Daily Review</span>}
+                {!props.collapsed && <span className="ml-3 truncate">{t("daily-review.title")}</span>}
               </div>
             }
           />

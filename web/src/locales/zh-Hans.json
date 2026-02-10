@@ -117,14 +117,6 @@
     "tue": "二",
     "wed": "三"
   },
-  "insight": {
-    "title": "默认洞察",
-    "start-date": "开始日期",
-    "end-date": "结束日期",
-    "tags": "标签 (逗号分隔)",
-    "generate": "生成洞察",
-    "result": "洞察结果"
-  },
   "editor": {
     "add-your-comment-here": "请输入您的评论...",
     "any-thoughts": "此刻的想法...",
@@ -474,6 +466,13 @@
     "select-visibility": "浏览权限",
     "tags": "标签",
     "upload-attachment": "上传附件"
+  },
+  "daily-review": {
+    "title": "每日回顾",
+    "empty": "使用 AI 生成今天备忘录的摘要。",
+    "generate": "生成回顾",
+    "generating": "生成回顾中...",
+    "fetch-failed": "获取每日回顾失败，请检查 OpenAI 设置。"
   },
   "insight": {
     "title": "深度洞察",

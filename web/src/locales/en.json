@@ -474,6 +474,13 @@
     "tags": "Tags",
     "upload-attachment": "Upload Attachment(s)"
   },
+  "daily-review": {
+    "title": "Daily Review",
+    "empty": "Generate a summary of your memos for today using AI.",
+    "generate": "Generate Review",
+    "generating": "Generating review...",
+    "fetch-failed": "Failed to fetch daily review. Please check your OpenAI settings."
+  },
   "insight": {
     "title": "Deep Insight",
     "start-date": "Start Date",

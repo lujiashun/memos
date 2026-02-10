@@ -81,6 +81,11 @@ export const getLocaleWithFallback = (userLocale?: string): Locale => {
     return userLocale as Locale;
   }
 
+  // If user setting exists but isn't a supported locale, map to nearest match.
+  if (userLocale) {
+    return findNearestMatchedLanguage(userLocale);
+  }
+
   // Priority 2: localStorage
   const stored = getStoredLocale();
   if (stored) {

@@ -22,6 +22,11 @@ docs/plans/
 
 dist
 
+# Local database artifacts (SQLite)
+*.db
+*.db-shm
+*.db-wal
+
 # VSCode settings
 .vscode
 

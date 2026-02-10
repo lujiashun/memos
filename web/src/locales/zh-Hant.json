@@ -7,7 +7,7 @@
     "official-website": "官方網站"
   },
   "auth": {
-    "create-your-account": "建立您的帳號",
+    "create-your-account": "建立您的帳戶",
     "host-tip": "您即將註冊為網站管理員。",
     "new-password": "新密碼",
     "repeat-new-password": "再次輸入新密碼",
@@ -464,5 +464,12 @@
     "select-visibility": "瀏覽權限",
     "tags": "標籤",
     "upload-attachment": "上傳附件"
+  },
+  "daily-review": {
+    "title": "每日回顧",
+    "empty": "使用 AI 產生今天備忘錄的摘要。",
+    "generate": "生成回顧",
+    "generating": "生成回顧中...",
+    "fetch-failed": "取得每日回顧失敗，請檢查 OpenAI 設定。"
   }
 }
