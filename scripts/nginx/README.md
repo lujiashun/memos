@@ -21,6 +21,7 @@ You can also set env var:
 
 LAN note:
 - Ensure `www.yingshun.xin` resolves to your Mac's LAN IP from other devices.
+- If you want `https://yingshun.xin` (apex) to work too, ensure `yingshun.xin` also resolves to the same LAN IP.
 - On a client device, validate:
   - `nslookup www.yingshun.xin`
   - or `ping www.yingshun.xin`
@@ -59,7 +60,7 @@ Then generate a trusted cert for the domain:
   - `mkcert -key-file /opt/homebrew/etc/nginx/certs/www.yingshun.xin.key -cert-file /opt/homebrew/etc/nginx/certs/www.yingshun.xin.crt www.yingshun.xin`
 
 If you're doing LAN access and also want to include the LAN IP in the cert (optional):
-- `mkcert -key-file /usr/local/etc/nginx/certs/www.yingshun.xin.key -cert-file /usr/local/etc/nginx/certs/www.yingshun.xin.crt www.yingshun.xin 192.168.5.8`
+- `mkcert -key-file /usr/local/etc/nginx/certs/www.yingshun.xin.key -cert-file /usr/local/etc/nginx/certs/www.yingshun.xin.crt yingshun.xin www.yingshun.xin 192.168.5.8`
 
 To make other LAN devices trust the cert, install the mkcert local CA on those devices:
 - Find the CA location on your Mac:

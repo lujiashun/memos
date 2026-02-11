@@ -21,14 +21,21 @@ map $http_upgrade $connection_upgrade {
 server {
   listen 80;
   listen [::]:80;
-  server_name www.yingshun.xin;
-  return 301 https://$host$request_uri;
+  server_name yingshun.xin www.yingshun.xin;
+
+  # Use www as the canonical host.
+  return 301 https://www.yingshun.xin$request_uri;
 }
 
 server {
   listen 443 ssl http2;
   listen [::]:443 ssl http2;
-  server_name www.yingshun.xin;
+  server_name yingshun.xin www.yingshun.xin;
+
+  # Redirect apex to www.
+  if ($host = yingshun.xin) {
+    return 301 https://www.yingshun.xin$request_uri;
+  }
 
   # Update paths to your certs
   # Homebrew nginx cert path:
