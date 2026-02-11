@@ -1,0 +1,68 @@
+# Nginx reverse-proxy config for Memos (HTTPS)
+#
+# Usage:
+#   - Put this file into your nginx includes (e.g. Homebrew: `.../etc/nginx/servers/`)
+#   - Replace `server_name` and certificate paths
+#   - Reload nginx: `nginx -t` then reload/start nginx
+#
+# Notes:
+#   - This file is intended to be included from within the `http { ... }` block.
+#   - It proxies everything to memos running on 127.0.0.1:8081.
+
+upstream memos_upstream {
+  server 127.0.0.1:8081;
+  keepalive 32;
+}
+
+# For WebSocket/upgrade (safe default even if not used).
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name memos.example.com;
+
+  # Redirect all HTTP to HTTPS.
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name memos.example.com;
+
+  # TLS certs
+  # macOS Homebrew nginx common paths:
+  # - Apple Silicon: /opt/homebrew/etc/nginx/certs/
+  # - Intel:        /usr/local/etc/nginx/certs/
+  ssl_certificate     /usr/local/etc/nginx/certs/memos.example.com.crt;
+  ssl_certificate_key /usr/local/etc/nginx/certs/memos.example.com.key;
+
+  # Modern TLS defaults (keep compatible and simple)
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers off;
+
+  # Attachments can be large
+  client_max_body_size 100m;
+
+  # Reverse proxy headers
+  proxy_set_header Host              $host;
+  proxy_set_header X-Real-IP         $remote_addr;
+  proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  # Keep upstream happy
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade    $http_upgrade;
+  proxy_set_header Connection $connection_upgrade;
+
+  proxy_read_timeout  300s;
+  proxy_send_timeout  300s;
+
+  location / {
+    proxy_pass http://memos_upstream;
+  }
+}

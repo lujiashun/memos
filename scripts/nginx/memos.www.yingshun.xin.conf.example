@@ -1,0 +1,60 @@
+# Nginx reverse-proxy config for Memos (HTTPS) - www.yingshun.xin
+#
+# Memos upstream: http://127.0.0.1:8081
+#
+# macOS Homebrew nginx tip:
+# - Config include dir:
+#   - Apple Silicon: /opt/homebrew/etc/nginx/servers/
+#   - Intel:        /usr/local/etc/nginx/servers/
+# - Put this file there (or include it from nginx.conf)
+
+upstream memos_upstream {
+  server 127.0.0.1:8081;
+  keepalive 32;
+}
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name www.yingshun.xin;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name www.yingshun.xin;
+
+  # Update paths to your certs
+  # Homebrew nginx cert path:
+  # - Apple Silicon: /opt/homebrew/etc/nginx/certs/
+  # - Intel:        /usr/local/etc/nginx/certs/
+  ssl_certificate     /usr/local/etc/nginx/certs/www.yingshun.xin.crt;
+  ssl_certificate_key /usr/local/etc/nginx/certs/www.yingshun.xin.key;
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers off;
+
+  client_max_body_size 100m;
+
+  proxy_set_header Host              $host;
+  proxy_set_header X-Real-IP         $remote_addr;
+  proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade    $http_upgrade;
+  proxy_set_header Connection $connection_upgrade;
+
+  proxy_read_timeout  300s;
+  proxy_send_timeout  300s;
+
+  location / {
+    proxy_pass http://memos_upstream;
+  }
+}
