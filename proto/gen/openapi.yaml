@@ -1104,6 +1104,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/text_refine:
+        post:
+            tags:
+                - MemoService
+            description: TextRefine refines input text with a prompt.
+            operationId: MemoService_TextRefine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TextRefineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TextRefineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users:
         get:
             tags:
@@ -2922,6 +2947,23 @@ components:
             description: |-
                 S3 configuration for cloud storage backend.
                  Reference: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/
+        TextRefineRequest:
+            type: object
+            properties:
+                text:
+                    type: string
+                    description: The input text to be refined.
+                prompt:
+                    type: string
+                    description: The prompt or instruction for refinement.
+            description: Request for text refinement.
+        TextRefineResponse:
+            type: object
+            properties:
+                content:
+                    type: string
+                    description: The refined/optimized text.
+            description: Response for text refinement.
         UpsertMemoReactionRequest:
             required:
                 - name

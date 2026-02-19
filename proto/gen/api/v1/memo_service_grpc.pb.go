@@ -36,6 +36,7 @@ const (
 	MemoService_DeleteMemoReaction_FullMethodName  = "/memos.api.v1.MemoService/DeleteMemoReaction"
 	MemoService_GetDailyReview_FullMethodName      = "/memos.api.v1.MemoService/GetDailyReview"
 	MemoService_GetMemoInsight_FullMethodName      = "/memos.api.v1.MemoService/GetMemoInsight"
+	MemoService_TextRefine_FullMethodName          = "/memos.api.v1.MemoService/TextRefine"
 )
 
 // MemoServiceClient is the client API for MemoService service.
@@ -74,6 +75,8 @@ type MemoServiceClient interface {
 	GetDailyReview(ctx context.Context, in *GetDailyReviewRequest, opts ...grpc.CallOption) (*GetDailyReviewResponse, error)
 	// GetMemoInsight generates a insight for the requested memos.
 	GetMemoInsight(ctx context.Context, in *GetMemoInsightRequest, opts ...grpc.CallOption) (*GetMemoInsightResponse, error)
+	// TextRefine refines input text with a prompt.
+	TextRefine(ctx context.Context, in *TextRefineRequest, opts ...grpc.CallOption) (*TextRefineResponse, error)
 }
 
 type memoServiceClient struct {
@@ -244,6 +247,16 @@ func (c *memoServiceClient) GetMemoInsight(ctx context.Context, in *GetMemoInsig
 	return out, nil
 }
 
+func (c *memoServiceClient) TextRefine(ctx context.Context, in *TextRefineRequest, opts ...grpc.CallOption) (*TextRefineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TextRefineResponse)
+	err := c.cc.Invoke(ctx, MemoService_TextRefine_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MemoServiceServer is the server API for MemoService service.
 // All implementations must embed UnimplementedMemoServiceServer
 // for forward compatibility.
@@ -280,6 +293,8 @@ type MemoServiceServer interface {
 	GetDailyReview(context.Context, *GetDailyReviewRequest) (*GetDailyReviewResponse, error)
 	// GetMemoInsight generates a insight for the requested memos.
 	GetMemoInsight(context.Context, *GetMemoInsightRequest) (*GetMemoInsightResponse, error)
+	// TextRefine refines input text with a prompt.
+	TextRefine(context.Context, *TextRefineRequest) (*TextRefineResponse, error)
 	mustEmbedUnimplementedMemoServiceServer()
 }
 
@@ -337,6 +352,9 @@ func (UnimplementedMemoServiceServer) GetDailyReview(context.Context, *GetDailyR
 }
 func (UnimplementedMemoServiceServer) GetMemoInsight(context.Context, *GetMemoInsightRequest) (*GetMemoInsightResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMemoInsight not implemented")
+}
+func (UnimplementedMemoServiceServer) TextRefine(context.Context, *TextRefineRequest) (*TextRefineResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TextRefine not implemented")
 }
 func (UnimplementedMemoServiceServer) mustEmbedUnimplementedMemoServiceServer() {}
 func (UnimplementedMemoServiceServer) testEmbeddedByValue()                     {}
@@ -647,6 +665,24 @@ func _MemoService_GetMemoInsight_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MemoService_TextRefine_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TextRefineRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MemoServiceServer).TextRefine(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MemoService_TextRefine_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MemoServiceServer).TextRefine(ctx, req.(*TextRefineRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MemoService_ServiceDesc is the grpc.ServiceDesc for MemoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -717,6 +753,10 @@ var MemoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMemoInsight",
 			Handler:    _MemoService_GetMemoInsight_Handler,
+		},
+		{
+			MethodName: "TextRefine",
+			Handler:    _MemoService_TextRefine_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

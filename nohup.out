@@ -1,0 +1,130 @@
+2026/02/12 21:43:10 INFO background runners started goroutines=10
+Memos 0.26.0 started successfully!
+Data directory: /Users/lujs/memos
+Database driver: sqlite
+Server running on port 8081
+Access your memos at: http://localhost:8081
+
+Documentation: https://usememos.com
+Source code: https://github.com/usememos/memos
+
+Happy note-taking!
+2026/02/12 21:43:13 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:43:13 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:43:13 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:43:13 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:43:34 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:43:34 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:43:34 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:43:34 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:43:35 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:43:55 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:43:56 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:03 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:03 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:03 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:44:03 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:44:49 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:49 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:49 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:44:49 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:44:50 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:50 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:44:50 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:44:50 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:44:53 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:53:14 INFO background runners started goroutines=9
+Memos 0.26.0 started successfully!
+Data directory: /Users/lujs/memos
+Database driver: sqlite
+Server running on 127.0.0.1:8081
+Access your memos at: http://127.0.0.1:8081
+
+Documentation: https://usememos.com
+Source code: https://github.com/usememos/memos
+
+Happy note-taking!
+2026/02/12 21:53:31 ERROR failed to start server error="listen tcp 127.0.0.1:8081: bind: address already in use\nfailed to listen\ngithub.com/usememos/memos/server.(*Server).Start\n\t/Users/lujs/memos/server/server.go:98\nmain.init.func1\n\t/Users/lujs/memos/cmd/memos/main.go:72\ngithub.com/spf13/cobra.(*Command).execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1019\ngithub.com/spf13/cobra.(*Command).ExecuteC\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1148\ngithub.com/spf13/cobra.(*Command).Execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1071\nmain.main\n\t/Users/lujs/memos/cmd/memos/main.go:171\nruntime.main\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/proc.go:285\nruntime.goexit\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/asm_amd64.s:1693"
+2026/02/12 21:54:21 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:54:21 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:54:21 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 21:54:22 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 21:55:38 ERROR failed to start server error="listen tcp 0.0.0.0:8081: bind: address already in use\nfailed to listen\ngithub.com/usememos/memos/server.(*Server).Start\n\t/Users/lujs/memos/server/server.go:98\nmain.init.func1\n\t/Users/lujs/memos/cmd/memos/main.go:72\ngithub.com/spf13/cobra.(*Command).execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1019\ngithub.com/spf13/cobra.(*Command).ExecuteC\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1148\ngithub.com/spf13/cobra.(*Command).Execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1071\nmain.main\n\t/Users/lujs/memos/cmd/memos/main.go:171\nruntime.main\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/proc.go:285\nruntime.goexit\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/asm_amd64.s:1693"
+2026/02/12 21:55:51 INFO server shutting down
+2026/02/12 21:55:51 INFO server shutting down
+2026/02/12 21:55:51 INFO s3presign runner stopped
+2026/02/12 21:55:51 INFO s3presign runner stopped
+2026/02/12 21:55:51 INFO memos stopped properly
+2026/02/12 21:55:51 INFO memos stopped properly
+2026/02/19 06:59:10 INFO background runners started goroutines=9
+Memos 0.26.0 started successfully!
+Data directory: /Users/lujs/memos
+Database driver: sqlite
+Server running on 0.0.0.0:8081
+Access your memos at: http://0.0.0.0:8081
+
+Documentation: https://usememos.com
+Source code: https://github.com/usememos/memos
+
+Happy note-taking!
+2026/02/19 07:30:43 INFO server shutting down
+2026/02/19 07:30:43 INFO s3presign runner stopped
+2026/02/19 07:30:43 INFO memos stopped properly
+2026/02/19 07:58:10 INFO background runners started goroutines=9
+Memos 0.26.0 started successfully!
+Data directory: /Users/lujs/memos
+Database driver: sqlite
+Server running on 0.0.0.0:8081
+Access your memos at: http://0.0.0.0:8081
+
+Documentation: https://usememos.com
+Source code: https://github.com/usememos/memos
+
+Happy note-taking!
+2026/02/19 08:04:31 ERROR failed to start server error="listen tcp 0.0.0.0:8081: bind: address already in use\nfailed to listen\ngithub.com/usememos/memos/server.(*Server).Start\n\t/Users/lujs/memos/server/server.go:98\nmain.init.func1\n\t/Users/lujs/memos/cmd/memos/main.go:72\ngithub.com/spf13/cobra.(*Command).execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1019\ngithub.com/spf13/cobra.(*Command).ExecuteC\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1148\ngithub.com/spf13/cobra.(*Command).Execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1071\nmain.main\n\t/Users/lujs/memos/cmd/memos/main.go:171\nruntime.main\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/proc.go:285\nruntime.goexit\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/asm_amd64.s:1693"
+2026/02/19 08:18:49 ERROR failed to start server error="listen tcp 0.0.0.0:8081: bind: address already in use\nfailed to listen\ngithub.com/usememos/memos/server.(*Server).Start\n\t/Users/lujs/memos/server/server.go:98\nmain.init.func1\n\t/Users/lujs/memos/cmd/memos/main.go:72\ngithub.com/spf13/cobra.(*Command).execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1019\ngithub.com/spf13/cobra.(*Command).ExecuteC\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1148\ngithub.com/spf13/cobra.(*Command).Execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1071\nmain.main\n\t/Users/lujs/memos/cmd/memos/main.go:171\nruntime.main\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/proc.go:285\nruntime.goexit\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/asm_amd64.s:1693"
+2026/02/19 08:21:15 ERROR failed to start server error="listen tcp 0.0.0.0:8081: bind: address already in use\nfailed to listen\ngithub.com/usememos/memos/server.(*Server).Start\n\t/Users/lujs/memos/server/server.go:98\nmain.init.func1\n\t/Users/lujs/memos/cmd/memos/main.go:72\ngithub.com/spf13/cobra.(*Command).execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1019\ngithub.com/spf13/cobra.(*Command).ExecuteC\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1148\ngithub.com/spf13/cobra.(*Command).Execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1071\nmain.main\n\t/Users/lujs/memos/cmd/memos/main.go:171\nruntime.main\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/proc.go:285\nruntime.goexit\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/asm_amd64.s:1693"
+2026/02/19 09:02:24 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/19 09:02:24 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/19 09:02:24 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:02:24 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:02:27 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/19 09:02:32 INFO OK method=/memos.api.v1.IdentityProviderService/ListIdentityProviders
+2026/02/19 09:02:39 INFO OK method=/memos.api.v1.AuthService/SignIn
+2026/02/19 09:02:39 INFO OK method=/memos.api.v1.AuthService/GetCurrentUser
+2026/02/19 09:02:39 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
+2026/02/19 09:02:39 INFO OK method=/memos.api.v1.UserService/ListUserSettings
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.AuthService/GetCurrentUser
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.UserService/ListUserSettings
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.UserService/ListUserSettings
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:02:40 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:03:45 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
+2026/02/19 09:03:45 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:03:45 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:03:45 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:04:43 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:04:45 INFO OK method=/memos.api.v1.UserService/ListUserSettings
+2026/02/19 09:04:45 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
+2026/02/19 09:04:45 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:04:45 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:24:21 ERROR failed to start server error="listen tcp 0.0.0.0:8081: bind: address already in use\nfailed to listen\ngithub.com/usememos/memos/server.(*Server).Start\n\t/Users/lujs/memos/server/server.go:98\nmain.init.func1\n\t/Users/lujs/memos/cmd/memos/main.go:72\ngithub.com/spf13/cobra.(*Command).execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1019\ngithub.com/spf13/cobra.(*Command).ExecuteC\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1148\ngithub.com/spf13/cobra.(*Command).Execute\n\t/Users/lujs/go/pkg/mod/github.com/spf13/cobra@v1.10.1/command.go:1071\nmain.main\n\t/Users/lujs/memos/cmd/memos/main.go:171\nruntime.main\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/proc.go:285\nruntime.goexit\n\t/usr/local/Cellar/go/1.25.6/libexec/src/runtime/asm_amd64.s:1693"
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.AuthService/RefreshToken
+2026/02/19 09:24:58 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:24:58 INFO client error method=/memos.api.v1.UserService/ListUserNotifications error="unauthenticated: authentication required"
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.UserService/GetUser
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.UserService/GetUserStats
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.AuthService/RefreshToken
+2026/02/19 09:24:58 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
+2026/02/19 09:24:59 INFO OK method=/memos.api.v1.AuthService/GetCurrentUser
+2026/02/19 09:29:47 INFO server shutting down
+2026/02/19 09:29:47 INFO s3presign runner stopped
+2026/02/19 09:29:47 INFO memos stopped properly

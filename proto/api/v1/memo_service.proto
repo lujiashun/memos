@@ -117,6 +117,14 @@ service MemoService {
       body: "*"
     };
   }
+
+  // TextRefine refines input text with a prompt.
+  rpc TextRefine(TextRefineRequest) returns (TextRefineResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/text_refine"
+      body: "*"
+    };
+  }
 }
 
 enum Visibility {
@@ -544,5 +552,19 @@ message GetMemoInsightRequest {
 }
 
 message GetMemoInsightResponse {
+  string content = 1;
+}
+
+// Request for text refinement.
+message TextRefineRequest {
+  // The input text to be refined.
+  string text = 1;
+  // The prompt or instruction for refinement.
+  string prompt = 2;
+}
+
+// Response for text refinement.
+message TextRefineResponse {
+  // The refined/optimized text.
   string content = 1;
 }

@@ -9,6 +9,15 @@ import (
 	v1pb "github.com/usememos/memos/proto/gen/api/v1"
 )
 
+
+func (s *ConnectServiceHandler) TextRefine(ctx context.Context, req *connect.Request[v1pb.TextRefineRequest]) (*connect.Response[v1pb.TextRefineResponse], error) {
+	resp, err := s.APIV1Service.TextRefine(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
 // This file contains all Connect service handler method implementations.
 // Each method delegates to the underlying gRPC service implementation,
 // converting between Connect and gRPC request/response types.

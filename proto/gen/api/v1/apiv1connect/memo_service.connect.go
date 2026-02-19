@@ -77,6 +77,8 @@ const (
 	// MemoServiceGetMemoInsightProcedure is the fully-qualified name of the MemoService's
 	// GetMemoInsight RPC.
 	MemoServiceGetMemoInsightProcedure = "/memos.api.v1.MemoService/GetMemoInsight"
+	// MemoServiceTextRefineProcedure is the fully-qualified name of the MemoService's TextRefine RPC.
+	MemoServiceTextRefineProcedure = "/memos.api.v1.MemoService/TextRefine"
 )
 
 // MemoServiceClient is a client for the memos.api.v1.MemoService service.
@@ -113,6 +115,8 @@ type MemoServiceClient interface {
 	GetDailyReview(context.Context, *connect.Request[v1.GetDailyReviewRequest]) (*connect.Response[v1.GetDailyReviewResponse], error)
 	// GetMemoInsight generates a insight for the requested memos.
 	GetMemoInsight(context.Context, *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error)
+	// TextRefine refines input text with a prompt.
+	TextRefine(context.Context, *connect.Request[v1.TextRefineRequest]) (*connect.Response[v1.TextRefineResponse], error)
 }
 
 // NewMemoServiceClient constructs a client for the memos.api.v1.MemoService service. By default, it
@@ -222,6 +226,12 @@ func NewMemoServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(memoServiceMethods.ByName("GetMemoInsight")),
 			connect.WithClientOptions(opts...),
 		),
+		textRefine: connect.NewClient[v1.TextRefineRequest, v1.TextRefineResponse](
+			httpClient,
+			baseURL+MemoServiceTextRefineProcedure,
+			connect.WithSchema(memoServiceMethods.ByName("TextRefine")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -243,6 +253,7 @@ type memoServiceClient struct {
 	deleteMemoReaction  *connect.Client[v1.DeleteMemoReactionRequest, emptypb.Empty]
 	getDailyReview      *connect.Client[v1.GetDailyReviewRequest, v1.GetDailyReviewResponse]
 	getMemoInsight      *connect.Client[v1.GetMemoInsightRequest, v1.GetMemoInsightResponse]
+	textRefine          *connect.Client[v1.TextRefineRequest, v1.TextRefineResponse]
 }
 
 // CreateMemo calls memos.api.v1.MemoService.CreateMemo.
@@ -325,6 +336,11 @@ func (c *memoServiceClient) GetMemoInsight(ctx context.Context, req *connect.Req
 	return c.getMemoInsight.CallUnary(ctx, req)
 }
 
+// TextRefine calls memos.api.v1.MemoService.TextRefine.
+func (c *memoServiceClient) TextRefine(ctx context.Context, req *connect.Request[v1.TextRefineRequest]) (*connect.Response[v1.TextRefineResponse], error) {
+	return c.textRefine.CallUnary(ctx, req)
+}
+
 // MemoServiceHandler is an implementation of the memos.api.v1.MemoService service.
 type MemoServiceHandler interface {
 	// CreateMemo creates a memo.
@@ -359,6 +375,8 @@ type MemoServiceHandler interface {
 	GetDailyReview(context.Context, *connect.Request[v1.GetDailyReviewRequest]) (*connect.Response[v1.GetDailyReviewResponse], error)
 	// GetMemoInsight generates a insight for the requested memos.
 	GetMemoInsight(context.Context, *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error)
+	// TextRefine refines input text with a prompt.
+	TextRefine(context.Context, *connect.Request[v1.TextRefineRequest]) (*connect.Response[v1.TextRefineResponse], error)
 }
 
 // NewMemoServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -464,6 +482,12 @@ func NewMemoServiceHandler(svc MemoServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(memoServiceMethods.ByName("GetMemoInsight")),
 		connect.WithHandlerOptions(opts...),
 	)
+	memoServiceTextRefineHandler := connect.NewUnaryHandler(
+		MemoServiceTextRefineProcedure,
+		svc.TextRefine,
+		connect.WithSchema(memoServiceMethods.ByName("TextRefine")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.MemoService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case MemoServiceCreateMemoProcedure:
@@ -498,6 +522,8 @@ func NewMemoServiceHandler(svc MemoServiceHandler, opts ...connect.HandlerOption
 			memoServiceGetDailyReviewHandler.ServeHTTP(w, r)
 		case MemoServiceGetMemoInsightProcedure:
 			memoServiceGetMemoInsightHandler.ServeHTTP(w, r)
+		case MemoServiceTextRefineProcedure:
+			memoServiceTextRefineHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -569,4 +595,8 @@ func (UnimplementedMemoServiceHandler) GetDailyReview(context.Context, *connect.
 
 func (UnimplementedMemoServiceHandler) GetMemoInsight(context.Context, *connect.Request[v1.GetMemoInsightRequest]) (*connect.Response[v1.GetMemoInsightResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.MemoService.GetMemoInsight is not implemented"))
+}
+
+func (UnimplementedMemoServiceHandler) TextRefine(context.Context, *connect.Request[v1.TextRefineRequest]) (*connect.Response[v1.TextRefineResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.MemoService.TextRefine is not implemented"))
 }

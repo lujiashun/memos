@@ -1,6 +1,12 @@
 package v1
 
 import (
+		"github.com/usememos/memos/internal/base"
+		"github.com/usememos/memos/plugin/webhook"
+		v1pb "github.com/usememos/memos/proto/gen/api/v1"
+		storepb "github.com/usememos/memos/proto/gen/store"
+		"github.com/usememos/memos/server/runner/memopayload"
+		"github.com/usememos/memos/store"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -16,14 +22,90 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	"github.com/usememos/memos/internal/base"
-	"github.com/usememos/memos/plugin/webhook"
-	v1pb "github.com/usememos/memos/proto/gen/api/v1"
-	storepb "github.com/usememos/memos/proto/gen/store"
-	"github.com/usememos/memos/server/runner/memopayload"
-	"github.com/usememos/memos/store"
 )
+
+// TextRefine refines input text with a prompt using OpenAI.
+func (s *APIV1Service) TextRefine(ctx context.Context, request *v1pb.TextRefineRequest) (*v1pb.TextRefineResponse, error) {
+	user, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user")
+	}
+	if user == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+
+	openaiSetting, err := s.Store.GetInstanceOpenAISetting(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get openai setting")
+	}
+	if openaiSetting == nil || openaiSetting.ApiKey == "" {
+		return nil, status.Errorf(codes.FailedPrecondition, "openai api key is not configured; please set it in Settings → AI")
+	}
+
+	// Compose prompt for OpenAI
+	prompt := request.Prompt
+	if prompt == "" {
+		prompt = "Please refine the following text:"
+	}
+	prompt = prompt + "\n\n" + request.Text
+
+	model := strings.TrimSpace(openaiSetting.Model)
+	if model == "" {
+		model = "gpt-3.5-turbo"
+	}
+
+	requestBody, err := json.Marshal(map[string]interface{}{
+		"model": model,
+		"messages": []map[string]string{
+			{"role": "user", "content": prompt},
+		},
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to marshal openai request: %v", err)
+	}
+
+	baseUrl := openaiSetting.BaseUrl
+	if baseUrl == "" {
+		baseUrl = "https://api.openai.com/v1"
+	}
+	url := fmt.Sprintf("%s/chat/completions", strings.TrimRight(baseUrl, "/"))
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(requestBody))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create openai request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", openaiSetting.ApiKey))
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to call openai: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, status.Errorf(codes.Internal, "openai api failed with status %d: %s", resp.StatusCode, string(body))
+	}
+
+	var result struct {
+		Choices []struct {
+			Message struct {
+				Content string `json:"content"`
+			} `json:"message"`
+		} `json:"choices"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to decode openai response: %v", err)
+	}
+
+	if len(result.Choices) == 0 {
+		return nil, status.Errorf(codes.Internal, "no choices returned from openai")
+	}
+
+		return &v1pb.TextRefineResponse{Content: result.Choices[0].Message.Content}, nil
+	}
 
 func (s *APIV1Service) CreateMemo(ctx context.Context, request *v1pb.CreateMemoRequest) (*v1pb.Memo, error) {
 	user, err := s.fetchCurrentUser(ctx)

@@ -1,0 +1,20 @@
+2026/02/12 22:10:01 INFO background runners started goroutines=9
+Memos 0.26.0 started successfully!
+Data directory: /Users/lujs/memos
+Database driver: sqlite
+Server running on port 8081
+Access your memos at: http://localhost:8081
+
+Documentation: https://usememos.com
+Source code: https://github.com/usememos/memos
+
+Happy note-taking!
+2026/02/12 22:10:54 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 22:10:54 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 22:10:54 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 22:10:55 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 22:11:00 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 22:11:00 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/02/12 22:11:00 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 22:11:00 INFO OK method=/memos.api.v1.MemoService/ListMemos
+2026/02/12 22:11:01 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"

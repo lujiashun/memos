@@ -32,6 +32,8 @@ var PublicMethods = map[string]struct{}{
 	"/memos.api.v1.MemoService/GetMemo":          {},
 	"/memos.api.v1.MemoService/ListMemos":        {},
 	"/memos.api.v1.MemoService/ListMemoComments": {},
+	// TextRefine - allow public access if desired
+	"/memos.api.v1.MemoService/TextRefine":       {},
 }
 
 // IsPublicMethod checks if a procedure path is public (no authentication required).
