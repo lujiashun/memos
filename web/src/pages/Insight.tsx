@@ -154,7 +154,7 @@ const Insight = () => {
                   <CopyIcon className="w-4 h-4" />
                 </Button>
               </div>
-              <MemoContent content={insight} />
+              <MemoContent content={insight} showCopyOnTranscript />
             </div>
           )}
         </div>
