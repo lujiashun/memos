@@ -5,6 +5,7 @@ export interface MemoContentProps {
   compact?: boolean;
   className?: string;
   contentClassName?: string;
+  showCopyOnTranscript?: boolean; // when true, copy button appears under transcript (Insight page)
   onClick?: (e: React.MouseEvent) => void;
   onDoubleClick?: (e: React.MouseEvent) => void;
 }

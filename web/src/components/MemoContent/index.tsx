@@ -25,7 +25,7 @@ import { TaskListItem } from "./TaskListItem";
 import type { MemoContentProps } from "./types";
 
 const MemoContent = (props: MemoContentProps) => {
-  const { className, contentClassName, content, onClick, onDoubleClick } = props;
+  const { className, contentClassName, content, onClick, onDoubleClick, showCopyOnTranscript } = props;
   const t = useTranslate();
   const {
     containerRef: memoContentContainerRef,
@@ -34,6 +34,59 @@ const MemoContent = (props: MemoContentProps) => {
   } = useCompactMode(Boolean(props.compact));
 
   const compactLabel = useCompactLabel(showCompactMode, t as (key: string) => string);
+
+  // If enabled, after markdown renders move copy buttons under transcript text
+  React.useEffect(() => {
+    if (!showCopyOnTranscript) return;
+    const container = memoContentContainerRef?.current;
+    if (!container) return;
+
+    const placeholders = Array.from(container.querySelectorAll(".audio-copy-placeholder"));
+    placeholders.forEach((pl) => {
+      const parent = pl.closest(".memo-audio-wrapper") as HTMLElement | null;
+      if (!parent) {
+        pl.remove();
+        return;
+      }
+
+      // Prefer immediate next sibling as transcript
+      let transcriptEl = parent.nextElementSibling as HTMLElement | null;
+      if (!(transcriptEl && transcriptEl.innerText.trim())) {
+        // fallback: search within parent for transcript-classed elements
+        transcriptEl = (parent.querySelector(".transcript, .audio-transcript") as HTMLElement) || transcriptEl;
+      }
+      if (!(transcriptEl && transcriptEl.innerText.trim())) {
+        // walk forward to find next non-empty sibling
+        let sib = parent.nextElementSibling as HTMLElement | null;
+        while (sib && !sib.innerText.trim()) sib = sib.nextElementSibling as HTMLElement | null;
+        transcriptEl = sib;
+      }
+
+      if (transcriptEl && transcriptEl.innerText.trim()) {
+        // prevent duplicate
+        const next = transcriptEl.nextElementSibling as HTMLElement | null;
+        if (next && next.classList && next.classList.contains("audio-copy-button")) {
+          pl.remove();
+          return;
+        }
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "audio-copy-button inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-muted text-muted-foreground hover:bg-muted/80";
+        btn.textContent = "Copy";
+        btn.onclick = () => {
+          try {
+            navigator.clipboard.writeText(transcriptEl!.innerText.trim()).then(() => {
+              toast.success("Copied transcript");
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        transcriptEl.parentNode?.insertBefore(btn, transcriptEl.nextSibling);
+      }
+      pl.remove();
+    });
+  }, [content, showCopyOnTranscript, memoContentContainerRef]);
 
   return (
     <div className={`w-full flex flex-col justify-start items-start text-foreground ${className || ""}`}>
@@ -91,27 +144,34 @@ const MemoContent = (props: MemoContentProps) => {
             code: ({ children }) => <InlineCode>{children}</InlineCode>,
             img: ({ ...props }) => <Image {...props} />,
             audio: ({ node, ...props }: any) => {
-              // Render audio with a copy-transcript button.
-              // Copy logic: try to find a nearby transcript text (next sibling or parent text).
-              const handleCopy = (e: React.MouseEvent) => {
+              // If showCopyOnTranscript is true, render a placeholder after audio
+              // so we can insert the copy button under the transcript text later.
+              const uid = `audio-${Math.random().toString(36).slice(2, 9)}`;
+              if (showCopyOnTranscript) {
+                return (
+                  <div className="memo-audio-wrapper">
+                    <audio {...props} controls />
+                    <span className="audio-copy-placeholder" data-audio-id={uid} />
+                  </div>
+                );
+              }
+
+              // Default behavior: render inline copy button next to audio
+              const handleCopyInline = (e: React.MouseEvent) => {
                 e.stopPropagation();
                 try {
-                  // Find the button's nearest parent element that contains the audio
                   const btn = e.currentTarget as HTMLElement;
                   const parent = btn.closest(".memo-audio-wrapper") as HTMLElement | null;
                   let textToCopy = "";
                   if (parent) {
-                    // Prefer next element sibling (commonly transcript is placed after audio)
                     const next = parent.nextElementSibling as HTMLElement | null;
                     if (next && next.innerText.trim()) {
                       textToCopy = next.innerText.trim();
                     } else {
-                      // Fallback: search within parent for elements with 'transcript' class
                       const transcriptEl = parent.querySelector(".transcript, .audio-transcript") as HTMLElement | null;
                       if (transcriptEl && transcriptEl.innerText.trim()) {
                         textToCopy = transcriptEl.innerText.trim();
                       } else {
-                        // As last resort, use parent's innerText minus any button text
                         textToCopy = parent.innerText.replace(/\n|Copy Transcript/g, "").trim();
                       }
                     }
@@ -130,8 +190,8 @@ const MemoContent = (props: MemoContentProps) => {
                   <audio {...props} controls />
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-muted text-muted-foreground hover:bg-muted/80"
-                    onClick={handleCopy}
+                    className="audio-copy-inline inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-muted text-muted-foreground hover:bg-muted/80"
+                    onClick={handleCopyInline}
                     aria-label="Copy transcript"
                   >
                     Copy
