@@ -35,59 +35,6 @@ const MemoContent = (props: MemoContentProps) => {
 
   const compactLabel = useCompactLabel(showCompactMode, t as (key: string) => string);
 
-  // If enabled, after markdown renders move copy buttons under transcript text
-  React.useEffect(() => {
-    if (!showCopyOnTranscript) return;
-    const container = memoContentContainerRef?.current;
-    if (!container) return;
-
-    const placeholders = Array.from(container.querySelectorAll(".audio-copy-placeholder"));
-    placeholders.forEach((pl) => {
-      const parent = pl.closest(".memo-audio-wrapper") as HTMLElement | null;
-      if (!parent) {
-        pl.remove();
-        return;
-      }
-
-      // Prefer immediate next sibling as transcript
-      let transcriptEl = parent.nextElementSibling as HTMLElement | null;
-      if (!(transcriptEl && transcriptEl.innerText.trim())) {
-        // fallback: search within parent for transcript-classed elements
-        transcriptEl = (parent.querySelector(".transcript, .audio-transcript") as HTMLElement) || transcriptEl;
-      }
-      if (!(transcriptEl && transcriptEl.innerText.trim())) {
-        // walk forward to find next non-empty sibling
-        let sib = parent.nextElementSibling as HTMLElement | null;
-        while (sib && !sib.innerText.trim()) sib = sib.nextElementSibling as HTMLElement | null;
-        transcriptEl = sib;
-      }
-
-      if (transcriptEl && transcriptEl.innerText.trim()) {
-        // prevent duplicate
-        const next = transcriptEl.nextElementSibling as HTMLElement | null;
-        if (next && next.classList && next.classList.contains("audio-copy-button")) {
-          pl.remove();
-          return;
-        }
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "audio-copy-button inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-muted text-muted-foreground hover:bg-muted/80";
-        btn.textContent = "Copy";
-        btn.onclick = () => {
-          try {
-            navigator.clipboard.writeText(transcriptEl!.innerText.trim()).then(() => {
-              toast.success("Copied transcript");
-            });
-          } catch (err) {
-            console.error(err);
-          }
-        };
-        transcriptEl.parentNode?.insertBefore(btn, transcriptEl.nextSibling);
-      }
-      pl.remove();
-    });
-  }, [content, showCopyOnTranscript, memoContentContainerRef]);
-
   return (
     <div className={`w-full flex flex-col justify-start items-start text-foreground ${className || ""}`}>
       <div
