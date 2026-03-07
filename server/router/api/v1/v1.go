@@ -51,6 +51,28 @@ func NewAPIV1Service(secret string, profile *profile.Profile, store *store.Store
 
 // RegisterGateway registers the gRPC-Gateway and Connect handlers with the given Echo instance.
 func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Echo) error {
+	// Rate limit middleware for gRPC-Gateway
+	rateLimiter := NewRateLimiter(DefaultRateLimitConfig)
+	gatewayRateLimitMiddleware := func(next runtime.HandlerFunc) runtime.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			// Check rate limit for CreateMemo requests (POST /api/v1/memos)
+			if r.Method == "POST" && r.URL.Path == "/api/v1/memos" {
+				// Get user ID from context
+				userID, _ := r.Context().Value(auth.UserIDContextKey).(int32)
+
+				// Get client IP
+				ip := getClientIPFromRequest(r)
+
+				if !rateLimiter.Allow(userID, ip) {
+					http.Error(w, `{"code": 8, "message": "rate limit exceeded: too many memo creation requests"}`, http.StatusTooManyRequests)
+					return
+				}
+			}
+
+			next(w, r, pathParams)
+		}
+	}
+
 	// Auth middleware for gRPC-Gateway - runs after routing, has access to method name.
 	// Uses the same PublicMethods config as the Connect AuthInterceptor.
 	authenticator := auth.NewAuthenticator(s.Store, s.Secret)
@@ -66,13 +88,6 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 
 			result := authenticator.Authenticate(ctx, authHeader)
 
-			// Enforce authentication for non-public methods
-			// If rpcMethod cannot be determined, allow through, service layer will handle visibility checks
-			if result == nil && ok && !IsPublicMethod(rpcMethod) {
-				http.Error(w, `{"code": 16, "message": "authentication required"}`, http.StatusUnauthorized)
-				return
-			}
-
 			// Set context based on auth result (may be nil for public endpoints)
 			if result != nil {
 				if result.Claims != nil {
@@ -86,13 +101,22 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 				r = r.WithContext(ctx)
 			}
 
+			// Enforce authentication for non-public methods
+			// If rpcMethod cannot be determined, allow through, service layer will handle visibility checks
+			if result == nil && ok && !IsPublicMethod(rpcMethod) {
+				http.Error(w, `{"code": 16, "message": "authentication required"}`, http.StatusUnauthorized)
+				return
+			}
+
 			next(w, r, pathParams)
 		}
 	}
 
-	// Create gRPC-Gateway mux with auth middleware.
+
+
+	// Create gRPC-Gateway mux with middlewares.
 	gwMux := runtime.NewServeMux(
-		runtime.WithMiddlewares(gatewayAuthMiddleware),
+		runtime.WithMiddlewares(gatewayRateLimitMiddleware, gatewayAuthMiddleware),
 	)
 	if err := v1pb.RegisterInstanceServiceHandlerServer(ctx, gwMux, s); err != nil {
 		return err
@@ -131,6 +155,7 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 		NewMetadataInterceptor(), // Convert HTTP headers to gRPC metadata first
 		NewLoggingInterceptor(logStacktraces),
 		NewRecoveryInterceptor(logStacktraces),
+		NewRateLimitInterceptor(DefaultRateLimitConfig),
 		NewAuthInterceptor(s.Store, s.Secret),
 	)
 	connectMux := http.NewServeMux()
@@ -150,4 +175,18 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 	connectGroup.Any("/memos.api.v1.*", echo.WrapHandler(connectMux))
 
 	return nil
+}
+
+// getClientIPFromRequest extracts the client IP from HTTP request
+func getClientIPFromRequest(r *http.Request) string {
+	// Try X-Forwarded-For first
+	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+		return xff
+	}
+	// Try X-Real-IP
+	if xri := r.Header.Get("X-Real-Ip"); xri != "" {
+		return xri
+	}
+	// Fallback to remote address
+	return r.RemoteAddr
 }

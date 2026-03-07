@@ -21,8 +21,12 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
+
+// globalRateLimiter is the global rate limiter instance
+var globalRateLimiter = NewRateLimiter(DefaultRateLimitConfig)
 
 // TextRefine refines input text with a prompt using OpenAI.
 func (s *APIV1Service) TextRefine(ctx context.Context, request *v1pb.TextRefineRequest) (*v1pb.TextRefineResponse, error) {
@@ -108,10 +112,36 @@ func (s *APIV1Service) TextRefine(ctx context.Context, request *v1pb.TextRefineR
 	}
 
 func (s *APIV1Service) CreateMemo(ctx context.Context, request *v1pb.CreateMemoRequest) (*v1pb.Memo, error) {
+	// Rate limit check
 	user, err := s.fetchCurrentUser(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get user")
 	}
+	
+	// Get client IP from context
+	var ip string
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		if xff := md.Get("x-forwarded-for"); len(xff) > 0 {
+			ip = xff[0]
+		} else if xri := md.Get("x-real-ip"); len(xri) > 0 {
+			ip = xri[0]
+		} else {
+			ip = "unknown"
+		}
+	} else {
+		ip = "unknown"
+	}
+	
+	// Check rate limit
+	userID := int32(0)
+	if user != nil {
+		userID = user.ID
+	}
+	if !globalRateLimiter.Allow(userID, ip) {
+		return nil, status.Errorf(codes.ResourceExhausted, "rate limit exceeded: too many memo creation requests")
+	}
+	
 	if user == nil {
 		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
 	}
