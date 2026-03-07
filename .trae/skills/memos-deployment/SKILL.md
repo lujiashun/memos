@@ -7,6 +7,8 @@ description: "Provides steps for installing, deploying, and restarting Memos. In
 
 This skill provides comprehensive steps for installing, deploying, and restarting Memos, a self-hosted knowledge management platform.
 
+**Important Note:** All commands use port 8081 for Memos service. Do not change the port unless absolutely necessary.
+
 ## Prerequisites
 
 - Go 1.25 or later
