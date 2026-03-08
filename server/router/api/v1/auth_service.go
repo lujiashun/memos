@@ -637,16 +637,20 @@ func (s *APIV1Service) VerifyPhone(ctx context.Context, request *v1pb.VerifyPhon
 		}, nil
 	}
 	
-	// 如果短信验证码验证失败，尝试号码认证
-	verificationID, err := s.VerificationService.VerifyPhone(ctx, request.PhoneNumber, request.AuthToken, request.Purpose.String())
+	// 如果短信验证码检查返回错误（可能是服务不支持），尝试号码认证
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to verify phone: %v", err)
+		verificationID, verifyErr := s.VerificationService.VerifyPhone(ctx, request.PhoneNumber, request.AuthToken, request.Purpose.String())
+		if verifyErr != nil {
+			return nil, status.Errorf(codes.Internal, "failed to verify phone: %v", verifyErr)
+		}
+		return &v1pb.VerifyPhoneResponse{
+			Valid:           true,
+			VerificationId:  verificationID,
+		}, nil
 	}
 	
-	return &v1pb.VerifyPhoneResponse{
-		Valid:           true,
-		VerificationId:  verificationID,
-	}, nil
+	// 短信验证码无效
+	return nil, status.Errorf(codes.InvalidArgument, "invalid verification code")
 }
 
 // ResetPassword 重置密码
