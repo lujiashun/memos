@@ -163,7 +163,11 @@ func (s *APIV1Service) CreateUser(ctx context.Context, request *v1pb.CreateUserR
 	}
 
 	// 验证手机认证
-	if request.User.PhoneNumber != "" && request.Verification != nil {
+	if request.User.PhoneNumber != "" {
+		if request.Verification == nil {
+			return nil, status.Errorf(codes.InvalidArgument, "phone verification is required when phone number is provided")
+		}
+		
 		var valid bool
 		var err error
 		

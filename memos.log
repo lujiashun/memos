@@ -1,4 +1,5 @@
-2026/02/26 21:45:26 INFO background runners started goroutines=9
+2026/03/08 09:12:00 INFO Using SMS verification service
+2026/03/08 09:12:00 INFO background runners started goroutines=13
 Memos 0.26.0 started successfully!
 Data directory: /Users/lujs/memos
 Database driver: sqlite
@@ -9,41 +10,9 @@ Documentation: https://usememos.com
 Source code: https://github.com/usememos/memos
 
 Happy note-taking!
-2026/02/26 21:56:13 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
-2026/02/26 21:56:13 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
-2026/02/26 21:56:13 INFO OK method=/memos.api.v1.MemoService/ListMemos
-2026/02/26 21:56:13 INFO OK method=/memos.api.v1.MemoService/ListMemos
-2026/02/26 21:56:16 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
-2026/02/26 21:56:19 INFO OK method=/memos.api.v1.IdentityProviderService/ListIdentityProviders
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.AuthService/SignIn
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.AuthService/GetCurrentUser
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.UserService/ListUserSettings
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.UserService/GetUserStats
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.UserService/ListUserSettings
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.MemoService/ListMemos
-2026/02/26 21:56:26 INFO OK method=/memos.api.v1.UserService/GetUserStats
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.AuthService/GetCurrentUser
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.UserService/ListUserSettings
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.UserService/GetUserStats
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.MemoService/ListMemos
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.MemoService/ListMemos
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.ShortcutService/ListShortcuts
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.UserService/ListUserSettings
-2026/02/26 21:56:28 INFO OK method=/memos.api.v1.UserService/GetUserStats
-2026/02/26 21:56:36 INFO OK method=/memos.api.v1.UserService/GetUser
-2026/02/26 21:56:36 INFO OK method=/memos.api.v1.UserService/GetUser
-2026/02/26 21:56:44 INFO OK method=/memos.api.v1.UserService/ListPersonalAccessTokens
-2026/02/26 21:56:51 INFO OK method=/memos.api.v1.UserService/ListUsers
-2026/02/26 21:56:55 INFO OK method=/memos.api.v1.IdentityProviderService/ListIdentityProviders
-2026/02/26 21:57:01 INFO OK method=/memos.api.v1.IdentityProviderService/ListIdentityProviders
-2026/02/26 21:57:02 INFO OK method=/memos.api.v1.UserService/ListPersonalAccessTokens
-2026/02/26 21:57:19 INFO OK method=/memos.api.v1.UserService/CreatePersonalAccessToken
-2026/02/26 21:57:19 INFO OK method=/memos.api.v1.UserService/ListPersonalAccessTokens
-2026/02/26 21:57:30 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
-2026/02/26 22:07:23 INFO OK method=/memos.api.v1.AuthService/GetCurrentUser
-2026/02/26 22:07:23 INFO OK method=/memos.api.v1.UserService/ListUserNotifications
+2026/03/08 09:14:46 ERROR server error method=/memos.api.v1.AuthService/SendVerificationCode error="internal: rpc error: code = Internal desc = failed to send verification code: failed to send SMS: SDKError:\n   StatusCode: 404\n   Code: InvalidAction.NotFound\n   Message: code: 404, Specified api is not found, please check your url and method. request id: F368B98B-A582-5F54-A761-DB983E6B1E99\n   Data: {\"Code\":\"InvalidAction.NotFound\",\"HostId\":\"dysmsapi.aliyuncs.com\",\"Message\":\"Specified api is not found, please check your url and method.\",\"Recommend\":\"https://api.aliyun.com/troubleshoot?q=InvalidAction.NotFound&product=Dysmsapi&requestId=F368B98B-A582-5F54-A761-DB983E6B1E99\",\"RequestId\":\"F368B98B-A582-5F54-A761-DB983E6B1E99\"}\n"
+2026/03/08 09:15:04 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/03/08 09:15:05 INFO client error method=/memos.api.v1.AuthService/GetCurrentUser error="unauthenticated: authentication required"
+2026/03/08 09:16:36 INFO server shutting down
+2026/03/08 09:16:36 INFO s3presign runner stopped
+2026/03/08 09:16:36 INFO memos stopped properly

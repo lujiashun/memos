@@ -3,6 +3,7 @@ package verification
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
@@ -110,23 +111,30 @@ func (s *SMSService) VerifySMSCode(ctx context.Context, phoneNumber, code, purpo
 }
 
 func (s *SMSService) CheckSMSCode(ctx context.Context, phoneNumber, code, purpose string) (bool, error) {
+	slog.Info("CheckSMSCode called", "phone_number", phoneNumber, "code", code, "purpose", purpose)
+	
 	verification, err := s.store.GetVerification(ctx, phoneNumber, code, purpose)
 	if err != nil {
+		slog.Error("CheckSMSCode GetVerification error", "error", err)
 		return false, err
 	}
 
 	if verification == nil {
+		slog.Warn("CheckSMSCode verification not found", "phone_number", phoneNumber, "code", code, "purpose", purpose)
 		return false, nil
 	}
 
 	if verification.IsUsed {
+		slog.Warn("CheckSMSCode verification already used", "phone_number", phoneNumber)
 		return false, nil
 	}
 
 	if time.Now().Unix() > verification.ExpiresTs {
+		slog.Warn("CheckSMSCode verification expired", "phone_number", phoneNumber, "expires_ts", verification.ExpiresTs, "now", time.Now().Unix())
 		return false, nil
 	}
 
+	slog.Info("CheckSMSCode verification valid", "phone_number", phoneNumber)
 	return true, nil
 }
 
