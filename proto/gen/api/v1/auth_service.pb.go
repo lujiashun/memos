@@ -24,6 +24,56 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// VerificationPurpose 验证用途枚举
+type VerificationPurpose int32
+
+const (
+	VerificationPurpose_PURPOSE_UNSPECIFIED VerificationPurpose = 0
+	VerificationPurpose_REGISTER            VerificationPurpose = 1
+	VerificationPurpose_FORGOT_PASSWORD     VerificationPurpose = 2
+)
+
+// Enum value maps for VerificationPurpose.
+var (
+	VerificationPurpose_name = map[int32]string{
+		0: "PURPOSE_UNSPECIFIED",
+		1: "REGISTER",
+		2: "FORGOT_PASSWORD",
+	}
+	VerificationPurpose_value = map[string]int32{
+		"PURPOSE_UNSPECIFIED": 0,
+		"REGISTER":            1,
+		"FORGOT_PASSWORD":     2,
+	}
+)
+
+func (x VerificationPurpose) Enum() *VerificationPurpose {
+	p := new(VerificationPurpose)
+	*p = x
+	return p
+}
+
+func (x VerificationPurpose) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VerificationPurpose) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_v1_auth_service_proto_enumTypes[0].Descriptor()
+}
+
+func (VerificationPurpose) Type() protoreflect.EnumType {
+	return &file_api_v1_auth_service_proto_enumTypes[0]
+}
+
+func (x VerificationPurpose) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VerificationPurpose.Descriptor instead.
+func (VerificationPurpose) EnumDescriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{0}
+}
+
 type GetCurrentUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -382,6 +432,370 @@ func (x *RefreshTokenResponse) GetExpiresAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// SendVerificationCodeRequest 发送验证码请求
+type SendVerificationCodeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PhoneNumber   string                 `protobuf:"bytes,1,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	Purpose       VerificationPurpose    `protobuf:"varint,2,opt,name=purpose,proto3,enum=memos.api.v1.VerificationPurpose" json:"purpose,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendVerificationCodeRequest) Reset() {
+	*x = SendVerificationCodeRequest{}
+	mi := &file_api_v1_auth_service_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendVerificationCodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendVerificationCodeRequest) ProtoMessage() {}
+
+func (x *SendVerificationCodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_auth_service_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendVerificationCodeRequest.ProtoReflect.Descriptor instead.
+func (*SendVerificationCodeRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *SendVerificationCodeRequest) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *SendVerificationCodeRequest) GetPurpose() VerificationPurpose {
+	if x != nil {
+		return x.Purpose
+	}
+	return VerificationPurpose_PURPOSE_UNSPECIFIED
+}
+
+// SendVerificationCodeResponse 发送验证码响应
+type SendVerificationCodeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	SentAt        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendVerificationCodeResponse) Reset() {
+	*x = SendVerificationCodeResponse{}
+	mi := &file_api_v1_auth_service_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendVerificationCodeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendVerificationCodeResponse) ProtoMessage() {}
+
+func (x *SendVerificationCodeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_auth_service_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendVerificationCodeResponse.ProtoReflect.Descriptor instead.
+func (*SendVerificationCodeResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *SendVerificationCodeResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *SendVerificationCodeResponse) GetSentAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.SentAt
+	}
+	return nil
+}
+
+// VerifyPhoneRequest 验证手机号请求
+type VerifyPhoneRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PhoneNumber   string                 `protobuf:"bytes,1,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	Purpose       VerificationPurpose    `protobuf:"varint,2,opt,name=purpose,proto3,enum=memos.api.v1.VerificationPurpose" json:"purpose,omitempty"`
+	AuthToken     string                 `protobuf:"bytes,3,opt,name=auth_token,json=authToken,proto3" json:"auth_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyPhoneRequest) Reset() {
+	*x = VerifyPhoneRequest{}
+	mi := &file_api_v1_auth_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyPhoneRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyPhoneRequest) ProtoMessage() {}
+
+func (x *VerifyPhoneRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_auth_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyPhoneRequest.ProtoReflect.Descriptor instead.
+func (*VerifyPhoneRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *VerifyPhoneRequest) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *VerifyPhoneRequest) GetPurpose() VerificationPurpose {
+	if x != nil {
+		return x.Purpose
+	}
+	return VerificationPurpose_PURPOSE_UNSPECIFIED
+}
+
+func (x *VerifyPhoneRequest) GetAuthToken() string {
+	if x != nil {
+		return x.AuthToken
+	}
+	return ""
+}
+
+// VerifyPhoneResponse 验证手机号响应
+type VerifyPhoneResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Valid          bool                   `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	VerificationId string                 `protobuf:"bytes,2,opt,name=verification_id,json=verificationId,proto3" json:"verification_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *VerifyPhoneResponse) Reset() {
+	*x = VerifyPhoneResponse{}
+	mi := &file_api_v1_auth_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyPhoneResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyPhoneResponse) ProtoMessage() {}
+
+func (x *VerifyPhoneResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_auth_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyPhoneResponse.ProtoReflect.Descriptor instead.
+func (*VerifyPhoneResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *VerifyPhoneResponse) GetValid() bool {
+	if x != nil {
+		return x.Valid
+	}
+	return false
+}
+
+func (x *VerifyPhoneResponse) GetVerificationId() string {
+	if x != nil {
+		return x.VerificationId
+	}
+	return ""
+}
+
+// ResetPasswordRequest 重置密码请求
+type ResetPasswordRequest struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	PhoneNumber string                 `protobuf:"bytes,1,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	// Types that are valid to be assigned to Verification:
+	//
+	//	*ResetPasswordRequest_SmsCode
+	//	*ResetPasswordRequest_VerificationId
+	Verification  isResetPasswordRequest_Verification `protobuf_oneof:"verification"`
+	NewPassword   string                              `protobuf:"bytes,4,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResetPasswordRequest) Reset() {
+	*x = ResetPasswordRequest{}
+	mi := &file_api_v1_auth_service_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResetPasswordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetPasswordRequest) ProtoMessage() {}
+
+func (x *ResetPasswordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_auth_service_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetPasswordRequest.ProtoReflect.Descriptor instead.
+func (*ResetPasswordRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ResetPasswordRequest) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *ResetPasswordRequest) GetVerification() isResetPasswordRequest_Verification {
+	if x != nil {
+		return x.Verification
+	}
+	return nil
+}
+
+func (x *ResetPasswordRequest) GetSmsCode() string {
+	if x != nil {
+		if x, ok := x.Verification.(*ResetPasswordRequest_SmsCode); ok {
+			return x.SmsCode
+		}
+	}
+	return ""
+}
+
+func (x *ResetPasswordRequest) GetVerificationId() string {
+	if x != nil {
+		if x, ok := x.Verification.(*ResetPasswordRequest_VerificationId); ok {
+			return x.VerificationId
+		}
+	}
+	return ""
+}
+
+func (x *ResetPasswordRequest) GetNewPassword() string {
+	if x != nil {
+		return x.NewPassword
+	}
+	return ""
+}
+
+type isResetPasswordRequest_Verification interface {
+	isResetPasswordRequest_Verification()
+}
+
+type ResetPasswordRequest_SmsCode struct {
+	SmsCode string `protobuf:"bytes,2,opt,name=sms_code,json=smsCode,proto3,oneof"`
+}
+
+type ResetPasswordRequest_VerificationId struct {
+	VerificationId string `protobuf:"bytes,3,opt,name=verification_id,json=verificationId,proto3,oneof"`
+}
+
+func (*ResetPasswordRequest_SmsCode) isResetPasswordRequest_Verification() {}
+
+func (*ResetPasswordRequest_VerificationId) isResetPasswordRequest_Verification() {}
+
+// ResetPasswordResponse 重置密码响应
+type ResetPasswordResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResetPasswordResponse) Reset() {
+	*x = ResetPasswordResponse{}
+	mi := &file_api_v1_auth_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResetPasswordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetPasswordResponse) ProtoMessage() {}
+
+func (x *ResetPasswordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_auth_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetPasswordResponse.ProtoReflect.Descriptor instead.
+func (*ResetPasswordResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_auth_service_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ResetPasswordResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 // Nested message for password-based authentication credentials.
 type SignInRequest_PasswordCredentials struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -395,7 +809,7 @@ type SignInRequest_PasswordCredentials struct {
 
 func (x *SignInRequest_PasswordCredentials) Reset() {
 	*x = SignInRequest_PasswordCredentials{}
-	mi := &file_api_v1_auth_service_proto_msgTypes[7]
+	mi := &file_api_v1_auth_service_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -407,7 +821,7 @@ func (x *SignInRequest_PasswordCredentials) String() string {
 func (*SignInRequest_PasswordCredentials) ProtoMessage() {}
 
 func (x *SignInRequest_PasswordCredentials) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_auth_service_proto_msgTypes[7]
+	mi := &file_api_v1_auth_service_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -455,7 +869,7 @@ type SignInRequest_SSOCredentials struct {
 
 func (x *SignInRequest_SSOCredentials) Reset() {
 	*x = SignInRequest_SSOCredentials{}
-	mi := &file_api_v1_auth_service_proto_msgTypes[8]
+	mi := &file_api_v1_auth_service_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +881,7 @@ func (x *SignInRequest_SSOCredentials) String() string {
 func (*SignInRequest_SSOCredentials) ProtoMessage() {}
 
 func (x *SignInRequest_SSOCredentials) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_auth_service_proto_msgTypes[8]
+	mi := &file_api_v1_auth_service_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,12 +954,41 @@ const file_api_v1_auth_service_proto_rawDesc = "" +
 	"\x14RefreshTokenResponse\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt2\xbf\x03\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x87\x01\n" +
+	"\x1bSendVerificationCodeRequest\x12&\n" +
+	"\fphone_number\x18\x01 \x01(\tB\x03\xe0A\x02R\vphoneNumber\x12@\n" +
+	"\apurpose\x18\x02 \x01(\x0e2!.memos.api.v1.VerificationPurposeB\x03\xe0A\x02R\apurpose\"m\n" +
+	"\x1cSendVerificationCodeResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x123\n" +
+	"\asent_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x06sentAt\"\xa2\x01\n" +
+	"\x12VerifyPhoneRequest\x12&\n" +
+	"\fphone_number\x18\x01 \x01(\tB\x03\xe0A\x02R\vphoneNumber\x12@\n" +
+	"\apurpose\x18\x02 \x01(\x0e2!.memos.api.v1.VerificationPurposeB\x03\xe0A\x02R\apurpose\x12\"\n" +
+	"\n" +
+	"auth_token\x18\x03 \x01(\tB\x03\xe0A\x02R\tauthToken\"T\n" +
+	"\x13VerifyPhoneResponse\x12\x14\n" +
+	"\x05valid\x18\x01 \x01(\bR\x05valid\x12'\n" +
+	"\x0fverification_id\x18\x02 \x01(\tR\x0everificationId\"\xbe\x01\n" +
+	"\x14ResetPasswordRequest\x12&\n" +
+	"\fphone_number\x18\x01 \x01(\tB\x03\xe0A\x02R\vphoneNumber\x12\x1b\n" +
+	"\bsms_code\x18\x02 \x01(\tH\x00R\asmsCode\x12)\n" +
+	"\x0fverification_id\x18\x03 \x01(\tH\x00R\x0everificationId\x12&\n" +
+	"\fnew_password\x18\x04 \x01(\tB\x03\xe0A\x02R\vnewPasswordB\x0e\n" +
+	"\fverification\"1\n" +
+	"\x15ResetPasswordResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess*Q\n" +
+	"\x13VerificationPurpose\x12\x17\n" +
+	"\x13PURPOSE_UNSPECIFIED\x10\x00\x12\f\n" +
+	"\bREGISTER\x10\x01\x12\x13\n" +
+	"\x0fFORGOT_PASSWORD\x10\x022\xd7\x06\n" +
 	"\vAuthService\x12t\n" +
 	"\x0eGetCurrentUser\x12#.memos.api.v1.GetCurrentUserRequest\x1a$.memos.api.v1.GetCurrentUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/auth/me\x12c\n" +
 	"\x06SignIn\x12\x1b.memos.api.v1.SignInRequest\x1a\x1c.memos.api.v1.SignInResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/auth/signin\x12]\n" +
 	"\aSignOut\x12\x1c.memos.api.v1.SignOutRequest\x1a\x16.google.protobuf.Empty\"\x1c\x82\xd3\xe4\x93\x02\x16\"\x14/api/v1/auth/signout\x12v\n" +
-	"\fRefreshToken\x12!.memos.api.v1.RefreshTokenRequest\x1a\".memos.api.v1.RefreshTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/auth/refreshB\xa8\x01\n" +
+	"\fRefreshToken\x12!.memos.api.v1.RefreshTokenRequest\x1a\".memos.api.v1.RefreshTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/auth/refresh\x12\x98\x01\n" +
+	"\x14SendVerificationCode\x12).memos.api.v1.SendVerificationCodeRequest\x1a*.memos.api.v1.SendVerificationCodeResponse\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/auth/verification-code\x12x\n" +
+	"\vVerifyPhone\x12 .memos.api.v1.VerifyPhoneRequest\x1a!.memos.api.v1.VerifyPhoneResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/auth/verify-phone\x12\x80\x01\n" +
+	"\rResetPassword\x12\".memos.api.v1.ResetPasswordRequest\x1a#.memos.api.v1.ResetPasswordResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/reset-passwordB\xa8\x01\n" +
 	"\x10com.memos.api.v1B\x10AuthServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
@@ -560,41 +1003,58 @@ func file_api_v1_auth_service_proto_rawDescGZIP() []byte {
 	return file_api_v1_auth_service_proto_rawDescData
 }
 
-var file_api_v1_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_api_v1_auth_service_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_v1_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_api_v1_auth_service_proto_goTypes = []any{
-	(*GetCurrentUserRequest)(nil),             // 0: memos.api.v1.GetCurrentUserRequest
-	(*GetCurrentUserResponse)(nil),            // 1: memos.api.v1.GetCurrentUserResponse
-	(*SignInRequest)(nil),                     // 2: memos.api.v1.SignInRequest
-	(*SignInResponse)(nil),                    // 3: memos.api.v1.SignInResponse
-	(*SignOutRequest)(nil),                    // 4: memos.api.v1.SignOutRequest
-	(*RefreshTokenRequest)(nil),               // 5: memos.api.v1.RefreshTokenRequest
-	(*RefreshTokenResponse)(nil),              // 6: memos.api.v1.RefreshTokenResponse
-	(*SignInRequest_PasswordCredentials)(nil), // 7: memos.api.v1.SignInRequest.PasswordCredentials
-	(*SignInRequest_SSOCredentials)(nil),      // 8: memos.api.v1.SignInRequest.SSOCredentials
-	(*User)(nil),                              // 9: memos.api.v1.User
-	(*timestamppb.Timestamp)(nil),             // 10: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                     // 11: google.protobuf.Empty
+	(VerificationPurpose)(0),                  // 0: memos.api.v1.VerificationPurpose
+	(*GetCurrentUserRequest)(nil),             // 1: memos.api.v1.GetCurrentUserRequest
+	(*GetCurrentUserResponse)(nil),            // 2: memos.api.v1.GetCurrentUserResponse
+	(*SignInRequest)(nil),                     // 3: memos.api.v1.SignInRequest
+	(*SignInResponse)(nil),                    // 4: memos.api.v1.SignInResponse
+	(*SignOutRequest)(nil),                    // 5: memos.api.v1.SignOutRequest
+	(*RefreshTokenRequest)(nil),               // 6: memos.api.v1.RefreshTokenRequest
+	(*RefreshTokenResponse)(nil),              // 7: memos.api.v1.RefreshTokenResponse
+	(*SendVerificationCodeRequest)(nil),       // 8: memos.api.v1.SendVerificationCodeRequest
+	(*SendVerificationCodeResponse)(nil),      // 9: memos.api.v1.SendVerificationCodeResponse
+	(*VerifyPhoneRequest)(nil),                // 10: memos.api.v1.VerifyPhoneRequest
+	(*VerifyPhoneResponse)(nil),               // 11: memos.api.v1.VerifyPhoneResponse
+	(*ResetPasswordRequest)(nil),              // 12: memos.api.v1.ResetPasswordRequest
+	(*ResetPasswordResponse)(nil),             // 13: memos.api.v1.ResetPasswordResponse
+	(*SignInRequest_PasswordCredentials)(nil), // 14: memos.api.v1.SignInRequest.PasswordCredentials
+	(*SignInRequest_SSOCredentials)(nil),      // 15: memos.api.v1.SignInRequest.SSOCredentials
+	(*User)(nil),                              // 16: memos.api.v1.User
+	(*timestamppb.Timestamp)(nil),             // 17: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                     // 18: google.protobuf.Empty
 }
 var file_api_v1_auth_service_proto_depIdxs = []int32{
-	9,  // 0: memos.api.v1.GetCurrentUserResponse.user:type_name -> memos.api.v1.User
-	7,  // 1: memos.api.v1.SignInRequest.password_credentials:type_name -> memos.api.v1.SignInRequest.PasswordCredentials
-	8,  // 2: memos.api.v1.SignInRequest.sso_credentials:type_name -> memos.api.v1.SignInRequest.SSOCredentials
-	9,  // 3: memos.api.v1.SignInResponse.user:type_name -> memos.api.v1.User
-	10, // 4: memos.api.v1.SignInResponse.access_token_expires_at:type_name -> google.protobuf.Timestamp
-	10, // 5: memos.api.v1.RefreshTokenResponse.expires_at:type_name -> google.protobuf.Timestamp
-	0,  // 6: memos.api.v1.AuthService.GetCurrentUser:input_type -> memos.api.v1.GetCurrentUserRequest
-	2,  // 7: memos.api.v1.AuthService.SignIn:input_type -> memos.api.v1.SignInRequest
-	4,  // 8: memos.api.v1.AuthService.SignOut:input_type -> memos.api.v1.SignOutRequest
-	5,  // 9: memos.api.v1.AuthService.RefreshToken:input_type -> memos.api.v1.RefreshTokenRequest
-	1,  // 10: memos.api.v1.AuthService.GetCurrentUser:output_type -> memos.api.v1.GetCurrentUserResponse
-	3,  // 11: memos.api.v1.AuthService.SignIn:output_type -> memos.api.v1.SignInResponse
-	11, // 12: memos.api.v1.AuthService.SignOut:output_type -> google.protobuf.Empty
-	6,  // 13: memos.api.v1.AuthService.RefreshToken:output_type -> memos.api.v1.RefreshTokenResponse
-	10, // [10:14] is the sub-list for method output_type
-	6,  // [6:10] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	16, // 0: memos.api.v1.GetCurrentUserResponse.user:type_name -> memos.api.v1.User
+	14, // 1: memos.api.v1.SignInRequest.password_credentials:type_name -> memos.api.v1.SignInRequest.PasswordCredentials
+	15, // 2: memos.api.v1.SignInRequest.sso_credentials:type_name -> memos.api.v1.SignInRequest.SSOCredentials
+	16, // 3: memos.api.v1.SignInResponse.user:type_name -> memos.api.v1.User
+	17, // 4: memos.api.v1.SignInResponse.access_token_expires_at:type_name -> google.protobuf.Timestamp
+	17, // 5: memos.api.v1.RefreshTokenResponse.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 6: memos.api.v1.SendVerificationCodeRequest.purpose:type_name -> memos.api.v1.VerificationPurpose
+	17, // 7: memos.api.v1.SendVerificationCodeResponse.sent_at:type_name -> google.protobuf.Timestamp
+	0,  // 8: memos.api.v1.VerifyPhoneRequest.purpose:type_name -> memos.api.v1.VerificationPurpose
+	1,  // 9: memos.api.v1.AuthService.GetCurrentUser:input_type -> memos.api.v1.GetCurrentUserRequest
+	3,  // 10: memos.api.v1.AuthService.SignIn:input_type -> memos.api.v1.SignInRequest
+	5,  // 11: memos.api.v1.AuthService.SignOut:input_type -> memos.api.v1.SignOutRequest
+	6,  // 12: memos.api.v1.AuthService.RefreshToken:input_type -> memos.api.v1.RefreshTokenRequest
+	8,  // 13: memos.api.v1.AuthService.SendVerificationCode:input_type -> memos.api.v1.SendVerificationCodeRequest
+	10, // 14: memos.api.v1.AuthService.VerifyPhone:input_type -> memos.api.v1.VerifyPhoneRequest
+	12, // 15: memos.api.v1.AuthService.ResetPassword:input_type -> memos.api.v1.ResetPasswordRequest
+	2,  // 16: memos.api.v1.AuthService.GetCurrentUser:output_type -> memos.api.v1.GetCurrentUserResponse
+	4,  // 17: memos.api.v1.AuthService.SignIn:output_type -> memos.api.v1.SignInResponse
+	18, // 18: memos.api.v1.AuthService.SignOut:output_type -> google.protobuf.Empty
+	7,  // 19: memos.api.v1.AuthService.RefreshToken:output_type -> memos.api.v1.RefreshTokenResponse
+	9,  // 20: memos.api.v1.AuthService.SendVerificationCode:output_type -> memos.api.v1.SendVerificationCodeResponse
+	11, // 21: memos.api.v1.AuthService.VerifyPhone:output_type -> memos.api.v1.VerifyPhoneResponse
+	13, // 22: memos.api.v1.AuthService.ResetPassword:output_type -> memos.api.v1.ResetPasswordResponse
+	16, // [16:23] is the sub-list for method output_type
+	9,  // [9:16] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_auth_service_proto_init() }
@@ -607,18 +1067,23 @@ func file_api_v1_auth_service_proto_init() {
 		(*SignInRequest_PasswordCredentials_)(nil),
 		(*SignInRequest_SsoCredentials)(nil),
 	}
+	file_api_v1_auth_service_proto_msgTypes[11].OneofWrappers = []any{
+		(*ResetPasswordRequest_SmsCode)(nil),
+		(*ResetPasswordRequest_VerificationId)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_auth_service_proto_rawDesc), len(file_api_v1_auth_service_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   9,
+			NumEnums:      1,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_v1_auth_service_proto_goTypes,
 		DependencyIndexes: file_api_v1_auth_service_proto_depIdxs,
+		EnumInfos:         file_api_v1_auth_service_proto_enumTypes,
 		MessageInfos:      file_api_v1_auth_service_proto_msgTypes,
 	}.Build()
 	File_api_v1_auth_service_proto = out.File

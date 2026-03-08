@@ -39,6 +39,8 @@ func (s *Store) UpsertInstanceSetting(ctx context.Context, upsert *storepb.Insta
 		valueBytes, err = protojson.Marshal(upsert.GetMemoRelatedSetting())
 	} else if upsert.Key == storepb.InstanceSettingKey_OPENAI {
 		valueBytes, err = protojson.Marshal(upsert.GetOpenaiSetting())
+	} else if upsert.Key == storepb.InstanceSettingKey_SMS {
+		valueBytes, err = protojson.Marshal(upsert.GetSmsSetting())
 	} else {
 		return nil, errors.Errorf("unsupported instance setting key: %v", upsert.Key)
 	}
@@ -223,6 +225,25 @@ func (s *Store) GetInstanceOpenAISetting(ctx context.Context) (*storepb.Instance
 	return instanceOpenAISetting, nil
 }
 
+func (s *Store) GetInstanceSmsSetting(ctx context.Context) (*storepb.InstanceSmsSetting, error) {
+	instanceSetting, err := s.GetInstanceSetting(ctx, &FindInstanceSetting{
+		Name: storepb.InstanceSettingKey_SMS.String(),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get instance sms setting")
+	}
+
+	instanceSmsSetting := &storepb.InstanceSmsSetting{}
+	if instanceSetting != nil {
+		instanceSmsSetting = instanceSetting.GetSmsSetting()
+	}
+	s.instanceSettingCache.Set(ctx, storepb.InstanceSettingKey_SMS.String(), &storepb.InstanceSetting{
+		Key:   storepb.InstanceSettingKey_SMS,
+		Value: &storepb.InstanceSetting_SmsSetting{SmsSetting: instanceSmsSetting},
+	})
+	return instanceSmsSetting, nil
+}
+
 func convertInstanceSettingFromRaw(instanceSettingRaw *InstanceSetting) (*storepb.InstanceSetting, error) {
 	instanceSetting := &storepb.InstanceSetting{
 		Key: storepb.InstanceSettingKey(storepb.InstanceSettingKey_value[instanceSettingRaw.Name]),
@@ -258,6 +279,12 @@ func convertInstanceSettingFromRaw(instanceSettingRaw *InstanceSetting) (*storep
 			return nil, err
 		}
 		instanceSetting.Value = &storepb.InstanceSetting_OpenaiSetting{OpenaiSetting: openaiSetting}
+	case storepb.InstanceSettingKey_SMS.String():
+		smsSetting := &storepb.InstanceSmsSetting{}
+		if err := protojsonUnmarshaler.Unmarshal([]byte(instanceSettingRaw.Value), smsSetting); err != nil {
+			return nil, err
+		}
+		instanceSetting.Value = &storepb.InstanceSetting_SmsSetting{SmsSetting: smsSetting}
 	default:
 		// Skip unsupported instance setting key.
 		return nil, nil

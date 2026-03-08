@@ -70,6 +70,7 @@ message InstanceSetting {
     StorageSetting storage_setting = 3;
     MemoRelatedSetting memo_related_setting = 4;
     OpenAISetting openai_setting = 5;
+    SmsSetting sms_setting = 6;
   }
 
   // Enumeration of instance setting keys.
@@ -83,6 +84,8 @@ message InstanceSetting {
     MEMO_RELATED = 3;
     // OPENAI is the key for OpenAI related settings.
     OPENAI = 4;
+    // SMS is the key for SMS related settings.
+    SMS = 5;
   }
 
   // General instance settings configuration.
@@ -168,6 +171,21 @@ message InstanceSetting {
     string api_key = 1;
     string base_url = 2;
     string model = 3;
+  }
+
+  // SMS related instance settings.
+  message SmsSetting {
+    // verification_method is the verification method to use.
+    // Possible values: phone, sms
+    string verification_method = 1;
+    // api_key is the API key for the SMS service.
+    string api_key = 2;
+    // api_secret is the API secret for the SMS service.
+    string api_secret = 3;
+    // template_id is the template ID for the SMS service.
+    string template_id = 4;
+    // endpoint is the API endpoint for the SMS service.
+    string endpoint = 5;
   }
 }
 

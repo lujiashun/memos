@@ -1,12 +1,14 @@
 package v1
 
 import (
+	"context"
 	"net/http"
 
 	"connectrpc.com/connect"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	v1pb "github.com/usememos/memos/proto/gen/api/v1"
 	"github.com/usememos/memos/proto/gen/api/v1/apiv1connect"
 )
 
@@ -77,4 +79,31 @@ func convertGRPCError(err error) error {
 // See: https://connectrpc.com/docs/protocol/#error-codes
 func grpcCodeToConnectCode(code codes.Code) connect.Code {
 	return connect.Code(code)
+}
+
+// SendVerificationCode implements apiv1connect.AuthServiceHandler
+func (s *ConnectServiceHandler) SendVerificationCode(ctx context.Context, req *connect.Request[v1pb.SendVerificationCodeRequest]) (*connect.Response[v1pb.SendVerificationCodeResponse], error) {
+	resp, err := s.APIV1Service.SendVerificationCode(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+// VerifyPhone implements apiv1connect.AuthServiceHandler
+func (s *ConnectServiceHandler) VerifyPhone(ctx context.Context, req *connect.Request[v1pb.VerifyPhoneRequest]) (*connect.Response[v1pb.VerifyPhoneResponse], error) {
+	resp, err := s.APIV1Service.VerifyPhone(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+// ResetPassword implements apiv1connect.AuthServiceHandler
+func (s *ConnectServiceHandler) ResetPassword(ctx context.Context, req *connect.Request[v1pb.ResetPasswordRequest]) (*connect.Response[v1pb.ResetPasswordResponse], error) {
+	resp, err := s.APIV1Service.ResetPassword(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
 }

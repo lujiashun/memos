@@ -21,6 +21,7 @@ import (
 	"github.com/usememos/memos/server/router/frontend"
 	"github.com/usememos/memos/server/router/rss"
 	"github.com/usememos/memos/server/runner/s3presign"
+	"github.com/usememos/memos/server/service/verification"
 	"github.com/usememos/memos/store"
 )
 
@@ -67,7 +68,23 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 
 	rootGroup := echoServer.Group("")
 
-	apiV1Service := apiv1.NewAPIV1Service(s.Secret, profile, store)
+	// Initialize verification service
+	var verificationService verification.Service
+	// Get SMS setting to determine which verification service to use
+	smsSetting, err := store.GetInstanceSmsSetting(ctx)
+	if err != nil {
+		slog.Warn("failed to get SMS setting, using phone authentication service", "error", err)
+		verificationService = verification.NewPhoneAuthService(store)
+		slog.Info("Using phone authentication service")
+	} else if smsSetting.VerificationMethod == "sms" {
+		verificationService = verification.NewSMSService(store)
+		slog.Info("Using SMS verification service")
+	} else {
+		verificationService = verification.NewPhoneAuthService(store)
+		slog.Info("Using phone authentication service")
+	}
+
+	apiV1Service := apiv1.NewAPIV1Service(s.Secret, profile, store, verificationService)
 
 	// Register HTTP file server routes BEFORE gRPC-Gateway to ensure proper range request handling for Safari.
 	// This uses native HTTP serving (http.ServeContent) instead of gRPC for video/audio files.

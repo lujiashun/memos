@@ -18,6 +18,7 @@ const Attachments = lazy(() => import("@/pages/Attachments"));
 const Setting = lazy(() => import("@/pages/Setting"));
 const SignIn = lazy(() => import("@/pages/SignIn"));
 const SignUp = lazy(() => import("@/pages/SignUp"));
+const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
 const UserProfile = lazy(() => import("@/pages/UserProfile"));
 
 import { ROUTES } from "./routes";
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
           { path: "", element: <SignIn /> },
           { path: "admin", element: <AdminSignIn /> },
           { path: "signup", element: <SignUp /> },
+          { path: "forgot-password", element: <ForgotPassword /> },
           { path: "callback", element: <AuthCallback /> },
         ],
       },

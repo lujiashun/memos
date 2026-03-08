@@ -2,8 +2,8 @@
 // @generated from file api/v1/auth_service.proto (package memos.api.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { User } from "./user_service_pb";
 import { file_api_v1_user_service } from "./user_service_pb";
 import { file_google_api_annotations } from "../../google/api/annotations_pb";
@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/v1/auth_service.proto.
  */
 export const file_api_v1_auth_service: GenFile = /*@__PURE__*/
-  fileDesc("ChlhcGkvdjEvYXV0aF9zZXJ2aWNlLnByb3RvEgxtZW1vcy5hcGkudjEiFwoVR2V0Q3VycmVudFVzZXJSZXF1ZXN0IjoKFkdldEN1cnJlbnRVc2VyUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLm1lbW9zLmFwaS52MS5Vc2VyIuwCCg1TaWduSW5SZXF1ZXN0Ek8KFHBhc3N3b3JkX2NyZWRlbnRpYWxzGAEgASgLMi8ubWVtb3MuYXBpLnYxLlNpZ25JblJlcXVlc3QuUGFzc3dvcmRDcmVkZW50aWFsc0gAEkUKD3Nzb19jcmVkZW50aWFscxgCIAEoCzIqLm1lbW9zLmFwaS52MS5TaWduSW5SZXF1ZXN0LlNTT0NyZWRlbnRpYWxzSAAaQwoTUGFzc3dvcmRDcmVkZW50aWFscxIVCgh1c2VybmFtZRgBIAEoCUID4EECEhUKCHBhc3N3b3JkGAIgASgJQgPgQQIabwoOU1NPQ3JlZGVudGlhbHMSEwoGaWRwX2lkGAEgASgFQgPgQQISEQoEY29kZRgCIAEoCUID4EECEhkKDHJlZGlyZWN0X3VyaRgDIAEoCUID4EECEhoKDWNvZGVfdmVyaWZpZXIYBCABKAlCA+BBAUINCgtjcmVkZW50aWFscyKFAQoOU2lnbkluUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLm1lbW9zLmFwaS52MS5Vc2VyEhQKDGFjY2Vzc190b2tlbhgCIAEoCRI7ChdhY2Nlc3NfdG9rZW5fZXhwaXJlc19hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiEAoOU2lnbk91dFJlcXVlc3QiFQoTUmVmcmVzaFRva2VuUmVxdWVzdCJcChRSZWZyZXNoVG9rZW5SZXNwb25zZRIUCgxhY2Nlc3NfdG9rZW4YASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAyvwMKC0F1dGhTZXJ2aWNlEnQKDkdldEN1cnJlbnRVc2VyEiMubWVtb3MuYXBpLnYxLkdldEN1cnJlbnRVc2VyUmVxdWVzdBokLm1lbW9zLmFwaS52MS5HZXRDdXJyZW50VXNlclJlc3BvbnNlIheC0+STAhESDy9hcGkvdjEvYXV0aC9tZRJjCgZTaWduSW4SGy5tZW1vcy5hcGkudjEuU2lnbkluUmVxdWVzdBocLm1lbW9zLmFwaS52MS5TaWduSW5SZXNwb25zZSIegtPkkwIYOgEqIhMvYXBpL3YxL2F1dGgvc2lnbmluEl0KB1NpZ25PdXQSHC5tZW1vcy5hcGkudjEuU2lnbk91dFJlcXVlc3QaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiHILT5JMCFiIUL2FwaS92MS9hdXRoL3NpZ25vdXQSdgoMUmVmcmVzaFRva2VuEiEubWVtb3MuYXBpLnYxLlJlZnJlc2hUb2tlblJlcXVlc3QaIi5tZW1vcy5hcGkudjEuUmVmcmVzaFRva2VuUmVzcG9uc2UiH4LT5JMCGToBKiIUL2FwaS92MS9hdXRoL3JlZnJlc2hCqAEKEGNvbS5tZW1vcy5hcGkudjFCEEF1dGhTZXJ2aWNlUHJvdG9QAVowZ2l0aHViLmNvbS91c2VtZW1vcy9tZW1vcy9wcm90by9nZW4vYXBpL3YxO2FwaXYxogIDTUFYqgIMTWVtb3MuQXBpLlYxygIMTWVtb3NcQXBpXFYx4gIYTWVtb3NcQXBpXFYxXEdQQk1ldGFkYXRh6gIOTWVtb3M6OkFwaTo6VjFiBnByb3RvMw", [file_api_v1_user_service, file_google_api_annotations, file_google_api_field_behavior, file_google_protobuf_empty, file_google_protobuf_timestamp]);
+  fileDesc("ChlhcGkvdjEvYXV0aF9zZXJ2aWNlLnByb3RvEgxtZW1vcy5hcGkudjEiFwoVR2V0Q3VycmVudFVzZXJSZXF1ZXN0IjoKFkdldEN1cnJlbnRVc2VyUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLm1lbW9zLmFwaS52MS5Vc2VyIuwCCg1TaWduSW5SZXF1ZXN0Ek8KFHBhc3N3b3JkX2NyZWRlbnRpYWxzGAEgASgLMi8ubWVtb3MuYXBpLnYxLlNpZ25JblJlcXVlc3QuUGFzc3dvcmRDcmVkZW50aWFsc0gAEkUKD3Nzb19jcmVkZW50aWFscxgCIAEoCzIqLm1lbW9zLmFwaS52MS5TaWduSW5SZXF1ZXN0LlNTT0NyZWRlbnRpYWxzSAAaQwoTUGFzc3dvcmRDcmVkZW50aWFscxIVCgh1c2VybmFtZRgBIAEoCUID4EECEhUKCHBhc3N3b3JkGAIgASgJQgPgQQIabwoOU1NPQ3JlZGVudGlhbHMSEwoGaWRwX2lkGAEgASgFQgPgQQISEQoEY29kZRgCIAEoCUID4EECEhkKDHJlZGlyZWN0X3VyaRgDIAEoCUID4EECEhoKDWNvZGVfdmVyaWZpZXIYBCABKAlCA+BBAUINCgtjcmVkZW50aWFscyKFAQoOU2lnbkluUmVzcG9uc2USIAoEdXNlchgBIAEoCzISLm1lbW9zLmFwaS52MS5Vc2VyEhQKDGFjY2Vzc190b2tlbhgCIAEoCRI7ChdhY2Nlc3NfdG9rZW5fZXhwaXJlc19hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiEAoOU2lnbk91dFJlcXVlc3QiFQoTUmVmcmVzaFRva2VuUmVxdWVzdCJcChRSZWZyZXNoVG9rZW5SZXNwb25zZRIUCgxhY2Nlc3NfdG9rZW4YASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAicQobU2VuZFZlcmlmaWNhdGlvbkNvZGVSZXF1ZXN0EhkKDHBob25lX251bWJlchgBIAEoCUID4EECEjcKB3B1cnBvc2UYAiABKA4yIS5tZW1vcy5hcGkudjEuVmVyaWZpY2F0aW9uUHVycG9zZUID4EECIlwKHFNlbmRWZXJpZmljYXRpb25Db2RlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBIrCgdzZW50X2F0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKBAQoSVmVyaWZ5UGhvbmVSZXF1ZXN0EhkKDHBob25lX251bWJlchgBIAEoCUID4EECEjcKB3B1cnBvc2UYAiABKA4yIS5tZW1vcy5hcGkudjEuVmVyaWZpY2F0aW9uUHVycG9zZUID4EECEhcKCmF1dGhfdG9rZW4YAyABKAlCA+BBAiI9ChNWZXJpZnlQaG9uZVJlc3BvbnNlEg0KBXZhbGlkGAEgASgIEhcKD3ZlcmlmaWNhdGlvbl9pZBgCIAEoCSKLAQoUUmVzZXRQYXNzd29yZFJlcXVlc3QSGQoMcGhvbmVfbnVtYmVyGAEgASgJQgPgQQISEgoIc21zX2NvZGUYAiABKAlIABIZCg92ZXJpZmljYXRpb25faWQYAyABKAlIABIZCgxuZXdfcGFzc3dvcmQYBCABKAlCA+BBAkIOCgx2ZXJpZmljYXRpb24iKAoVUmVzZXRQYXNzd29yZFJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgqUQoTVmVyaWZpY2F0aW9uUHVycG9zZRIXChNQVVJQT1NFX1VOU1BFQ0lGSUVEEAASDAoIUkVHSVNURVIQARITCg9GT1JHT1RfUEFTU1dPUkQQAjLXBgoLQXV0aFNlcnZpY2USdAoOR2V0Q3VycmVudFVzZXISIy5tZW1vcy5hcGkudjEuR2V0Q3VycmVudFVzZXJSZXF1ZXN0GiQubWVtb3MuYXBpLnYxLkdldEN1cnJlbnRVc2VyUmVzcG9uc2UiF4LT5JMCERIPL2FwaS92MS9hdXRoL21lEmMKBlNpZ25JbhIbLm1lbW9zLmFwaS52MS5TaWduSW5SZXF1ZXN0GhwubWVtb3MuYXBpLnYxLlNpZ25JblJlc3BvbnNlIh6C0+STAhg6ASoiEy9hcGkvdjEvYXV0aC9zaWduaW4SXQoHU2lnbk91dBIcLm1lbW9zLmFwaS52MS5TaWduT3V0UmVxdWVzdBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSIcgtPkkwIWIhQvYXBpL3YxL2F1dGgvc2lnbm91dBJ2CgxSZWZyZXNoVG9rZW4SIS5tZW1vcy5hcGkudjEuUmVmcmVzaFRva2VuUmVxdWVzdBoiLm1lbW9zLmFwaS52MS5SZWZyZXNoVG9rZW5SZXNwb25zZSIfgtPkkwIZOgEqIhQvYXBpL3YxL2F1dGgvcmVmcmVzaBKYAQoUU2VuZFZlcmlmaWNhdGlvbkNvZGUSKS5tZW1vcy5hcGkudjEuU2VuZFZlcmlmaWNhdGlvbkNvZGVSZXF1ZXN0GioubWVtb3MuYXBpLnYxLlNlbmRWZXJpZmljYXRpb25Db2RlUmVzcG9uc2UiKYLT5JMCIzoBKiIeL2FwaS92MS9hdXRoL3ZlcmlmaWNhdGlvbi1jb2RlEngKC1ZlcmlmeVBob25lEiAubWVtb3MuYXBpLnYxLlZlcmlmeVBob25lUmVxdWVzdBohLm1lbW9zLmFwaS52MS5WZXJpZnlQaG9uZVJlc3BvbnNlIiSC0+STAh46ASoiGS9hcGkvdjEvYXV0aC92ZXJpZnktcGhvbmUSgAEKDVJlc2V0UGFzc3dvcmQSIi5tZW1vcy5hcGkudjEuUmVzZXRQYXNzd29yZFJlcXVlc3QaIy5tZW1vcy5hcGkudjEuUmVzZXRQYXNzd29yZFJlc3BvbnNlIiaC0+STAiA6ASoiGy9hcGkvdjEvYXV0aC9yZXNldC1wYXNzd29yZEKoAQoQY29tLm1lbW9zLmFwaS52MUIQQXV0aFNlcnZpY2VQcm90b1ABWjBnaXRodWIuY29tL3VzZW1lbW9zL21lbW9zL3Byb3RvL2dlbi9hcGkvdjE7YXBpdjGiAgNNQViqAgxNZW1vcy5BcGkuVjHKAgxNZW1vc1xBcGlcVjHiAhhNZW1vc1xBcGlcVjFcR1BCTWV0YWRhdGHqAg5NZW1vczo6QXBpOjpWMWIGcHJvdG8z", [file_api_v1_user_service, file_google_api_annotations, file_google_api_field_behavior, file_google_protobuf_empty, file_google_protobuf_timestamp]);
 
 /**
  * @generated from message memos.api.v1.GetCurrentUserRequest
@@ -244,6 +244,195 @@ export const RefreshTokenResponseSchema: GenMessage<RefreshTokenResponse> = /*@_
   messageDesc(file_api_v1_auth_service, 6);
 
 /**
+ * SendVerificationCodeRequest 发送验证码请求
+ *
+ * @generated from message memos.api.v1.SendVerificationCodeRequest
+ */
+export type SendVerificationCodeRequest = Message<"memos.api.v1.SendVerificationCodeRequest"> & {
+  /**
+   * @generated from field: string phone_number = 1;
+   */
+  phoneNumber: string;
+
+  /**
+   * @generated from field: memos.api.v1.VerificationPurpose purpose = 2;
+   */
+  purpose: VerificationPurpose;
+};
+
+/**
+ * Describes the message memos.api.v1.SendVerificationCodeRequest.
+ * Use `create(SendVerificationCodeRequestSchema)` to create a new message.
+ */
+export const SendVerificationCodeRequestSchema: GenMessage<SendVerificationCodeRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_auth_service, 7);
+
+/**
+ * SendVerificationCodeResponse 发送验证码响应
+ *
+ * @generated from message memos.api.v1.SendVerificationCodeResponse
+ */
+export type SendVerificationCodeResponse = Message<"memos.api.v1.SendVerificationCodeResponse"> & {
+  /**
+   * @generated from field: bool success = 1;
+   */
+  success: boolean;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp sent_at = 2;
+   */
+  sentAt?: Timestamp;
+};
+
+/**
+ * Describes the message memos.api.v1.SendVerificationCodeResponse.
+ * Use `create(SendVerificationCodeResponseSchema)` to create a new message.
+ */
+export const SendVerificationCodeResponseSchema: GenMessage<SendVerificationCodeResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_auth_service, 8);
+
+/**
+ * VerifyPhoneRequest 验证手机号请求
+ *
+ * @generated from message memos.api.v1.VerifyPhoneRequest
+ */
+export type VerifyPhoneRequest = Message<"memos.api.v1.VerifyPhoneRequest"> & {
+  /**
+   * @generated from field: string phone_number = 1;
+   */
+  phoneNumber: string;
+
+  /**
+   * @generated from field: memos.api.v1.VerificationPurpose purpose = 2;
+   */
+  purpose: VerificationPurpose;
+
+  /**
+   * @generated from field: string auth_token = 3;
+   */
+  authToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.VerifyPhoneRequest.
+ * Use `create(VerifyPhoneRequestSchema)` to create a new message.
+ */
+export const VerifyPhoneRequestSchema: GenMessage<VerifyPhoneRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_auth_service, 9);
+
+/**
+ * VerifyPhoneResponse 验证手机号响应
+ *
+ * @generated from message memos.api.v1.VerifyPhoneResponse
+ */
+export type VerifyPhoneResponse = Message<"memos.api.v1.VerifyPhoneResponse"> & {
+  /**
+   * @generated from field: bool valid = 1;
+   */
+  valid: boolean;
+
+  /**
+   * @generated from field: string verification_id = 2;
+   */
+  verificationId: string;
+};
+
+/**
+ * Describes the message memos.api.v1.VerifyPhoneResponse.
+ * Use `create(VerifyPhoneResponseSchema)` to create a new message.
+ */
+export const VerifyPhoneResponseSchema: GenMessage<VerifyPhoneResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_auth_service, 10);
+
+/**
+ * ResetPasswordRequest 重置密码请求
+ *
+ * @generated from message memos.api.v1.ResetPasswordRequest
+ */
+export type ResetPasswordRequest = Message<"memos.api.v1.ResetPasswordRequest"> & {
+  /**
+   * @generated from field: string phone_number = 1;
+   */
+  phoneNumber: string;
+
+  /**
+   * @generated from oneof memos.api.v1.ResetPasswordRequest.verification
+   */
+  verification: {
+    /**
+     * @generated from field: string sms_code = 2;
+     */
+    value: string;
+    case: "smsCode";
+  } | {
+    /**
+     * @generated from field: string verification_id = 3;
+     */
+    value: string;
+    case: "verificationId";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * @generated from field: string new_password = 4;
+   */
+  newPassword: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ResetPasswordRequest.
+ * Use `create(ResetPasswordRequestSchema)` to create a new message.
+ */
+export const ResetPasswordRequestSchema: GenMessage<ResetPasswordRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_auth_service, 11);
+
+/**
+ * ResetPasswordResponse 重置密码响应
+ *
+ * @generated from message memos.api.v1.ResetPasswordResponse
+ */
+export type ResetPasswordResponse = Message<"memos.api.v1.ResetPasswordResponse"> & {
+  /**
+   * @generated from field: bool success = 1;
+   */
+  success: boolean;
+};
+
+/**
+ * Describes the message memos.api.v1.ResetPasswordResponse.
+ * Use `create(ResetPasswordResponseSchema)` to create a new message.
+ */
+export const ResetPasswordResponseSchema: GenMessage<ResetPasswordResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_auth_service, 12);
+
+/**
+ * VerificationPurpose 验证用途枚举
+ *
+ * @generated from enum memos.api.v1.VerificationPurpose
+ */
+export enum VerificationPurpose {
+  /**
+   * @generated from enum value: PURPOSE_UNSPECIFIED = 0;
+   */
+  PURPOSE_UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: REGISTER = 1;
+   */
+  REGISTER = 1,
+
+  /**
+   * @generated from enum value: FORGOT_PASSWORD = 2;
+   */
+  FORGOT_PASSWORD = 2,
+}
+
+/**
+ * Describes the enum memos.api.v1.VerificationPurpose.
+ */
+export const VerificationPurposeSchema: GenEnum<VerificationPurpose> = /*@__PURE__*/
+  enumDesc(file_api_v1_auth_service, 0);
+
+/**
  * @generated from service memos.api.v1.AuthService
  */
 export const AuthService: GenService<{
@@ -293,6 +482,36 @@ export const AuthService: GenService<{
     methodKind: "unary";
     input: typeof RefreshTokenRequestSchema;
     output: typeof RefreshTokenResponseSchema;
+  },
+  /**
+   * SendVerificationCode 发送验证码
+   *
+   * @generated from rpc memos.api.v1.AuthService.SendVerificationCode
+   */
+  sendVerificationCode: {
+    methodKind: "unary";
+    input: typeof SendVerificationCodeRequestSchema;
+    output: typeof SendVerificationCodeResponseSchema;
+  },
+  /**
+   * VerifyPhone 验证手机号
+   *
+   * @generated from rpc memos.api.v1.AuthService.VerifyPhone
+   */
+  verifyPhone: {
+    methodKind: "unary";
+    input: typeof VerifyPhoneRequestSchema;
+    output: typeof VerifyPhoneResponseSchema;
+  },
+  /**
+   * ResetPassword 重置密码
+   *
+   * @generated from rpc memos.api.v1.AuthService.ResetPassword
+   */
+  resetPassword: {
+    methodKind: "unary";
+    input: typeof ResetPasswordRequestSchema;
+    output: typeof ResetPasswordResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_v1_auth_service, 0);

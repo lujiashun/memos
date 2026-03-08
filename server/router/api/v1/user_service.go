@@ -154,11 +154,32 @@ func (s *APIV1Service) CreateUser(ctx context.Context, request *v1pb.CreateUserR
 	if request.ValidateOnly {
 		// Perform validation checks without actually creating the user
 		return &v1pb.User{
-			Username:    request.User.Username,
-			Email:       request.User.Email,
-			DisplayName: request.User.DisplayName,
-			Role:        convertUserRoleFromStore(roleToAssign),
+			Username:     request.User.Username,
+			Email:        request.User.Email,
+			PhoneNumber:  request.User.PhoneNumber,
+			DisplayName:  request.User.DisplayName,
+			Role:         convertUserRoleFromStore(roleToAssign),
 		}, nil
+	}
+
+	// 验证手机认证
+	if request.User.PhoneNumber != "" && request.Verification != nil {
+		var valid bool
+		var err error
+		
+		switch request.Verification.(type) {
+		case *v1pb.CreateUserRequest_SmsVerificationCode:
+			// 验证短信验证码
+			valid, err = s.VerificationService.VerifySMSCode(ctx, request.User.PhoneNumber, request.GetSmsVerificationCode(), "REGISTER")
+		case *v1pb.CreateUserRequest_PhoneVerificationId:
+			// 验证号码认证
+			verification, _ := s.Store.GetVerification(ctx, request.User.PhoneNumber, request.GetPhoneVerificationId(), "REGISTER")
+			valid = (verification != nil && !verification.IsUsed)
+		}
+		
+		if err != nil || !valid {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid phone verification")
+		}
 	}
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(request.User.Password), bcrypt.DefaultCost)
@@ -170,6 +191,7 @@ func (s *APIV1Service) CreateUser(ctx context.Context, request *v1pb.CreateUserR
 		Username:     request.User.Username,
 		Role:         roleToAssign,
 		Email:        request.User.Email,
+		PhoneNumber:  request.User.PhoneNumber,
 		Nickname:     request.User.DisplayName,
 		PasswordHash: string(passwordHash),
 	})
@@ -240,6 +262,8 @@ func (s *APIV1Service) UpdateUser(ctx context.Context, request *v1pb.UpdateUserR
 			update.Nickname = &request.User.DisplayName
 		case "email":
 			update.Email = &request.User.Email
+		case "phone_number":
+			update.PhoneNumber = &request.User.PhoneNumber
 		case "avatar_url":
 			// Validate avatar MIME type to prevent XSS during upload
 			if request.User.AvatarUrl != "" {
@@ -916,6 +940,7 @@ func convertUserFromStore(user *store.User) *v1pb.User {
 		Role:        convertUserRoleFromStore(user.Role),
 		Username:    user.Username,
 		Email:       user.Email,
+		PhoneNumber: user.PhoneNumber,
 		DisplayName: user.Nickname,
 		AvatarUrl:   user.AvatarURL,
 		Description: user.Description,

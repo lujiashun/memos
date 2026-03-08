@@ -14,15 +14,21 @@ import { useInstance } from "@/contexts/InstanceContext";
 import useLoading from "@/hooks/useLoading";
 import useNavigateTo from "@/hooks/useNavigateTo";
 import { handleError } from "@/lib/error";
-import { User_Role, UserSchema } from "@/types/proto/api/v1/user_service_pb";
+import { User_Role, CreateUserRequestSchema, UserSchema } from "@/types/proto/api/v1/user_service_pb";
+import { VerificationPurpose } from "@/types/proto/api/v1/auth_service_pb";
 import { useTranslate } from "@/utils/i18n";
 
 const SignUp = () => {
   const t = useTranslate();
   const navigateTo = useNavigateTo();
   const actionBtnLoadingState = useLoading(false);
+  const verifyBtnLoadingState = useLoading(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationId, setVerificationId] = useState("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const { initialize: initAuth } = useAuth();
   const { generalSetting: instanceGeneralSetting, profile, initialize: initInstance } = useInstance();
 
@@ -34,6 +40,75 @@ const SignUp = () => {
   const handlePasswordInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value as string;
     setPassword(text);
+  };
+
+  const handlePhoneInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value as string;
+    setPhoneNumber(text);
+  };
+
+  const handleVerificationCodeInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value as string;
+    setVerificationCode(text);
+  };
+
+  const handleVerifyPhone = async () => {
+    if (phoneNumber === "") {
+      return;
+    }
+
+    if (verifyBtnLoadingState.isLoading) {
+      return;
+    }
+
+    try {
+      verifyBtnLoadingState.setLoading();
+      
+      // 发送短信验证码
+      const response = await authServiceClient.sendVerificationCode({
+        phoneNumber,
+        purpose: VerificationPurpose.REGISTER,
+      });
+      if (response.success) {
+        toast.success("Verification code sent successfully!");
+      }
+    } catch (error: unknown) {
+      handleError(error, toast.error, {
+        fallbackMessage: "Phone verification failed",
+      });
+    } finally {
+      verifyBtnLoadingState.setFinish();
+    }
+  };
+
+  const handleVerifySMSCode = async () => {
+    if (phoneNumber === "" || verificationCode === "") {
+      return;
+    }
+
+    if (verifyBtnLoadingState.isLoading) {
+      return;
+    }
+
+    try {
+      verifyBtnLoadingState.setLoading();
+      const response = await authServiceClient.verifyPhone({
+        phoneNumber,
+        purpose: VerificationPurpose.REGISTER,
+        authToken: verificationCode, // 使用验证码作为authToken
+      });
+      if (response.valid && response.verificationId) {
+        setVerificationId(response.verificationId);
+        setIsPhoneVerified(true);
+        toast.success("Verification code verified successfully!");
+      }
+    } catch (error: unknown) {
+      handleError(error, toast.error, {
+        fallbackMessage: "Verification code verification failed",
+      });
+    } finally {
+      verifyBtnLoadingState.setFinish();
+    }
   };
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,9 +130,19 @@ const SignUp = () => {
       const user = create(UserSchema, {
         username,
         password,
+        phoneNumber,
         role: User_Role.USER,
       });
-      await userServiceClient.createUser({ user });
+      
+      const createUserRequest = create(CreateUserRequestSchema, {
+        user,
+        verification: isPhoneVerified && verificationCode ? {
+          case: "smsVerificationCode",
+          value: verificationCode,
+        } : undefined,
+      });
+      
+      await userServiceClient.createUser(createUserRequest);
       const response = await authServiceClient.signIn({
         credentials: {
           case: "passwordCredentials",
@@ -122,6 +207,53 @@ const SignUp = () => {
                     onChange={handlePasswordInputChanged}
                     required
                   />
+                </div>
+                <div className="w-full flex flex-col justify-start items-start">
+                  <span className="leading-8 text-muted-foreground">Phone Number</span>
+                  <div className="w-full flex gap-2">
+                    <Input
+                      className="flex-1 bg-background h-10"
+                      type="tel"
+                      readOnly={actionBtnLoadingState.isLoading || verifyBtnLoadingState.isLoading}
+                      placeholder="Phone number"
+                      value={phoneNumber}
+                      autoComplete="tel"
+                      onChange={handlePhoneInputChanged}
+                    />
+                  </div>
+                </div>
+                <div className="w-full flex flex-col justify-start items-start">
+                  <span className="leading-8 text-muted-foreground">Verification Code</span>
+                  <div className="w-full flex gap-2">
+                    <Input
+                      className="flex-1 bg-background h-10"
+                      type="text"
+                      readOnly={actionBtnLoadingState.isLoading || verifyBtnLoadingState.isLoading}
+                      placeholder="Verification code"
+                      value={verificationCode}
+                      onChange={handleVerificationCodeInputChanged}
+                    />
+                    <Button 
+                      type="button" 
+                      className="h-10 px-4"
+                      disabled={actionBtnLoadingState.isLoading || verifyBtnLoadingState.isLoading || phoneNumber === ""}
+                      onClick={handleVerifyPhone}
+                    >
+                      Send Code
+                      {verifyBtnLoadingState.isLoading && <LoaderIcon className="w-4 h-auto ml-2 animate-spin opacity-60" />}
+                    </Button>
+                  </div>
+                  {verificationCode !== "" && (
+                    <Button 
+                      type="button" 
+                      className="h-10 px-4 mt-2"
+                      disabled={actionBtnLoadingState.isLoading || verifyBtnLoadingState.isLoading || verificationCode === ""}
+                      onClick={handleVerifySMSCode}
+                    >
+                      Verify Code
+                      {verifyBtnLoadingState.isLoading && <LoaderIcon className="w-4 h-auto ml-2 animate-spin opacity-60" />}
+                    </Button>
+                  )}
                 </div>
               </div>
               <div className="flex flex-row justify-end items-center w-full mt-6">

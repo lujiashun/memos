@@ -241,14 +241,16 @@ type User struct {
 	AvatarUrl string `protobuf:"bytes,6,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
 	// Optional. The description of the user.
 	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	// Optional. The phone number of the user.
+	PhoneNumber string `protobuf:"bytes,8,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
 	// Input only. The password for the user.
-	Password string `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
+	Password string `protobuf:"bytes,9,opt,name=password,proto3" json:"password,omitempty"`
 	// The state of the user.
-	State State `protobuf:"varint,9,opt,name=state,proto3,enum=memos.api.v1.State" json:"state,omitempty"`
+	State State `protobuf:"varint,10,opt,name=state,proto3,enum=memos.api.v1.State" json:"state,omitempty"`
 	// Output only. The creation timestamp.
-	CreateTime *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// Output only. The last update timestamp.
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -328,6 +330,13 @@ func (x *User) GetAvatarUrl() string {
 func (x *User) GetDescription() string {
 	if x != nil {
 		return x.Description
+	}
+	return ""
+}
+
+func (x *User) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
 	}
 	return ""
 }
@@ -575,7 +584,14 @@ type CreateUserRequest struct {
 	ValidateOnly bool `protobuf:"varint,3,opt,name=validate_only,json=validateOnly,proto3" json:"validate_only,omitempty"`
 	// Optional. An idempotency token that can be used to ensure that multiple
 	// requests to create a user have the same result.
-	RequestId     string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	RequestId string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	// Optional. Verification information for phone number.
+	//
+	// Types that are valid to be assigned to Verification:
+	//
+	//	*CreateUserRequest_SmsVerificationCode
+	//	*CreateUserRequest_PhoneVerificationId
+	Verification  isCreateUserRequest_Verification `protobuf_oneof:"verification"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -637,6 +653,47 @@ func (x *CreateUserRequest) GetRequestId() string {
 	}
 	return ""
 }
+
+func (x *CreateUserRequest) GetVerification() isCreateUserRequest_Verification {
+	if x != nil {
+		return x.Verification
+	}
+	return nil
+}
+
+func (x *CreateUserRequest) GetSmsVerificationCode() string {
+	if x != nil {
+		if x, ok := x.Verification.(*CreateUserRequest_SmsVerificationCode); ok {
+			return x.SmsVerificationCode
+		}
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetPhoneVerificationId() string {
+	if x != nil {
+		if x, ok := x.Verification.(*CreateUserRequest_PhoneVerificationId); ok {
+			return x.PhoneVerificationId
+		}
+	}
+	return ""
+}
+
+type isCreateUserRequest_Verification interface {
+	isCreateUserRequest_Verification()
+}
+
+type CreateUserRequest_SmsVerificationCode struct {
+	SmsVerificationCode string `protobuf:"bytes,5,opt,name=sms_verification_code,json=smsVerificationCode,proto3,oneof"`
+}
+
+type CreateUserRequest_PhoneVerificationId struct {
+	PhoneVerificationId string `protobuf:"bytes,6,opt,name=phone_verification_id,json=phoneVerificationId,proto3,oneof"`
+}
+
+func (*CreateUserRequest_SmsVerificationCode) isCreateUserRequest_Verification() {}
+
+func (*CreateUserRequest_PhoneVerificationId) isCreateUserRequest_Verification() {}
 
 type UpdateUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2513,7 +2570,7 @@ var File_api_v1_user_service_proto protoreflect.FileDescriptor
 
 const file_api_v1_user_service_proto_rawDesc = "" +
 	"\n" +
-	"\x19api/v1/user_service.proto\x12\fmemos.api.v1\x1a\x13api/v1/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc1\x04\n" +
+	"\x19api/v1/user_service.proto\x12\fmemos.api.v1\x1a\x13api/v1/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe9\x04\n" +
 	"\x04User\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tB\x03\xe0A\bR\x04name\x120\n" +
 	"\x04role\x18\x02 \x01(\x0e2\x17.memos.api.v1.User.RoleB\x03\xe0A\x02R\x04role\x12\x1f\n" +
@@ -2522,13 +2579,14 @@ const file_api_v1_user_service_proto_rawDesc = "" +
 	"\fdisplay_name\x18\x05 \x01(\tB\x03\xe0A\x01R\vdisplayName\x12\"\n" +
 	"\n" +
 	"avatar_url\x18\x06 \x01(\tB\x03\xe0A\x01R\tavatarUrl\x12%\n" +
-	"\vdescription\x18\a \x01(\tB\x03\xe0A\x01R\vdescription\x12\x1f\n" +
-	"\bpassword\x18\b \x01(\tB\x03\xe0A\x04R\bpassword\x12.\n" +
-	"\x05state\x18\t \x01(\x0e2\x13.memos.api.v1.StateB\x03\xe0A\x02R\x05state\x12@\n" +
-	"\vcreate_time\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
+	"\vdescription\x18\a \x01(\tB\x03\xe0A\x01R\vdescription\x12&\n" +
+	"\fphone_number\x18\b \x01(\tB\x03\xe0A\x01R\vphoneNumber\x12\x1f\n" +
+	"\bpassword\x18\t \x01(\tB\x03\xe0A\x04R\bpassword\x12.\n" +
+	"\x05state\x18\n" +
+	" \x01(\x0e2\x13.memos.api.v1.StateB\x03\xe0A\x02R\x05state\x12@\n" +
+	"\vcreate_time\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
 	"createTime\x12@\n" +
-	"\vupdate_time\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
+	"\vupdate_time\x18\f \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
 	"updateTime\"1\n" +
 	"\x04Role\x12\x14\n" +
 	"\x10ROLE_UNSPECIFIED\x10\x00\x12\t\n" +
@@ -2549,13 +2607,16 @@ const file_api_v1_user_service_proto_rawDesc = "" +
 	"\x0eGetUserRequest\x12-\n" +
 	"\x04name\x18\x01 \x01(\tB\x19\xe0A\x02\xfaA\x13\n" +
 	"\x11memos.api.v1/UserR\x04name\x12<\n" +
-	"\tread_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskB\x03\xe0A\x01R\breadMask\"\xaf\x01\n" +
+	"\tread_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskB\x03\xe0A\x01R\breadMask\"\xab\x02\n" +
 	"\x11CreateUserRequest\x12.\n" +
 	"\x04user\x18\x01 \x01(\v2\x12.memos.api.v1.UserB\x06\xe0A\x02\xe0A\x04R\x04user\x12\x1c\n" +
 	"\auser_id\x18\x02 \x01(\tB\x03\xe0A\x01R\x06userId\x12(\n" +
 	"\rvalidate_only\x18\x03 \x01(\bB\x03\xe0A\x01R\fvalidateOnly\x12\"\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tB\x03\xe0A\x01R\trequestId\"\xac\x01\n" +
+	"request_id\x18\x04 \x01(\tB\x03\xe0A\x01R\trequestId\x124\n" +
+	"\x15sms_verification_code\x18\x05 \x01(\tH\x00R\x13smsVerificationCode\x124\n" +
+	"\x15phone_verification_id\x18\x06 \x01(\tH\x00R\x13phoneVerificationIdB\x0e\n" +
+	"\fverification\"\xac\x01\n" +
 	"\x11UpdateUserRequest\x12+\n" +
 	"\x04user\x18\x01 \x01(\v2\x12.memos.api.v1.UserB\x03\xe0A\x02R\x04user\x12@\n" +
 	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskB\x03\xe0A\x02R\n" +
@@ -2893,6 +2954,10 @@ func file_api_v1_user_service_proto_init() {
 		return
 	}
 	file_api_v1_common_proto_init()
+	file_api_v1_user_service_proto_msgTypes[4].OneofWrappers = []any{
+		(*CreateUserRequest_SmsVerificationCode)(nil),
+		(*CreateUserRequest_PhoneVerificationId)(nil),
+	}
 	file_api_v1_user_service_proto_msgTypes[11].OneofWrappers = []any{
 		(*UserSetting_GeneralSetting_)(nil),
 		(*UserSetting_WebhooksSetting_)(nil),

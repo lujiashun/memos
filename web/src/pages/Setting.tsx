@@ -1,4 +1,4 @@
-import { BotIcon, CogIcon, DatabaseIcon, KeyIcon, LibraryIcon, LucideIcon, Settings2Icon, UserIcon, UsersIcon } from "lucide-react";
+import { BotIcon, CogIcon, DatabaseIcon, KeyIcon, LibraryIcon, LucideIcon, MessageSquareIcon, Settings2Icon, UserIcon, UsersIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import MobileHeader from "@/components/MobileHeader";
@@ -11,6 +11,7 @@ import PreferencesSection from "@/components/Settings/PreferencesSection";
 import SectionMenuItem from "@/components/Settings/SectionMenuItem";
 import SSOSection from "@/components/Settings/SSOSection";
 import StorageSection from "@/components/Settings/StorageSection";
+import SMSSection from "@/components/Settings/SMSSection";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useInstance } from "@/contexts/InstanceContext";
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -19,14 +20,14 @@ import { InstanceSetting_Key } from "@/types/proto/api/v1/instance_service_pb";
 import { User_Role } from "@/types/proto/api/v1/user_service_pb";
 import { useTranslate } from "@/utils/i18n";
 
-type SettingSection = "my-account" | "preference" | "member" | "system" | "memo-related" | "storage" | "sso" | "ai-service";
+type SettingSection = "my-account" | "preference" | "member" | "system" | "memo-related" | "storage" | "sso" | "ai-service" | "sms";
 
 interface State {
   selectedSection: SettingSection;
 }
 
 const BASIC_SECTIONS: SettingSection[] = ["my-account", "preference"];
-const ADMIN_SECTIONS: SettingSection[] = ["member", "system", "memo-related", "storage", "sso", "ai-service"];
+const ADMIN_SECTIONS: SettingSection[] = ["member", "system", "memo-related", "storage", "sso", "ai-service", "sms"];
 const SECTION_ICON_MAP: Record<SettingSection, LucideIcon> = {
   "my-account": UserIcon,
   preference: CogIcon,
@@ -36,6 +37,7 @@ const SECTION_ICON_MAP: Record<SettingSection, LucideIcon> = {
   storage: DatabaseIcon,
   sso: KeyIcon,
   "ai-service": BotIcon,
+  sms: MessageSquareIcon,
 };
 
 const Setting = () => {
@@ -158,6 +160,8 @@ const Setting = () => {
               <SSOSection />
             ) : state.selectedSection === "ai-service" ? (
               <OpenAISection />
+            ) : state.selectedSection === "sms" ? (
+              <SMSSection />
             ) : null}
           </div>
         </div>

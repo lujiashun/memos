@@ -67,4 +67,9 @@ type Driver interface {
 	ListReactions(ctx context.Context, find *FindReaction) ([]*Reaction, error)
 	GetReaction(ctx context.Context, find *FindReaction) (*Reaction, error)
 	DeleteReaction(ctx context.Context, delete *DeleteReaction) error
+
+	// Verification model related methods.
+	CreateVerification(ctx context.Context, create *Verification) (*Verification, error)
+	GetVerification(ctx context.Context, phoneNumber, code, purpose string) (*Verification, error)
+	UpdateVerification(ctx context.Context, update *Verification) error
 }

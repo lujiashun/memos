@@ -44,6 +44,14 @@ const (
 	// AuthServiceRefreshTokenProcedure is the fully-qualified name of the AuthService's RefreshToken
 	// RPC.
 	AuthServiceRefreshTokenProcedure = "/memos.api.v1.AuthService/RefreshToken"
+	// AuthServiceSendVerificationCodeProcedure is the fully-qualified name of the AuthService's
+	// SendVerificationCode RPC.
+	AuthServiceSendVerificationCodeProcedure = "/memos.api.v1.AuthService/SendVerificationCode"
+	// AuthServiceVerifyPhoneProcedure is the fully-qualified name of the AuthService's VerifyPhone RPC.
+	AuthServiceVerifyPhoneProcedure = "/memos.api.v1.AuthService/VerifyPhone"
+	// AuthServiceResetPasswordProcedure is the fully-qualified name of the AuthService's ResetPassword
+	// RPC.
+	AuthServiceResetPasswordProcedure = "/memos.api.v1.AuthService/ResetPassword"
 )
 
 // AuthServiceClient is a client for the memos.api.v1.AuthService service.
@@ -63,6 +71,12 @@ type AuthServiceClient interface {
 	// The refresh token is read from the HttpOnly cookie.
 	// Returns a new short-lived access token.
 	RefreshToken(context.Context, *connect.Request[v1.RefreshTokenRequest]) (*connect.Response[v1.RefreshTokenResponse], error)
+	// SendVerificationCode 发送验证码
+	SendVerificationCode(context.Context, *connect.Request[v1.SendVerificationCodeRequest]) (*connect.Response[v1.SendVerificationCodeResponse], error)
+	// VerifyPhone 验证手机号
+	VerifyPhone(context.Context, *connect.Request[v1.VerifyPhoneRequest]) (*connect.Response[v1.VerifyPhoneResponse], error)
+	// ResetPassword 重置密码
+	ResetPassword(context.Context, *connect.Request[v1.ResetPasswordRequest]) (*connect.Response[v1.ResetPasswordResponse], error)
 }
 
 // NewAuthServiceClient constructs a client for the memos.api.v1.AuthService service. By default, it
@@ -100,15 +114,36 @@ func NewAuthServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(authServiceMethods.ByName("RefreshToken")),
 			connect.WithClientOptions(opts...),
 		),
+		sendVerificationCode: connect.NewClient[v1.SendVerificationCodeRequest, v1.SendVerificationCodeResponse](
+			httpClient,
+			baseURL+AuthServiceSendVerificationCodeProcedure,
+			connect.WithSchema(authServiceMethods.ByName("SendVerificationCode")),
+			connect.WithClientOptions(opts...),
+		),
+		verifyPhone: connect.NewClient[v1.VerifyPhoneRequest, v1.VerifyPhoneResponse](
+			httpClient,
+			baseURL+AuthServiceVerifyPhoneProcedure,
+			connect.WithSchema(authServiceMethods.ByName("VerifyPhone")),
+			connect.WithClientOptions(opts...),
+		),
+		resetPassword: connect.NewClient[v1.ResetPasswordRequest, v1.ResetPasswordResponse](
+			httpClient,
+			baseURL+AuthServiceResetPasswordProcedure,
+			connect.WithSchema(authServiceMethods.ByName("ResetPassword")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // authServiceClient implements AuthServiceClient.
 type authServiceClient struct {
-	getCurrentUser *connect.Client[v1.GetCurrentUserRequest, v1.GetCurrentUserResponse]
-	signIn         *connect.Client[v1.SignInRequest, v1.SignInResponse]
-	signOut        *connect.Client[v1.SignOutRequest, emptypb.Empty]
-	refreshToken   *connect.Client[v1.RefreshTokenRequest, v1.RefreshTokenResponse]
+	getCurrentUser       *connect.Client[v1.GetCurrentUserRequest, v1.GetCurrentUserResponse]
+	signIn               *connect.Client[v1.SignInRequest, v1.SignInResponse]
+	signOut              *connect.Client[v1.SignOutRequest, emptypb.Empty]
+	refreshToken         *connect.Client[v1.RefreshTokenRequest, v1.RefreshTokenResponse]
+	sendVerificationCode *connect.Client[v1.SendVerificationCodeRequest, v1.SendVerificationCodeResponse]
+	verifyPhone          *connect.Client[v1.VerifyPhoneRequest, v1.VerifyPhoneResponse]
+	resetPassword        *connect.Client[v1.ResetPasswordRequest, v1.ResetPasswordResponse]
 }
 
 // GetCurrentUser calls memos.api.v1.AuthService.GetCurrentUser.
@@ -131,6 +166,21 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, req *connect.Reque
 	return c.refreshToken.CallUnary(ctx, req)
 }
 
+// SendVerificationCode calls memos.api.v1.AuthService.SendVerificationCode.
+func (c *authServiceClient) SendVerificationCode(ctx context.Context, req *connect.Request[v1.SendVerificationCodeRequest]) (*connect.Response[v1.SendVerificationCodeResponse], error) {
+	return c.sendVerificationCode.CallUnary(ctx, req)
+}
+
+// VerifyPhone calls memos.api.v1.AuthService.VerifyPhone.
+func (c *authServiceClient) VerifyPhone(ctx context.Context, req *connect.Request[v1.VerifyPhoneRequest]) (*connect.Response[v1.VerifyPhoneResponse], error) {
+	return c.verifyPhone.CallUnary(ctx, req)
+}
+
+// ResetPassword calls memos.api.v1.AuthService.ResetPassword.
+func (c *authServiceClient) ResetPassword(ctx context.Context, req *connect.Request[v1.ResetPasswordRequest]) (*connect.Response[v1.ResetPasswordResponse], error) {
+	return c.resetPassword.CallUnary(ctx, req)
+}
+
 // AuthServiceHandler is an implementation of the memos.api.v1.AuthService service.
 type AuthServiceHandler interface {
 	// GetCurrentUser returns the authenticated user's information.
@@ -148,6 +198,12 @@ type AuthServiceHandler interface {
 	// The refresh token is read from the HttpOnly cookie.
 	// Returns a new short-lived access token.
 	RefreshToken(context.Context, *connect.Request[v1.RefreshTokenRequest]) (*connect.Response[v1.RefreshTokenResponse], error)
+	// SendVerificationCode 发送验证码
+	SendVerificationCode(context.Context, *connect.Request[v1.SendVerificationCodeRequest]) (*connect.Response[v1.SendVerificationCodeResponse], error)
+	// VerifyPhone 验证手机号
+	VerifyPhone(context.Context, *connect.Request[v1.VerifyPhoneRequest]) (*connect.Response[v1.VerifyPhoneResponse], error)
+	// ResetPassword 重置密码
+	ResetPassword(context.Context, *connect.Request[v1.ResetPasswordRequest]) (*connect.Response[v1.ResetPasswordResponse], error)
 }
 
 // NewAuthServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -181,6 +237,24 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(authServiceMethods.ByName("RefreshToken")),
 		connect.WithHandlerOptions(opts...),
 	)
+	authServiceSendVerificationCodeHandler := connect.NewUnaryHandler(
+		AuthServiceSendVerificationCodeProcedure,
+		svc.SendVerificationCode,
+		connect.WithSchema(authServiceMethods.ByName("SendVerificationCode")),
+		connect.WithHandlerOptions(opts...),
+	)
+	authServiceVerifyPhoneHandler := connect.NewUnaryHandler(
+		AuthServiceVerifyPhoneProcedure,
+		svc.VerifyPhone,
+		connect.WithSchema(authServiceMethods.ByName("VerifyPhone")),
+		connect.WithHandlerOptions(opts...),
+	)
+	authServiceResetPasswordHandler := connect.NewUnaryHandler(
+		AuthServiceResetPasswordProcedure,
+		svc.ResetPassword,
+		connect.WithSchema(authServiceMethods.ByName("ResetPassword")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.AuthService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case AuthServiceGetCurrentUserProcedure:
@@ -191,6 +265,12 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 			authServiceSignOutHandler.ServeHTTP(w, r)
 		case AuthServiceRefreshTokenProcedure:
 			authServiceRefreshTokenHandler.ServeHTTP(w, r)
+		case AuthServiceSendVerificationCodeProcedure:
+			authServiceSendVerificationCodeHandler.ServeHTTP(w, r)
+		case AuthServiceVerifyPhoneProcedure:
+			authServiceVerifyPhoneHandler.ServeHTTP(w, r)
+		case AuthServiceResetPasswordProcedure:
+			authServiceResetPasswordHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -214,4 +294,16 @@ func (UnimplementedAuthServiceHandler) SignOut(context.Context, *connect.Request
 
 func (UnimplementedAuthServiceHandler) RefreshToken(context.Context, *connect.Request[v1.RefreshTokenRequest]) (*connect.Response[v1.RefreshTokenResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.AuthService.RefreshToken is not implemented"))
+}
+
+func (UnimplementedAuthServiceHandler) SendVerificationCode(context.Context, *connect.Request[v1.SendVerificationCodeRequest]) (*connect.Response[v1.SendVerificationCodeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.AuthService.SendVerificationCode is not implemented"))
+}
+
+func (UnimplementedAuthServiceHandler) VerifyPhone(context.Context, *connect.Request[v1.VerifyPhoneRequest]) (*connect.Response[v1.VerifyPhoneResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.AuthService.VerifyPhone is not implemented"))
+}
+
+func (UnimplementedAuthServiceHandler) ResetPassword(context.Context, *connect.Request[v1.ResetPasswordRequest]) (*connect.Response[v1.ResetPasswordResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.AuthService.ResetPassword is not implemented"))
 }

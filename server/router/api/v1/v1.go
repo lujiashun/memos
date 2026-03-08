@@ -14,6 +14,7 @@ import (
 	"github.com/usememos/memos/plugin/markdown"
 	v1pb "github.com/usememos/memos/proto/gen/api/v1"
 	"github.com/usememos/memos/server/auth"
+	"github.com/usememos/memos/server/service/verification"
 	"github.com/usememos/memos/store"
 )
 
@@ -27,25 +28,27 @@ type APIV1Service struct {
 	v1pb.UnimplementedActivityServiceServer
 	v1pb.UnimplementedIdentityProviderServiceServer
 
-	Secret          string
-	Profile         *profile.Profile
-	Store           *store.Store
-	MarkdownService markdown.Service
+	Secret              string
+	Profile             *profile.Profile
+	Store               *store.Store
+	MarkdownService     markdown.Service
+	VerificationService verification.Service
 
 	// thumbnailSemaphore limits concurrent thumbnail generation to prevent memory exhaustion
 	thumbnailSemaphore *semaphore.Weighted
 }
 
-func NewAPIV1Service(secret string, profile *profile.Profile, store *store.Store) *APIV1Service {
+func NewAPIV1Service(secret string, profile *profile.Profile, store *store.Store, verificationService verification.Service) *APIV1Service {
 	markdownService := markdown.NewService(
 		markdown.WithTagExtension(),
 	)
 	return &APIV1Service{
-		Secret:             secret,
-		Profile:            profile,
-		Store:              store,
-		MarkdownService:    markdownService,
-		thumbnailSemaphore: semaphore.NewWeighted(3), // Limit to 3 concurrent thumbnail generations
+		Secret:              secret,
+		Profile:             profile,
+		Store:               store,
+		MarkdownService:     markdownService,
+		VerificationService: verificationService,
+		thumbnailSemaphore:  semaphore.NewWeighted(3), // Limit to 3 concurrent thumbnail generations
 	}
 }
 

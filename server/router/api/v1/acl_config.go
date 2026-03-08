@@ -10,8 +10,11 @@ package v1
 // or info.FullMethod (gRPC interceptor).
 var PublicMethods = map[string]struct{}{
 	// Auth Service - login/token endpoints must be accessible without auth
-	"/memos.api.v1.AuthService/SignIn":       {},
-	"/memos.api.v1.AuthService/RefreshToken": {}, // Token refresh uses cookie, must be accessible when access token expired
+	"/memos.api.v1.AuthService/SignIn":                {},
+	"/memos.api.v1.AuthService/RefreshToken":          {}, // Token refresh uses cookie, must be accessible when access token expired
+	"/memos.api.v1.AuthService/SendVerificationCode":  {}, // Public for registration and password reset
+	"/memos.api.v1.AuthService/VerifyPhone":          {}, // Public for registration and password reset
+	"/memos.api.v1.AuthService/ResetPassword":         {}, // Public for password reset
 
 	// Instance Service - needed before login to show instance info
 	"/memos.api.v1.InstanceService/GetInstanceProfile": {},

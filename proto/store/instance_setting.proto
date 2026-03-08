@@ -16,6 +16,8 @@ enum InstanceSettingKey {
   MEMO_RELATED = 4;
   // OPENAI is the key for OpenAI related settings.
   OPENAI = 5;
+  // SMS is the key for SMS related settings.
+  SMS = 6;
 }
 
 message InstanceSetting {
@@ -26,6 +28,7 @@ message InstanceSetting {
     InstanceStorageSetting storage_setting = 4;
     InstanceMemoRelatedSetting memo_related_setting = 5;
     InstanceOpenAISetting openai_setting = 6;
+    InstanceSmsSetting sms_setting = 7;
   }
 }
 
@@ -111,4 +114,20 @@ message InstanceOpenAISetting {
   string api_key = 1;
   string base_url = 2;
   string model = 3;
+}
+
+message InstanceSmsSetting {
+  // verification_method is the verification method to use.
+  // Possible values: phone, sms
+  string verification_method = 1;
+  // api_key is the API key for the SMS service.
+  string api_key = 2;
+  // api_secret is the API secret for the SMS service.
+  string api_secret = 3;
+  // template_id is the template ID for the SMS service.
+  string template_id = 4;
+  // endpoint is the API endpoint for the SMS service.
+  string endpoint = 5;
+  // sign_name is the SMS sign name.
+  string sign_name = 6;
 }

@@ -289,6 +289,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/auth/reset-password:
+        post:
+            tags:
+                - AuthService
+            description: ResetPassword 重置密码
+            operationId: AuthService_ResetPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ResetPasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResetPasswordResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/auth/signin:
         post:
             tags:
@@ -329,6 +354,56 @@ paths:
                 "200":
                     description: OK
                     content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/auth/verification-code:
+        post:
+            tags:
+                - AuthService
+            description: SendVerificationCode 发送验证码
+            operationId: AuthService_SendVerificationCode
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SendVerificationCodeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SendVerificationCodeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/auth/verify-phone:
+        post:
+            tags:
+                - AuthService
+            description: VerifyPhone 验证手机号
+            operationId: AuthService_VerifyPhone
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VerifyPhoneRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/VerifyPhoneResponse'
                 default:
                     description: Default error response
                     content:
@@ -1204,6 +1279,14 @@ paths:
                   description: |-
                     Optional. An idempotency token that can be used to ensure that multiple
                      requests to create a user have the same result.
+                  schema:
+                    type: string
+                - name: smsVerificationCode
+                  in: query
+                  schema:
+                    type: string
+                - name: phoneVerificationId
+                  in: query
                   schema:
                     type: string
             requestBody:
@@ -2269,6 +2352,8 @@ components:
                     $ref: '#/components/schemas/InstanceSetting_MemoRelatedSetting'
                 openaiSetting:
                     $ref: '#/components/schemas/InstanceSetting_OpenAISetting'
+                smsSetting:
+                    $ref: '#/components/schemas/InstanceSetting_SmsSetting'
             description: An instance setting resource.
         InstanceSetting_GeneralSetting:
             type: object
@@ -2335,6 +2420,27 @@ components:
                 model:
                     type: string
             description: OpenAI related instance settings.
+        InstanceSetting_SmsSetting:
+            type: object
+            properties:
+                verificationMethod:
+                    type: string
+                    description: |-
+                        verification_method is the verification method to use.
+                         Possible values: phone, sms
+                apiKey:
+                    type: string
+                    description: api_key is the API key for the SMS service.
+                apiSecret:
+                    type: string
+                    description: api_secret is the API secret for the SMS service.
+                templateId:
+                    type: string
+                    description: template_id is the template ID for the SMS service.
+                endpoint:
+                    type: string
+                    description: endpoint is the API endpoint for the SMS service.
+            description: SMS related instance settings.
         InstanceSetting_StorageSetting:
             type: object
             properties:
@@ -2800,6 +2906,52 @@ components:
                     type: string
                     description: When the access token expires.
                     format: date-time
+        ResetPasswordRequest:
+            required:
+                - phoneNumber
+                - newPassword
+            type: object
+            properties:
+                phoneNumber:
+                    type: string
+                smsCode:
+                    type: string
+                verificationId:
+                    type: string
+                newPassword:
+                    type: string
+            description: ResetPasswordRequest 重置密码请求
+        ResetPasswordResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+            description: ResetPasswordResponse 重置密码响应
+        SendVerificationCodeRequest:
+            required:
+                - phoneNumber
+                - purpose
+            type: object
+            properties:
+                phoneNumber:
+                    type: string
+                purpose:
+                    enum:
+                        - PURPOSE_UNSPECIFIED
+                        - REGISTER
+                        - FORGOT_PASSWORD
+                    type: string
+                    format: enum
+            description: SendVerificationCodeRequest 发送验证码请求
+        SendVerificationCodeResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                sentAt:
+                    type: string
+                    format: date-time
+            description: SendVerificationCodeResponse 发送验证码响应
         SetMemoAttachmentsRequest:
             required:
                 - name
@@ -3014,6 +3166,9 @@ components:
                 description:
                     type: string
                     description: Optional. The description of the user.
+                phoneNumber:
+                    type: string
+                    description: Optional. The phone number of the user.
                 password:
                     writeOnly: true
                     type: string
@@ -3193,6 +3348,33 @@ components:
                     description: The last update time of the webhook.
                     format: date-time
             description: UserWebhook represents a webhook owned by a user.
+        VerifyPhoneRequest:
+            required:
+                - phoneNumber
+                - purpose
+                - authToken
+            type: object
+            properties:
+                phoneNumber:
+                    type: string
+                purpose:
+                    enum:
+                        - PURPOSE_UNSPECIFIED
+                        - REGISTER
+                        - FORGOT_PASSWORD
+                    type: string
+                    format: enum
+                authToken:
+                    type: string
+            description: VerifyPhoneRequest 验证手机号请求
+        VerifyPhoneResponse:
+            type: object
+            properties:
+                valid:
+                    type: boolean
+                verificationId:
+                    type: string
+            description: VerifyPhoneResponse 验证手机号响应
 tags:
     - name: ActivityService
     - name: AttachmentService

@@ -441,6 +441,17 @@
       "saturday": "周六",
       "sunday": "周日",
       "week-start-day": "周开始日"
+    },
+    "sms-section": {
+      "title": "短信设置",
+      "verification-method": "验证方式",
+      "phone-auth": "号码认证",
+      "sms-code": "短信验证码",
+      "api-key": "API Key",
+      "api-secret": "API Secret",
+      "template-id": "模板ID",
+      "sign-name": "签名名称",
+      "endpoint": "API端点"
     }
   },
   "tag": {

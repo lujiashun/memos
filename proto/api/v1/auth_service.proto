@@ -43,6 +43,30 @@ service AuthService {
       body: "*"
     };
   }
+
+  // SendVerificationCode 发送验证码
+  rpc SendVerificationCode(SendVerificationCodeRequest) returns (SendVerificationCodeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/verification-code"
+      body: "*"
+    };
+  }
+
+  // VerifyPhone 验证手机号
+  rpc VerifyPhone(VerifyPhoneRequest) returns (VerifyPhoneResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/verify-phone"
+      body: "*"
+    };
+  }
+
+  // ResetPassword 重置密码
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/reset-password"
+      body: "*"
+    };
+  }
 }
 
 message GetCurrentUserRequest {}
@@ -111,4 +135,51 @@ message RefreshTokenResponse {
 
   // When the access token expires.
   google.protobuf.Timestamp expires_at = 2;
+}
+
+// SendVerificationCodeRequest 发送验证码请求
+message SendVerificationCodeRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+  VerificationPurpose purpose = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// SendVerificationCodeResponse 发送验证码响应
+message SendVerificationCodeResponse {
+  bool success = 1;
+  google.protobuf.Timestamp sent_at = 2;
+}
+
+// VerifyPhoneRequest 验证手机号请求
+message VerifyPhoneRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+  VerificationPurpose purpose = 2 [(google.api.field_behavior) = REQUIRED];
+  string auth_token = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// VerifyPhoneResponse 验证手机号响应
+message VerifyPhoneResponse {
+  bool valid = 1;
+  string verification_id = 2;
+}
+
+// ResetPasswordRequest 重置密码请求
+message ResetPasswordRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+  oneof verification {
+    string sms_code = 2;
+    string verification_id = 3;
+  }
+  string new_password = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ResetPasswordResponse 重置密码响应
+message ResetPasswordResponse {
+  bool success = 1;
+}
+
+// VerificationPurpose 验证用途枚举
+enum VerificationPurpose {
+  PURPOSE_UNSPECIFIED = 0;
+  REGISTER = 1;
+  FORGOT_PASSWORD = 2;
 }

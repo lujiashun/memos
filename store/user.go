@@ -49,6 +49,7 @@ type User struct {
 	Username     string
 	Role         Role
 	Email        string
+	PhoneNumber  string
 	Nickname     string
 	PasswordHash string
 	AvatarURL    string
@@ -63,6 +64,7 @@ type UpdateUser struct {
 	Username     *string
 	Role         *Role
 	Email        *string
+	PhoneNumber  *string
 	Nickname     *string
 	Password     *string
 	AvatarURL    *string
@@ -76,6 +78,7 @@ type FindUser struct {
 	Username  *string
 	Role      *Role
 	Email     *string
+	PhoneNumber *string
 	Nickname  *string
 
 	// Domain specific fields

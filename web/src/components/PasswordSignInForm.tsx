@@ -1,6 +1,7 @@
 import { timestampDate } from "@bufbuild/protobuf/wkt";
 import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { setAccessToken } from "@/auth-state";
 import { Button } from "@/components/ui/button";
@@ -101,6 +102,11 @@ function PasswordSignInForm() {
             required
           />
         </div>
+      </div>
+      <div className="flex flex-row justify-end items-center w-full mt-2">
+        <Link to="/auth/forgot-password" className="cursor-pointer text-sm text-primary hover:underline">
+          Forgot password?
+        </Link>
       </div>
       <div className="flex flex-row justify-end items-center w-full mt-6">
         <Button type="submit" className="w-full h-10" disabled={actionBtnLoadingState.isLoading} onClick={handleSignInButtonClick}>

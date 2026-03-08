@@ -189,17 +189,20 @@ message User {
   // Optional. The description of the user.
   string description = 7 [(google.api.field_behavior) = OPTIONAL];
 
+  // Optional. The phone number of the user.
+  string phone_number = 8 [(google.api.field_behavior) = OPTIONAL];
+
   // Input only. The password for the user.
-  string password = 8 [(google.api.field_behavior) = INPUT_ONLY];
+  string password = 9 [(google.api.field_behavior) = INPUT_ONLY];
 
   // The state of the user.
-  State state = 9 [(google.api.field_behavior) = REQUIRED];
+  State state = 10 [(google.api.field_behavior) = REQUIRED];
 
   // Output only. The creation timestamp.
-  google.protobuf.Timestamp create_time = 10 [(google.api.field_behavior) = OUTPUT_ONLY];
+  google.protobuf.Timestamp create_time = 11 [(google.api.field_behavior) = OUTPUT_ONLY];
 
   // Output only. The last update timestamp.
-  google.protobuf.Timestamp update_time = 11 [(google.api.field_behavior) = OUTPUT_ONLY];
+  google.protobuf.Timestamp update_time = 12 [(google.api.field_behavior) = OUTPUT_ONLY];
 
   // User role enumeration.
   enum Role {
@@ -278,6 +281,12 @@ message CreateUserRequest {
   // Optional. An idempotency token that can be used to ensure that multiple
   // requests to create a user have the same result.
   string request_id = 4 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional. Verification information for phone number.
+  oneof verification {
+    string sms_verification_code = 5;
+    string phone_verification_id = 6;
+  }
 }
 
 message UpdateUserRequest {

@@ -37,7 +37,7 @@ interface InstanceContextValue extends InstanceState {
   storageSetting: InstanceSetting_StorageSetting;
   openaiSetting: InstanceSetting_OpenAISetting;
   initialize: () => Promise<void>;
-  fetchSetting: (key: InstanceSetting_Key) => Promise<void>;
+  fetchSetting: (key: InstanceSetting_Key) => Promise<InstanceSetting | undefined>;
   updateSetting: (setting: InstanceSetting) => Promise<void>;
 }
 
@@ -119,7 +119,7 @@ export function InstanceProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const fetchSetting = useCallback(async (key: InstanceSetting_Key) => {
+  const fetchSetting = useCallback(async (key: InstanceSetting_Key): Promise<InstanceSetting | undefined> => {
     const setting = await instanceServiceClient.getInstanceSetting({
       name: buildInstanceSettingName(key),
     });
@@ -127,6 +127,7 @@ export function InstanceProvider({ children }: { children: ReactNode }) {
       ...prev,
       settings: [...prev.settings.filter((s) => s.name !== setting.name), setting],
     }));
+    return setting;
   }, []);
 
   const updateSetting = useCallback(async (setting: InstanceSetting) => {

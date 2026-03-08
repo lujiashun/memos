@@ -610,3 +610,92 @@ func (*APIV1Service) parseUserAgent(userAgent string, clientInfo *storepb.Refres
 		clientInfo.Browser = "Opera"
 	}
 }
+
+// SendVerificationCode 发送验证码
+func (s *APIV1Service) SendVerificationCode(ctx context.Context, request *v1pb.SendVerificationCodeRequest) (*v1pb.SendVerificationCodeResponse, error) {
+	// 实现发送验证码逻辑
+	_, err := s.VerificationService.SendSMSCode(ctx, request.PhoneNumber, request.Purpose.String())
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to send verification code: %v", err)
+	}
+	
+	return &v1pb.SendVerificationCodeResponse{
+		Success:  true,
+		SentAt:   timestamppb.Now(),
+	}, nil
+}
+
+// VerifyPhone 验证手机号
+func (s *APIV1Service) VerifyPhone(ctx context.Context, request *v1pb.VerifyPhoneRequest) (*v1pb.VerifyPhoneResponse, error) {
+	// 先尝试检查短信验证码（不标记为已使用）
+	valid, err := s.VerificationService.CheckSMSCode(ctx, request.PhoneNumber, request.AuthToken, request.Purpose.String())
+	if err == nil && valid {
+		// 短信验证码验证成功
+		return &v1pb.VerifyPhoneResponse{
+			Valid:          true,
+			VerificationId: request.AuthToken, // 使用验证码作为 verificationId
+		}, nil
+	}
+	
+	// 如果短信验证码验证失败，尝试号码认证
+	verificationID, err := s.VerificationService.VerifyPhone(ctx, request.PhoneNumber, request.AuthToken, request.Purpose.String())
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to verify phone: %v", err)
+	}
+	
+	return &v1pb.VerifyPhoneResponse{
+		Valid:           true,
+		VerificationId:  verificationID,
+	}, nil
+}
+
+// ResetPassword 重置密码
+func (s *APIV1Service) ResetPassword(ctx context.Context, request *v1pb.ResetPasswordRequest) (*v1pb.ResetPasswordResponse, error) {
+	// 验证认证信息
+	var valid bool
+	var err error
+	
+	switch request.Verification.(type) {
+	case *v1pb.ResetPasswordRequest_SmsCode:
+		// 验证短信验证码
+		valid, err = s.VerificationService.VerifySMSCode(ctx, request.PhoneNumber, request.GetSmsCode(), "FORGOT_PASSWORD")
+	case *v1pb.ResetPasswordRequest_VerificationId:
+		// 验证号码认证
+		verification, _ := s.Store.GetVerification(ctx, request.PhoneNumber, request.GetVerificationId(), "FORGOT_PASSWORD")
+		valid = (verification != nil && !verification.IsUsed)
+	}
+	
+	if err != nil || !valid {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid verification")
+	}
+	
+	// 查找用户
+	user, err := s.Store.GetUser(ctx, &store.FindUser{
+		PhoneNumber: &request.PhoneNumber,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user: %v", err)
+	}
+	if user == nil {
+		return nil, status.Errorf(codes.NotFound, "user not found")
+	}
+	
+	// 更新密码
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(request.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to generate password hash: %v", err)
+	}
+	
+	passwordHashStr := string(passwordHash)
+	_, err = s.Store.UpdateUser(ctx, &store.UpdateUser{
+		ID:           user.ID,
+		PasswordHash: &passwordHashStr,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update password: %v", err)
+	}
+	
+	return &v1pb.ResetPasswordResponse{
+		Success: true,
+	}, nil
+}
