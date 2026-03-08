@@ -32,7 +32,7 @@ service UserService {
   rpc CreateUser(CreateUserRequest) returns (User) {
     option (google.api.http) = {
       post: "/api/v1/users"
-      body: "user"
+      body: "*"
     };
     option (google.api.method_signature) = "user";
   }

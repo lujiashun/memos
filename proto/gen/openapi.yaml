@@ -1260,40 +1260,11 @@ paths:
                 - UserService
             description: CreateUser creates a new user.
             operationId: UserService_CreateUser
-            parameters:
-                - name: userId
-                  in: query
-                  description: |-
-                    Optional. The user ID to use for this user.
-                     If empty, a unique ID will be generated.
-                     Must match the pattern [a-z0-9-]+
-                  schema:
-                    type: string
-                - name: validateOnly
-                  in: query
-                  description: Optional. If set, validate the request but don't actually create the user.
-                  schema:
-                    type: boolean
-                - name: requestId
-                  in: query
-                  description: |-
-                    Optional. An idempotency token that can be used to ensure that multiple
-                     requests to create a user have the same result.
-                  schema:
-                    type: string
-                - name: smsVerificationCode
-                  in: query
-                  schema:
-                    type: string
-                - name: phoneVerificationId
-                  in: query
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/User'
+                            $ref: '#/components/schemas/CreateUserRequest'
                 required: true
             responses:
                 "200":
@@ -2217,6 +2188,34 @@ components:
                     description: |-
                         The actual token value - only returned on creation.
                          This is the only time the token value will be visible.
+        CreateUserRequest:
+            required:
+                - user
+            type: object
+            properties:
+                user:
+                    writeOnly: true
+                    allOf:
+                        - $ref: '#/components/schemas/User'
+                    description: Required. The user to create.
+                userId:
+                    type: string
+                    description: |-
+                        Optional. The user ID to use for this user.
+                         If empty, a unique ID will be generated.
+                         Must match the pattern [a-z0-9-]+
+                validateOnly:
+                    type: boolean
+                    description: Optional. If set, validate the request but don't actually create the user.
+                requestId:
+                    type: string
+                    description: |-
+                        Optional. An idempotency token that can be used to ensure that multiple
+                         requests to create a user have the same result.
+                smsVerificationCode:
+                    type: string
+                phoneVerificationId:
+                    type: string
         FieldMapping:
             type: object
             properties:

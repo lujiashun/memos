@@ -2776,12 +2776,12 @@ const file_api_v1_user_service_proto_rawDesc = "" +
 	"updateMask\"Z\n" +
 	"\x1dDeleteUserNotificationRequest\x129\n" +
 	"\x04name\x18\x01 \x01(\tB%\xe0A\x02\xfaA\x1f\n" +
-	"\x1dmemos.api.v1/UserNotificationR\x04name2\x83\x17\n" +
+	"\x1dmemos.api.v1/UserNotificationR\x04name2\x80\x17\n" +
 	"\vUserService\x12c\n" +
 	"\tListUsers\x12\x1e.memos.api.v1.ListUsersRequest\x1a\x1f.memos.api.v1.ListUsersResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/api/v1/users\x12b\n" +
-	"\aGetUser\x12\x1c.memos.api.v1.GetUserRequest\x1a\x12.memos.api.v1.User\"%\xdaA\x04name\x82\xd3\xe4\x93\x02\x18\x12\x16/api/v1/{name=users/*}\x12e\n" +
+	"\aGetUser\x12\x1c.memos.api.v1.GetUserRequest\x1a\x12.memos.api.v1.User\"%\xdaA\x04name\x82\xd3\xe4\x93\x02\x18\x12\x16/api/v1/{name=users/*}\x12b\n" +
 	"\n" +
-	"CreateUser\x12\x1f.memos.api.v1.CreateUserRequest\x1a\x12.memos.api.v1.User\"\"\xdaA\x04user\x82\xd3\xe4\x93\x02\x15:\x04user\"\r/api/v1/users\x12\x7f\n" +
+	"CreateUser\x12\x1f.memos.api.v1.CreateUserRequest\x1a\x12.memos.api.v1.User\"\x1f\xdaA\x04user\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/api/v1/users\x12\x7f\n" +
 	"\n" +
 	"UpdateUser\x12\x1f.memos.api.v1.UpdateUserRequest\x1a\x12.memos.api.v1.User\"<\xdaA\x10user,update_mask\x82\xd3\xe4\x93\x02#:\x04user2\x1b/api/v1/{user.name=users/*}\x12l\n" +
 	"\n" +
