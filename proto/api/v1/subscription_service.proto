@@ -1,0 +1,239 @@
+syntax = "proto3";
+
+package memos.api.v1;
+
+import "api/v1/common.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "gen/api/v1";
+
+service SubscriptionService {
+  rpc GetSubscriptionStatus(GetSubscriptionStatusRequest) returns (SubscriptionStatus) {
+    option (google.api.http) = {get: "/api/v1/{name=users/*}/subscription"};
+    option (google.api.method_signature) = "name";
+  }
+
+  rpc ValidateReceipt(ValidateReceiptRequest) returns (ValidateReceiptResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/{parent=users/*}/subscription:validateReceipt"
+      body: "*"
+    };
+  }
+
+  rpc RestorePurchases(RestorePurchasesRequest) returns (RestorePurchasesResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/{parent=users/*}/subscription:restore"
+      body: "*"
+    };
+  }
+
+  rpc GetStorageUsage(GetStorageUsageRequest) returns (StorageUsage) {
+    option (google.api.http) = {get: "/api/v1/{name=users/*}/storage"};
+    option (google.api.method_signature) = "name";
+  }
+
+  rpc HandleAppleNotification(HandleAppleNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/apple/notifications"
+      body: "*"
+    };
+  }
+
+  rpc ListSubscriptionHistory(ListSubscriptionHistoryRequest) returns (ListSubscriptionHistoryResponse) {
+    option (google.api.http) = {get: "/api/v1/{parent=users/*}/subscriptionHistory"};
+    option (google.api.method_signature) = "parent";
+  }
+}
+
+message SubscriptionStatus {
+  option (google.api.resource) = {
+    type: "memos.api.v1/SubscriptionStatus"
+    pattern: "users/{user}/subscription"
+  };
+
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  bool is_vip = 2;
+
+  VipType vip_type = 3;
+
+  Subscription subscription = 4;
+
+  TrialInfo trial_info = 5;
+
+  int64 storage_quota_bytes = 6;
+
+  int64 storage_used_bytes = 7;
+
+  bool storage_exceeded = 8;
+}
+
+enum VipType {
+  VIP_TYPE_UNSPECIFIED = 0;
+  NONE = 1;
+  TRIAL = 2;
+  SUBSCRIPTION = 3;
+}
+
+message Subscription {
+  string product_id = 1;
+
+  SubscriptionState state = 2;
+
+  google.protobuf.Timestamp purchase_date = 3;
+
+  google.protobuf.Timestamp expires_date = 4;
+
+  bool is_trial = 5;
+
+  bool will_renew = 6;
+
+  string original_transaction_id = 7;
+}
+
+enum SubscriptionState {
+  SUBSCRIPTION_STATE_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  EXPIRED = 2;
+  GRACE_PERIOD = 3;
+  BILLING_RETRY = 4;
+  CANCELLED = 5;
+}
+
+message TrialInfo {
+  bool trial_used = 1;
+
+  google.protobuf.Timestamp trial_start_date = 2;
+
+  google.protobuf.Timestamp trial_end_date = 3;
+
+  int32 days_remaining = 4;
+}
+
+message StorageUsage {
+  option (google.api.resource) = {
+    type: "memos.api.v1/StorageUsage"
+    pattern: "users/{user}/storage"
+  };
+
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  int64 used_bytes = 2;
+
+  int64 quota_bytes = 3;
+
+  int32 used_percentage = 4;
+
+  StorageBreakdown breakdown = 5;
+
+  bool quota_exceeded = 6;
+}
+
+message StorageBreakdown {
+  int64 attachment_bytes = 1;
+
+  int64 memo_content_bytes = 2;
+}
+
+message GetSubscriptionStatusRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+}
+
+message ValidateReceiptRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+
+  string receipt_data = 2 [(google.api.field_behavior) = REQUIRED];
+
+  bool sandbox = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ValidateReceiptResponse {
+  SubscriptionStatus status = 1;
+
+  bool valid = 2;
+
+  string error_message = 3;
+}
+
+message RestorePurchasesRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+}
+
+message RestorePurchasesResponse {
+  SubscriptionStatus status = 1;
+
+  bool restored = 2;
+
+  int32 restored_count = 3;
+}
+
+message GetStorageUsageRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+}
+
+message HandleAppleNotificationRequest {
+  string signed_payload = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ListSubscriptionHistoryRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListSubscriptionHistoryResponse {
+  repeated SubscriptionHistoryEvent events = 1;
+
+  string next_page_token = 2;
+
+  int32 total_size = 3;
+}
+
+message SubscriptionHistoryEvent {
+  EventType event_type = 1;
+
+  google.protobuf.Timestamp event_time = 2;
+
+  string product_id = 3;
+
+  string from_status = 4;
+
+  string to_status = 5;
+
+  map<string, string> details = 6;
+
+  enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    PURCHASE = 1;
+    RENEWAL = 2;
+    CANCEL = 3;
+    EXPIRE = 4;
+    REFUND = 5;
+    TRIAL_START = 6;
+    TRIAL_END = 7;
+    GRACE_PERIOD_START = 8;
+    GRACE_PERIOD_END = 9;
+  }
+}
