@@ -1982,6 +1982,37 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/subscription:sync:
+        post:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_SyncSubscriptionStatus
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SyncSubscriptionStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SubscriptionStatus'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users/{user}/subscription:validateReceipt:
         post:
             tags:
@@ -3406,6 +3437,21 @@ components:
                     type: string
                 storageExceeded:
                     type: boolean
+        SyncSubscriptionStatusRequest:
+            required:
+                - parent
+                - isVip
+            type: object
+            properties:
+                parent:
+                    type: string
+                isVip:
+                    type: boolean
+                productId:
+                    type: string
+                expiresDate:
+                    type: string
+                    format: date-time
         TextRefineRequest:
             type: object
             properties:

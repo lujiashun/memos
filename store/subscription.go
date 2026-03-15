@@ -160,7 +160,8 @@ type FindSubscriptionHistory struct {
 
 const (
 	DefaultQuotaBytes  = 50 * 1024 * 1024
-	VIPQuotaBytes      = 5 * 1024 * 1024 * 1024
+	FreeQuotaBytes     = 50 * 1024 * 1024  // 免费用户配额：50MB
+	VIPQuotaBytes      = 5 * 1024 * 1024 * 1024  // VIP用户配额：5GB
 	TrialDurationDays  = 10
 )
 

@@ -201,7 +201,7 @@ func (x SubscriptionHistoryEvent_EventType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SubscriptionHistoryEvent_EventType.Descriptor instead.
 func (SubscriptionHistoryEvent_EventType) EnumDescriptor() ([]byte, []int) {
-	return file_api_v1_subscription_service_proto_rawDescGZIP(), []int{14, 0}
+	return file_api_v1_subscription_service_proto_rawDescGZIP(), []int{15, 0}
 }
 
 type SubscriptionStatus struct {
@@ -1076,6 +1076,74 @@ func (x *ListSubscriptionHistoryResponse) GetTotalSize() int32 {
 	return 0
 }
 
+type SyncSubscriptionStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Parent        string                 `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	IsVip         bool                   `protobuf:"varint,2,opt,name=is_vip,json=isVip,proto3" json:"is_vip,omitempty"`
+	ProductId     string                 `protobuf:"bytes,3,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	ExpiresDate   *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=expires_date,json=expiresDate,proto3" json:"expires_date,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SyncSubscriptionStatusRequest) Reset() {
+	*x = SyncSubscriptionStatusRequest{}
+	mi := &file_api_v1_subscription_service_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SyncSubscriptionStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncSubscriptionStatusRequest) ProtoMessage() {}
+
+func (x *SyncSubscriptionStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_subscription_service_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncSubscriptionStatusRequest.ProtoReflect.Descriptor instead.
+func (*SyncSubscriptionStatusRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_subscription_service_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *SyncSubscriptionStatusRequest) GetParent() string {
+	if x != nil {
+		return x.Parent
+	}
+	return ""
+}
+
+func (x *SyncSubscriptionStatusRequest) GetIsVip() bool {
+	if x != nil {
+		return x.IsVip
+	}
+	return false
+}
+
+func (x *SyncSubscriptionStatusRequest) GetProductId() string {
+	if x != nil {
+		return x.ProductId
+	}
+	return ""
+}
+
+func (x *SyncSubscriptionStatusRequest) GetExpiresDate() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ExpiresDate
+	}
+	return nil
+}
+
 type SubscriptionHistoryEvent struct {
 	state         protoimpl.MessageState             `protogen:"open.v1"`
 	EventType     SubscriptionHistoryEvent_EventType `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=memos.api.v1.SubscriptionHistoryEvent_EventType" json:"event_type,omitempty"`
@@ -1090,7 +1158,7 @@ type SubscriptionHistoryEvent struct {
 
 func (x *SubscriptionHistoryEvent) Reset() {
 	*x = SubscriptionHistoryEvent{}
-	mi := &file_api_v1_subscription_service_proto_msgTypes[14]
+	mi := &file_api_v1_subscription_service_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1102,7 +1170,7 @@ func (x *SubscriptionHistoryEvent) String() string {
 func (*SubscriptionHistoryEvent) ProtoMessage() {}
 
 func (x *SubscriptionHistoryEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_subscription_service_proto_msgTypes[14]
+	mi := &file_api_v1_subscription_service_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1115,7 +1183,7 @@ func (x *SubscriptionHistoryEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionHistoryEvent.ProtoReflect.Descriptor instead.
 func (*SubscriptionHistoryEvent) Descriptor() ([]byte, []int) {
-	return file_api_v1_subscription_service_proto_rawDescGZIP(), []int{14}
+	return file_api_v1_subscription_service_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *SubscriptionHistoryEvent) GetEventType() SubscriptionHistoryEvent_EventType {
@@ -1239,7 +1307,14 @@ const file_api_v1_subscription_service_proto_rawDesc = "" +
 	"\x06events\x18\x01 \x03(\v2&.memos.api.v1.SubscriptionHistoryEventR\x06events\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1d\n" +
 	"\n" +
-	"total_size\x18\x03 \x01(\x05R\ttotalSize\"\xc5\x04\n" +
+	"total_size\x18\x03 \x01(\x05R\ttotalSize\"\xd6\x01\n" +
+	"\x1dSyncSubscriptionStatusRequest\x121\n" +
+	"\x06parent\x18\x01 \x01(\tB\x19\xe0A\x02\xfaA\x13\n" +
+	"\x11memos.api.v1/UserR\x06parent\x12\x1a\n" +
+	"\x06is_vip\x18\x02 \x01(\bB\x03\xe0A\x02R\x05isVip\x12\"\n" +
+	"\n" +
+	"product_id\x18\x03 \x01(\tB\x03\xe0A\x01R\tproductId\x12B\n" +
+	"\fexpires_date\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x01R\vexpiresDate\"\xc5\x04\n" +
 	"\x18SubscriptionHistoryEvent\x12O\n" +
 	"\n" +
 	"event_type\x18\x01 \x01(\x0e20.memos.api.v1.SubscriptionHistoryEvent.EventTypeR\teventType\x129\n" +
@@ -1280,14 +1355,15 @@ const file_api_v1_subscription_service_proto_rawDesc = "" +
 	"\aEXPIRED\x10\x02\x12\x10\n" +
 	"\fGRACE_PERIOD\x10\x03\x12\x11\n" +
 	"\rBILLING_RETRY\x10\x04\x12\r\n" +
-	"\tCANCELLED\x10\x052\xb9\a\n" +
+	"\tCANCELLED\x10\x052\xda\b\n" +
 	"\x13SubscriptionService\x12\x99\x01\n" +
 	"\x15GetSubscriptionStatus\x12*.memos.api.v1.GetSubscriptionStatusRequest\x1a .memos.api.v1.SubscriptionStatus\"2\xdaA\x04name\x82\xd3\xe4\x93\x02%\x12#/api/v1/{name=users/*}/subscription\x12\xa0\x01\n" +
 	"\x0fValidateReceipt\x12$.memos.api.v1.ValidateReceiptRequest\x1a%.memos.api.v1.ValidateReceiptResponse\"@\x82\xd3\xe4\x93\x02::\x01*\"5/api/v1/{parent=users/*}/subscription:validateReceipt\x12\x9b\x01\n" +
 	"\x10RestorePurchases\x12%.memos.api.v1.RestorePurchasesRequest\x1a&.memos.api.v1.RestorePurchasesResponse\"8\x82\xd3\xe4\x93\x022:\x01*\"-/api/v1/{parent=users/*}/subscription:restore\x12\x82\x01\n" +
 	"\x0fGetStorageUsage\x12$.memos.api.v1.GetStorageUsageRequest\x1a\x1a.memos.api.v1.StorageUsage\"-\xdaA\x04name\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/{name=users/*}/storage\x12\x87\x01\n" +
 	"\x17HandleAppleNotification\x12,.memos.api.v1.HandleAppleNotificationRequest\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/apple/notifications\x12\xb5\x01\n" +
-	"\x17ListSubscriptionHistory\x12,.memos.api.v1.ListSubscriptionHistoryRequest\x1a-.memos.api.v1.ListSubscriptionHistoryResponse\"=\xdaA\x06parent\x82\xd3\xe4\x93\x02.\x12,/api/v1/{parent=users/*}/subscriptionHistoryB\xb0\x01\n" +
+	"\x17ListSubscriptionHistory\x12,.memos.api.v1.ListSubscriptionHistoryRequest\x1a-.memos.api.v1.ListSubscriptionHistoryResponse\"=\xdaA\x06parent\x82\xd3\xe4\x93\x02.\x12,/api/v1/{parent=users/*}/subscriptionHistory\x12\x9e\x01\n" +
+	"\x16SyncSubscriptionStatus\x12+.memos.api.v1.SyncSubscriptionStatusRequest\x1a .memos.api.v1.SubscriptionStatus\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1/{parent=users/*}/subscription:syncB\xb0\x01\n" +
 	"\x10com.memos.api.v1B\x18SubscriptionServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
@@ -1303,7 +1379,7 @@ func file_api_v1_subscription_service_proto_rawDescGZIP() []byte {
 }
 
 var file_api_v1_subscription_service_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_api_v1_subscription_service_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_api_v1_subscription_service_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_api_v1_subscription_service_proto_goTypes = []any{
 	(VipType)(0),                            // 0: memos.api.v1.VipType
 	(SubscriptionState)(0),                  // 1: memos.api.v1.SubscriptionState
@@ -1322,44 +1398,48 @@ var file_api_v1_subscription_service_proto_goTypes = []any{
 	(*HandleAppleNotificationRequest)(nil),  // 14: memos.api.v1.HandleAppleNotificationRequest
 	(*ListSubscriptionHistoryRequest)(nil),  // 15: memos.api.v1.ListSubscriptionHistoryRequest
 	(*ListSubscriptionHistoryResponse)(nil), // 16: memos.api.v1.ListSubscriptionHistoryResponse
-	(*SubscriptionHistoryEvent)(nil),        // 17: memos.api.v1.SubscriptionHistoryEvent
-	nil,                                     // 18: memos.api.v1.SubscriptionHistoryEvent.DetailsEntry
-	(*timestamppb.Timestamp)(nil),           // 19: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                   // 20: google.protobuf.Empty
+	(*SyncSubscriptionStatusRequest)(nil),   // 17: memos.api.v1.SyncSubscriptionStatusRequest
+	(*SubscriptionHistoryEvent)(nil),        // 18: memos.api.v1.SubscriptionHistoryEvent
+	nil,                                     // 19: memos.api.v1.SubscriptionHistoryEvent.DetailsEntry
+	(*timestamppb.Timestamp)(nil),           // 20: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                   // 21: google.protobuf.Empty
 }
 var file_api_v1_subscription_service_proto_depIdxs = []int32{
 	0,  // 0: memos.api.v1.SubscriptionStatus.vip_type:type_name -> memos.api.v1.VipType
 	4,  // 1: memos.api.v1.SubscriptionStatus.subscription:type_name -> memos.api.v1.Subscription
 	5,  // 2: memos.api.v1.SubscriptionStatus.trial_info:type_name -> memos.api.v1.TrialInfo
 	1,  // 3: memos.api.v1.Subscription.state:type_name -> memos.api.v1.SubscriptionState
-	19, // 4: memos.api.v1.Subscription.purchase_date:type_name -> google.protobuf.Timestamp
-	19, // 5: memos.api.v1.Subscription.expires_date:type_name -> google.protobuf.Timestamp
-	19, // 6: memos.api.v1.TrialInfo.trial_start_date:type_name -> google.protobuf.Timestamp
-	19, // 7: memos.api.v1.TrialInfo.trial_end_date:type_name -> google.protobuf.Timestamp
+	20, // 4: memos.api.v1.Subscription.purchase_date:type_name -> google.protobuf.Timestamp
+	20, // 5: memos.api.v1.Subscription.expires_date:type_name -> google.protobuf.Timestamp
+	20, // 6: memos.api.v1.TrialInfo.trial_start_date:type_name -> google.protobuf.Timestamp
+	20, // 7: memos.api.v1.TrialInfo.trial_end_date:type_name -> google.protobuf.Timestamp
 	7,  // 8: memos.api.v1.StorageUsage.breakdown:type_name -> memos.api.v1.StorageBreakdown
 	3,  // 9: memos.api.v1.ValidateReceiptResponse.status:type_name -> memos.api.v1.SubscriptionStatus
 	3,  // 10: memos.api.v1.RestorePurchasesResponse.status:type_name -> memos.api.v1.SubscriptionStatus
-	17, // 11: memos.api.v1.ListSubscriptionHistoryResponse.events:type_name -> memos.api.v1.SubscriptionHistoryEvent
-	2,  // 12: memos.api.v1.SubscriptionHistoryEvent.event_type:type_name -> memos.api.v1.SubscriptionHistoryEvent.EventType
-	19, // 13: memos.api.v1.SubscriptionHistoryEvent.event_time:type_name -> google.protobuf.Timestamp
-	18, // 14: memos.api.v1.SubscriptionHistoryEvent.details:type_name -> memos.api.v1.SubscriptionHistoryEvent.DetailsEntry
-	8,  // 15: memos.api.v1.SubscriptionService.GetSubscriptionStatus:input_type -> memos.api.v1.GetSubscriptionStatusRequest
-	9,  // 16: memos.api.v1.SubscriptionService.ValidateReceipt:input_type -> memos.api.v1.ValidateReceiptRequest
-	11, // 17: memos.api.v1.SubscriptionService.RestorePurchases:input_type -> memos.api.v1.RestorePurchasesRequest
-	13, // 18: memos.api.v1.SubscriptionService.GetStorageUsage:input_type -> memos.api.v1.GetStorageUsageRequest
-	14, // 19: memos.api.v1.SubscriptionService.HandleAppleNotification:input_type -> memos.api.v1.HandleAppleNotificationRequest
-	15, // 20: memos.api.v1.SubscriptionService.ListSubscriptionHistory:input_type -> memos.api.v1.ListSubscriptionHistoryRequest
-	3,  // 21: memos.api.v1.SubscriptionService.GetSubscriptionStatus:output_type -> memos.api.v1.SubscriptionStatus
-	10, // 22: memos.api.v1.SubscriptionService.ValidateReceipt:output_type -> memos.api.v1.ValidateReceiptResponse
-	12, // 23: memos.api.v1.SubscriptionService.RestorePurchases:output_type -> memos.api.v1.RestorePurchasesResponse
-	6,  // 24: memos.api.v1.SubscriptionService.GetStorageUsage:output_type -> memos.api.v1.StorageUsage
-	20, // 25: memos.api.v1.SubscriptionService.HandleAppleNotification:output_type -> google.protobuf.Empty
-	16, // 26: memos.api.v1.SubscriptionService.ListSubscriptionHistory:output_type -> memos.api.v1.ListSubscriptionHistoryResponse
-	21, // [21:27] is the sub-list for method output_type
-	15, // [15:21] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	18, // 11: memos.api.v1.ListSubscriptionHistoryResponse.events:type_name -> memos.api.v1.SubscriptionHistoryEvent
+	20, // 12: memos.api.v1.SyncSubscriptionStatusRequest.expires_date:type_name -> google.protobuf.Timestamp
+	2,  // 13: memos.api.v1.SubscriptionHistoryEvent.event_type:type_name -> memos.api.v1.SubscriptionHistoryEvent.EventType
+	20, // 14: memos.api.v1.SubscriptionHistoryEvent.event_time:type_name -> google.protobuf.Timestamp
+	19, // 15: memos.api.v1.SubscriptionHistoryEvent.details:type_name -> memos.api.v1.SubscriptionHistoryEvent.DetailsEntry
+	8,  // 16: memos.api.v1.SubscriptionService.GetSubscriptionStatus:input_type -> memos.api.v1.GetSubscriptionStatusRequest
+	9,  // 17: memos.api.v1.SubscriptionService.ValidateReceipt:input_type -> memos.api.v1.ValidateReceiptRequest
+	11, // 18: memos.api.v1.SubscriptionService.RestorePurchases:input_type -> memos.api.v1.RestorePurchasesRequest
+	13, // 19: memos.api.v1.SubscriptionService.GetStorageUsage:input_type -> memos.api.v1.GetStorageUsageRequest
+	14, // 20: memos.api.v1.SubscriptionService.HandleAppleNotification:input_type -> memos.api.v1.HandleAppleNotificationRequest
+	15, // 21: memos.api.v1.SubscriptionService.ListSubscriptionHistory:input_type -> memos.api.v1.ListSubscriptionHistoryRequest
+	17, // 22: memos.api.v1.SubscriptionService.SyncSubscriptionStatus:input_type -> memos.api.v1.SyncSubscriptionStatusRequest
+	3,  // 23: memos.api.v1.SubscriptionService.GetSubscriptionStatus:output_type -> memos.api.v1.SubscriptionStatus
+	10, // 24: memos.api.v1.SubscriptionService.ValidateReceipt:output_type -> memos.api.v1.ValidateReceiptResponse
+	12, // 25: memos.api.v1.SubscriptionService.RestorePurchases:output_type -> memos.api.v1.RestorePurchasesResponse
+	6,  // 26: memos.api.v1.SubscriptionService.GetStorageUsage:output_type -> memos.api.v1.StorageUsage
+	21, // 27: memos.api.v1.SubscriptionService.HandleAppleNotification:output_type -> google.protobuf.Empty
+	16, // 28: memos.api.v1.SubscriptionService.ListSubscriptionHistory:output_type -> memos.api.v1.ListSubscriptionHistoryResponse
+	3,  // 29: memos.api.v1.SubscriptionService.SyncSubscriptionStatus:output_type -> memos.api.v1.SubscriptionStatus
+	23, // [23:30] is the sub-list for method output_type
+	16, // [16:23] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_subscription_service_proto_init() }
@@ -1374,7 +1454,7 @@ func file_api_v1_subscription_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_subscription_service_proto_rawDesc), len(file_api_v1_subscription_service_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

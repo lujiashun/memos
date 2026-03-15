@@ -26,6 +26,7 @@ const (
 	SubscriptionService_GetStorageUsage_FullMethodName         = "/memos.api.v1.SubscriptionService/GetStorageUsage"
 	SubscriptionService_HandleAppleNotification_FullMethodName = "/memos.api.v1.SubscriptionService/HandleAppleNotification"
 	SubscriptionService_ListSubscriptionHistory_FullMethodName = "/memos.api.v1.SubscriptionService/ListSubscriptionHistory"
+	SubscriptionService_SyncSubscriptionStatus_FullMethodName  = "/memos.api.v1.SubscriptionService/SyncSubscriptionStatus"
 )
 
 // SubscriptionServiceClient is the client API for SubscriptionService service.
@@ -38,6 +39,7 @@ type SubscriptionServiceClient interface {
 	GetStorageUsage(ctx context.Context, in *GetStorageUsageRequest, opts ...grpc.CallOption) (*StorageUsage, error)
 	HandleAppleNotification(ctx context.Context, in *HandleAppleNotificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListSubscriptionHistory(ctx context.Context, in *ListSubscriptionHistoryRequest, opts ...grpc.CallOption) (*ListSubscriptionHistoryResponse, error)
+	SyncSubscriptionStatus(ctx context.Context, in *SyncSubscriptionStatusRequest, opts ...grpc.CallOption) (*SubscriptionStatus, error)
 }
 
 type subscriptionServiceClient struct {
@@ -108,6 +110,16 @@ func (c *subscriptionServiceClient) ListSubscriptionHistory(ctx context.Context,
 	return out, nil
 }
 
+func (c *subscriptionServiceClient) SyncSubscriptionStatus(ctx context.Context, in *SyncSubscriptionStatusRequest, opts ...grpc.CallOption) (*SubscriptionStatus, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SubscriptionStatus)
+	err := c.cc.Invoke(ctx, SubscriptionService_SyncSubscriptionStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SubscriptionServiceServer is the server API for SubscriptionService service.
 // All implementations must embed UnimplementedSubscriptionServiceServer
 // for forward compatibility.
@@ -118,6 +130,7 @@ type SubscriptionServiceServer interface {
 	GetStorageUsage(context.Context, *GetStorageUsageRequest) (*StorageUsage, error)
 	HandleAppleNotification(context.Context, *HandleAppleNotificationRequest) (*emptypb.Empty, error)
 	ListSubscriptionHistory(context.Context, *ListSubscriptionHistoryRequest) (*ListSubscriptionHistoryResponse, error)
+	SyncSubscriptionStatus(context.Context, *SyncSubscriptionStatusRequest) (*SubscriptionStatus, error)
 	mustEmbedUnimplementedSubscriptionServiceServer()
 }
 
@@ -145,6 +158,9 @@ func (UnimplementedSubscriptionServiceServer) HandleAppleNotification(context.Co
 }
 func (UnimplementedSubscriptionServiceServer) ListSubscriptionHistory(context.Context, *ListSubscriptionHistoryRequest) (*ListSubscriptionHistoryResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSubscriptionHistory not implemented")
+}
+func (UnimplementedSubscriptionServiceServer) SyncSubscriptionStatus(context.Context, *SyncSubscriptionStatusRequest) (*SubscriptionStatus, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncSubscriptionStatus not implemented")
 }
 func (UnimplementedSubscriptionServiceServer) mustEmbedUnimplementedSubscriptionServiceServer() {}
 func (UnimplementedSubscriptionServiceServer) testEmbeddedByValue()                             {}
@@ -275,6 +291,24 @@ func _SubscriptionService_ListSubscriptionHistory_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SubscriptionService_SyncSubscriptionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncSubscriptionStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SubscriptionServiceServer).SyncSubscriptionStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SubscriptionService_SyncSubscriptionStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SubscriptionServiceServer).SyncSubscriptionStatus(ctx, req.(*SyncSubscriptionStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SubscriptionService_ServiceDesc is the grpc.ServiceDesc for SubscriptionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -305,6 +339,10 @@ var SubscriptionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSubscriptionHistory",
 			Handler:    _SubscriptionService_ListSubscriptionHistory_Handler,
+		},
+		{
+			MethodName: "SyncSubscriptionStatus",
+			Handler:    _SubscriptionService_SyncSubscriptionStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

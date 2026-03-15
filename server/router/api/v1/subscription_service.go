@@ -276,6 +276,89 @@ func (s *SubscriptionService) ListSubscriptionHistory(ctx context.Context, req *
 	}, nil
 }
 
+func (s *SubscriptionService) SyncSubscriptionStatus(ctx context.Context, req *v1pb.SyncSubscriptionStatusRequest) (*v1pb.SubscriptionStatus, error) {
+	userID, err := extractOrGetCurrentUserID(ctx, req.Parent)
+	if err != nil {
+		return nil, err
+	}
+
+	// 如果请求设置为VIP，更新用户状态
+	if req.IsVip {
+		// 更新VIP状态为订阅类型
+		_, err = s.store.UpdateUserVIPStatus(ctx, &store.UpdateUserVIPStatus{
+			UserID:  userID,
+			IsVIP:   ptrBool(true),
+			VipType: ptrVipType(store.VipTypeSubscription),
+		})
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to update VIP status: %v", err)
+		}
+
+		// 更新存储配额为VIP配额（5GB）
+		_, err = s.store.UpdateUserStorageUsage(ctx, &store.UpdateUserStorageUsage{
+			UserID:     userID,
+			QuotaBytes: ptrInt64(store.VIPQuotaBytes),
+		})
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to update storage quota: %v", err)
+		}
+
+		// 如果有产品ID和过期时间，创建订阅记录
+		if req.ProductId != "" && req.ExpiresDate != nil {
+			expiresTs := req.ExpiresDate.AsTime().Unix()
+			_, err = s.store.CreateUserSubscription(ctx, &store.UserSubscription{
+				UserID:                userID,
+				ProductID:             req.ProductId,
+				Status:                store.SubscriptionStatusActive,
+				PurchaseDateTs:        time.Now().Unix(),
+				ExpiresDateTs:         expiresTs,
+				IsTrialPeriod:         false,
+				OriginalTransactionID: "sync_" + req.ProductId,
+			})
+			if err != nil {
+				// 记录错误但不返回，因为VIP状态已经更新
+				fmt.Printf("failed to create subscription record: %v\n", err)
+			}
+		}
+
+		// 记录同步历史
+		_, err = s.store.CreateSubscriptionHistory(ctx, &store.SubscriptionHistory{
+			UserID:    userID,
+			EventType: "SYNC",
+			EventTs:   time.Now().Unix(),
+			ToStatus:  ptrString("active"),
+		})
+		if err != nil {
+			fmt.Printf("failed to record sync history: %v\n", err)
+		}
+	} else {
+		// 取消VIP状态
+		_, err = s.store.UpdateUserVIPStatus(ctx, &store.UpdateUserVIPStatus{
+			UserID:  userID,
+			IsVIP:   ptrBool(false),
+			VipType: ptrVipType(store.VipTypeNone),
+		})
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to update VIP status: %v", err)
+		}
+
+		// 恢复存储配额为免费额度（50MB）
+		_, err = s.store.UpdateUserStorageUsage(ctx, &store.UpdateUserStorageUsage{
+			UserID:     userID,
+			QuotaBytes: ptrInt64(store.FreeQuotaBytes),
+		})
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to update storage quota: %v", err)
+		}
+	}
+
+	// 返回更新后的状态
+	statusReq := &v1pb.GetSubscriptionStatusRequest{
+		Name: fmt.Sprintf("users/%d", userID),
+	}
+	return s.GetSubscriptionStatus(ctx, statusReq)
+}
+
 // Apple收据验证相关
 
 const (

@@ -52,6 +52,9 @@ const (
 	// SubscriptionServiceListSubscriptionHistoryProcedure is the fully-qualified name of the
 	// SubscriptionService's ListSubscriptionHistory RPC.
 	SubscriptionServiceListSubscriptionHistoryProcedure = "/memos.api.v1.SubscriptionService/ListSubscriptionHistory"
+	// SubscriptionServiceSyncSubscriptionStatusProcedure is the fully-qualified name of the
+	// SubscriptionService's SyncSubscriptionStatus RPC.
+	SubscriptionServiceSyncSubscriptionStatusProcedure = "/memos.api.v1.SubscriptionService/SyncSubscriptionStatus"
 )
 
 // SubscriptionServiceClient is a client for the memos.api.v1.SubscriptionService service.
@@ -62,6 +65,7 @@ type SubscriptionServiceClient interface {
 	GetStorageUsage(context.Context, *connect.Request[v1.GetStorageUsageRequest]) (*connect.Response[v1.StorageUsage], error)
 	HandleAppleNotification(context.Context, *connect.Request[v1.HandleAppleNotificationRequest]) (*connect.Response[emptypb.Empty], error)
 	ListSubscriptionHistory(context.Context, *connect.Request[v1.ListSubscriptionHistoryRequest]) (*connect.Response[v1.ListSubscriptionHistoryResponse], error)
+	SyncSubscriptionStatus(context.Context, *connect.Request[v1.SyncSubscriptionStatusRequest]) (*connect.Response[v1.SubscriptionStatus], error)
 }
 
 // NewSubscriptionServiceClient constructs a client for the memos.api.v1.SubscriptionService
@@ -111,6 +115,12 @@ func NewSubscriptionServiceClient(httpClient connect.HTTPClient, baseURL string,
 			connect.WithSchema(subscriptionServiceMethods.ByName("ListSubscriptionHistory")),
 			connect.WithClientOptions(opts...),
 		),
+		syncSubscriptionStatus: connect.NewClient[v1.SyncSubscriptionStatusRequest, v1.SubscriptionStatus](
+			httpClient,
+			baseURL+SubscriptionServiceSyncSubscriptionStatusProcedure,
+			connect.WithSchema(subscriptionServiceMethods.ByName("SyncSubscriptionStatus")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -122,6 +132,7 @@ type subscriptionServiceClient struct {
 	getStorageUsage         *connect.Client[v1.GetStorageUsageRequest, v1.StorageUsage]
 	handleAppleNotification *connect.Client[v1.HandleAppleNotificationRequest, emptypb.Empty]
 	listSubscriptionHistory *connect.Client[v1.ListSubscriptionHistoryRequest, v1.ListSubscriptionHistoryResponse]
+	syncSubscriptionStatus  *connect.Client[v1.SyncSubscriptionStatusRequest, v1.SubscriptionStatus]
 }
 
 // GetSubscriptionStatus calls memos.api.v1.SubscriptionService.GetSubscriptionStatus.
@@ -154,6 +165,11 @@ func (c *subscriptionServiceClient) ListSubscriptionHistory(ctx context.Context,
 	return c.listSubscriptionHistory.CallUnary(ctx, req)
 }
 
+// SyncSubscriptionStatus calls memos.api.v1.SubscriptionService.SyncSubscriptionStatus.
+func (c *subscriptionServiceClient) SyncSubscriptionStatus(ctx context.Context, req *connect.Request[v1.SyncSubscriptionStatusRequest]) (*connect.Response[v1.SubscriptionStatus], error) {
+	return c.syncSubscriptionStatus.CallUnary(ctx, req)
+}
+
 // SubscriptionServiceHandler is an implementation of the memos.api.v1.SubscriptionService service.
 type SubscriptionServiceHandler interface {
 	GetSubscriptionStatus(context.Context, *connect.Request[v1.GetSubscriptionStatusRequest]) (*connect.Response[v1.SubscriptionStatus], error)
@@ -162,6 +178,7 @@ type SubscriptionServiceHandler interface {
 	GetStorageUsage(context.Context, *connect.Request[v1.GetStorageUsageRequest]) (*connect.Response[v1.StorageUsage], error)
 	HandleAppleNotification(context.Context, *connect.Request[v1.HandleAppleNotificationRequest]) (*connect.Response[emptypb.Empty], error)
 	ListSubscriptionHistory(context.Context, *connect.Request[v1.ListSubscriptionHistoryRequest]) (*connect.Response[v1.ListSubscriptionHistoryResponse], error)
+	SyncSubscriptionStatus(context.Context, *connect.Request[v1.SyncSubscriptionStatusRequest]) (*connect.Response[v1.SubscriptionStatus], error)
 }
 
 // NewSubscriptionServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -207,6 +224,12 @@ func NewSubscriptionServiceHandler(svc SubscriptionServiceHandler, opts ...conne
 		connect.WithSchema(subscriptionServiceMethods.ByName("ListSubscriptionHistory")),
 		connect.WithHandlerOptions(opts...),
 	)
+	subscriptionServiceSyncSubscriptionStatusHandler := connect.NewUnaryHandler(
+		SubscriptionServiceSyncSubscriptionStatusProcedure,
+		svc.SyncSubscriptionStatus,
+		connect.WithSchema(subscriptionServiceMethods.ByName("SyncSubscriptionStatus")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.SubscriptionService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SubscriptionServiceGetSubscriptionStatusProcedure:
@@ -221,6 +244,8 @@ func NewSubscriptionServiceHandler(svc SubscriptionServiceHandler, opts ...conne
 			subscriptionServiceHandleAppleNotificationHandler.ServeHTTP(w, r)
 		case SubscriptionServiceListSubscriptionHistoryProcedure:
 			subscriptionServiceListSubscriptionHistoryHandler.ServeHTTP(w, r)
+		case SubscriptionServiceSyncSubscriptionStatusProcedure:
+			subscriptionServiceSyncSubscriptionStatusHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -252,4 +277,8 @@ func (UnimplementedSubscriptionServiceHandler) HandleAppleNotification(context.C
 
 func (UnimplementedSubscriptionServiceHandler) ListSubscriptionHistory(context.Context, *connect.Request[v1.ListSubscriptionHistoryRequest]) (*connect.Response[v1.ListSubscriptionHistoryResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.SubscriptionService.ListSubscriptionHistory is not implemented"))
+}
+
+func (UnimplementedSubscriptionServiceHandler) SyncSubscriptionStatus(context.Context, *connect.Request[v1.SyncSubscriptionStatusRequest]) (*connect.Response[v1.SubscriptionStatus], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.SubscriptionService.SyncSubscriptionStatus is not implemented"))
 }

@@ -48,6 +48,13 @@ service SubscriptionService {
     option (google.api.http) = {get: "/api/v1/{parent=users/*}/subscriptionHistory"};
     option (google.api.method_signature) = "parent";
   }
+
+  rpc SyncSubscriptionStatus(SyncSubscriptionStatusRequest) returns (SubscriptionStatus) {
+    option (google.api.http) = {
+      post: "/api/v1/{parent=users/*}/subscription:sync"
+      body: "*"
+    };
+  }
 }
 
 message SubscriptionStatus {
@@ -209,6 +216,19 @@ message ListSubscriptionHistoryResponse {
   string next_page_token = 2;
 
   int32 total_size = 3;
+}
+
+message SyncSubscriptionStatusRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+
+  bool is_vip = 2 [(google.api.field_behavior) = REQUIRED];
+
+  string product_id = 3 [(google.api.field_behavior) = OPTIONAL];
+
+  google.protobuf.Timestamp expires_date = 4 [(google.api.field_behavior) = OPTIONAL];
 }
 
 message SubscriptionHistoryEvent {
