@@ -21,6 +21,7 @@ import (
 	"github.com/usememos/memos/server/router/frontend"
 	"github.com/usememos/memos/server/router/rss"
 	"github.com/usememos/memos/server/runner/s3presign"
+	"github.com/usememos/memos/server/runner/trialchecker"
 	"github.com/usememos/memos/server/service/verification"
 	"github.com/usememos/memos/store"
 )
@@ -157,9 +158,10 @@ func (s *Server) StartBackgroundRunners(ctx context.Context) {
 	// Create a separate context for each background runner
 	// This allows us to control cancellation for each runner independently
 	s3Context, s3Cancel := context.WithCancel(ctx)
+	trialContext, trialCancel := context.WithCancel(ctx)
 
 	// Store the cancel function so we can properly shut down runners
-	s.runnerCancelFuncs = append(s.runnerCancelFuncs, s3Cancel)
+	s.runnerCancelFuncs = append(s.runnerCancelFuncs, s3Cancel, trialCancel)
 
 	// Create and start S3 presign runner
 	s3presignRunner := s3presign.NewRunner(s.Store)
@@ -169,6 +171,28 @@ func (s *Server) StartBackgroundRunners(ctx context.Context) {
 	go func() {
 		s3presignRunner.Run(s3Context)
 		slog.Info("s3presign runner stopped")
+	}()
+
+	// Create and start trial period checker
+	trialChecker := trialchecker.NewRunner(s.Store)
+	trialChecker.Run(ctx) // Run once at startup
+
+	// Start periodic trial checker (every hour)
+	go func() {
+		ticker := time.NewTicker(1 * time.Hour)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-trialContext.Done():
+				slog.Info("trial checker stopped")
+				return
+			case <-ticker.C:
+				if err := trialChecker.Run(trialContext); err != nil {
+					slog.Error("trial checker failed", "error", err)
+				}
+			}
+		}
 	}()
 
 	// Log the number of goroutines running

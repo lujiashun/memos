@@ -72,4 +72,25 @@ type Driver interface {
 	CreateVerification(ctx context.Context, create *Verification) (*Verification, error)
 	GetVerification(ctx context.Context, phoneNumber, code, purpose string) (*Verification, error)
 	UpdateVerification(ctx context.Context, update *Verification) error
+
+	// UserSubscription model related methods.
+	CreateUserSubscription(ctx context.Context, create *UserSubscription) (*UserSubscription, error)
+	GetUserSubscription(ctx context.Context, find *FindUserSubscription) (*UserSubscription, error)
+	ListUserSubscriptions(ctx context.Context, find *FindUserSubscription) ([]*UserSubscription, error)
+	UpdateUserSubscription(ctx context.Context, update *UpdateUserSubscription) (*UserSubscription, error)
+	DeleteUserSubscription(ctx context.Context, delete *DeleteUserSubscription) error
+
+	// UserVIPStatus model related methods.
+	CreateUserVIPStatus(ctx context.Context, create *UserVIPStatus) (*UserVIPStatus, error)
+	GetUserVIPStatus(ctx context.Context, userID int32) (*UserVIPStatus, error)
+	UpdateUserVIPStatus(ctx context.Context, update *UpdateUserVIPStatus) (*UserVIPStatus, error)
+
+	// UserStorageUsage model related methods.
+	CreateUserStorageUsage(ctx context.Context, create *UserStorageUsage) (*UserStorageUsage, error)
+	GetUserStorageUsage(ctx context.Context, userID int32) (*UserStorageUsage, error)
+	UpdateUserStorageUsage(ctx context.Context, update *UpdateUserStorageUsage) (*UserStorageUsage, error)
+
+	// SubscriptionHistory model related methods.
+	CreateSubscriptionHistory(ctx context.Context, create *SubscriptionHistory) (*SubscriptionHistory, error)
+	ListSubscriptionHistory(ctx context.Context, find *FindSubscriptionHistory) ([]*SubscriptionHistory, error)
 }

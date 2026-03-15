@@ -203,6 +203,43 @@ func (s *APIV1Service) CreateUser(ctx context.Context, request *v1pb.CreateUserR
 		return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)
 	}
 
+	// Initialize VIP status with trial period
+	trialEndTs := time.Now().AddDate(0, 0, store.TrialDurationDays).Unix()
+	trialStartTs := time.Now().Unix()
+	_, err = s.Store.CreateUserVIPStatus(ctx, &store.UserVIPStatus{
+		UserID:       user.ID,
+		IsVIP:        true,
+		VipType:      store.VipTypeTrial,
+		TrialStartTs: &trialStartTs,
+		TrialEndTs:   &trialEndTs,
+		TrialUsed:    true,
+	})
+	if err != nil {
+		// Log error but don't fail user creation
+		fmt.Printf("failed to initialize VIP status for user %d: %v\n", user.ID, err)
+	}
+
+	// Initialize storage usage with VIP quota
+	_, err = s.Store.CreateUserStorageUsage(ctx, &store.UserStorageUsage{
+		UserID:           user.ID,
+		QuotaBytes:       store.VIPQuotaBytes,
+		LastCalculatedTs: time.Now().Unix(),
+	})
+	if err != nil {
+		// Log error but don't fail user creation
+		fmt.Printf("failed to initialize storage usage for user %d: %v\n", user.ID, err)
+	}
+
+	// Record trial start in history
+	_, err = s.Store.CreateSubscriptionHistory(ctx, &store.SubscriptionHistory{
+		UserID:    user.ID,
+		EventType: "TRIAL_START",
+		EventTs:   time.Now().Unix(),
+	})
+	if err != nil {
+		fmt.Printf("failed to record trial start for user %d: %v\n", user.ID, err)
+	}
+
 	return convertUserFromStore(user), nil
 }
 

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/sync/semaphore"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/usememos/memos/internal/profile"
 	"github.com/usememos/memos/plugin/markdown"
@@ -27,6 +28,7 @@ type APIV1Service struct {
 	v1pb.UnimplementedShortcutServiceServer
 	v1pb.UnimplementedActivityServiceServer
 	v1pb.UnimplementedIdentityProviderServiceServer
+	*SubscriptionService
 
 	Secret              string
 	Profile             *profile.Profile
@@ -43,6 +45,7 @@ func NewAPIV1Service(secret string, profile *profile.Profile, store *store.Store
 		markdown.WithTagExtension(),
 	)
 	return &APIV1Service{
+		SubscriptionService:  NewSubscriptionService(store),
 		Secret:              secret,
 		Profile:             profile,
 		Store:               store,
@@ -145,6 +148,9 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 	if err := v1pb.RegisterIdentityProviderServiceHandlerServer(ctx, gwMux, s); err != nil {
 		return err
 	}
+	if err := v1pb.RegisterSubscriptionServiceHandlerServer(ctx, gwMux, s); err != nil {
+		return err
+	}
 	gwGroup := echoServer.Group("")
 	gwGroup.Use(middleware.CORS())
 	handler := echo.WrapHandler(gwMux)
@@ -192,4 +198,54 @@ func getClientIPFromRequest(r *http.Request) string {
 	}
 	// Fallback to remote address
 	return r.RemoteAddr
+}
+
+// SubscriptionService
+
+func (s *ConnectServiceHandler) GetSubscriptionStatus(ctx context.Context, req *connect.Request[v1pb.GetSubscriptionStatusRequest]) (*connect.Response[v1pb.SubscriptionStatus], error) {
+	resp, err := s.APIV1Service.GetSubscriptionStatus(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ValidateReceipt(ctx context.Context, req *connect.Request[v1pb.ValidateReceiptRequest]) (*connect.Response[v1pb.ValidateReceiptResponse], error) {
+	resp, err := s.APIV1Service.ValidateReceipt(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) RestorePurchases(ctx context.Context, req *connect.Request[v1pb.RestorePurchasesRequest]) (*connect.Response[v1pb.RestorePurchasesResponse], error) {
+	resp, err := s.APIV1Service.RestorePurchases(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) GetStorageUsage(ctx context.Context, req *connect.Request[v1pb.GetStorageUsageRequest]) (*connect.Response[v1pb.StorageUsage], error) {
+	resp, err := s.APIV1Service.GetStorageUsage(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) HandleAppleNotification(ctx context.Context, req *connect.Request[v1pb.HandleAppleNotificationRequest]) (*connect.Response[emptypb.Empty], error) {
+	resp, err := s.APIV1Service.HandleAppleNotification(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListSubscriptionHistory(ctx context.Context, req *connect.Request[v1pb.ListSubscriptionHistoryRequest]) (*connect.Response[v1pb.ListSubscriptionHistoryResponse], error) {
+	resp, err := s.APIV1Service.ListSubscriptionHistory(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
 }

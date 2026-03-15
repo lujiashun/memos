@@ -125,6 +125,20 @@ func (s *APIV1Service) CreateAttachment(ctx context.Context, request *v1pb.Creat
 	if size > uploadSizeLimit {
 		return nil, status.Errorf(codes.InvalidArgument, "file size exceeds the limit")
 	}
+
+	// Check storage quota
+	storageUsage, err := s.Store.GetUserStorageUsage(ctx, user.ID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get storage usage: %v", err)
+	}
+	
+	newTotalBytes := storageUsage.TotalBytes + int64(size)
+	if newTotalBytes > storageUsage.QuotaBytes {
+		return nil, status.Errorf(codes.ResourceExhausted, 
+			"storage quota exceeded. Used: %d bytes, Quota: %d bytes. Please upgrade to VIP or delete some content.", 
+			storageUsage.TotalBytes, storageUsage.QuotaBytes)
+	}
+
 	create.Size = int64(size)
 	create.Blob = request.Attachment.Content
 

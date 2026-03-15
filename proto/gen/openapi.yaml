@@ -69,6 +69,27 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/apple/notifications:
+        post:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_HandleAppleNotification
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/HandleAppleNotificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/attachments:
         get:
             tags:
@@ -1880,6 +1901,152 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/storage:
+        get:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_GetStorageUsage
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StorageUsage'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/subscription:
+        get:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_GetSubscriptionStatus
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SubscriptionStatus'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/subscription:restore:
+        post:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_RestorePurchases
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RestorePurchasesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RestorePurchasesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/subscription:validateReceipt:
+        post:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_ValidateReceipt
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ValidateReceiptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ValidateReceiptResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/subscriptionHistory:
+        get:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_ListSubscriptionHistory
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListSubscriptionHistoryResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users/{user}/webhooks:
         get:
             tags:
@@ -2282,6 +2449,13 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        HandleAppleNotificationRequest:
+            required:
+                - signedPayload
+            type: object
+            properties:
+                signedPayload:
+                    type: string
         IdentityProvider:
             required:
                 - type
@@ -2600,6 +2774,18 @@ components:
                     items:
                         $ref: '#/components/schemas/Shortcut'
                     description: The list of shortcuts.
+        ListSubscriptionHistoryResponse:
+            type: object
+            properties:
+                events:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SubscriptionHistoryEvent'
+                nextPageToken:
+                    type: string
+                totalSize:
+                    type: integer
+                    format: int32
         ListUserNotificationsResponse:
             type: object
             properties:
@@ -2926,6 +3112,23 @@ components:
                 success:
                     type: boolean
             description: ResetPasswordResponse 重置密码响应
+        RestorePurchasesRequest:
+            required:
+                - parent
+            type: object
+            properties:
+                parent:
+                    type: string
+        RestorePurchasesResponse:
+            type: object
+            properties:
+                status:
+                    $ref: '#/components/schemas/SubscriptionStatus'
+                restored:
+                    type: boolean
+                restoredCount:
+                    type: integer
+                    format: int32
         SendVerificationCodeRequest:
             required:
                 - phoneNumber
@@ -3080,6 +3283,13 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        StorageBreakdown:
+            type: object
+            properties:
+                attachmentBytes:
+                    type: string
+                memoContentBytes:
+                    type: string
         StorageSetting_S3Config:
             type: object
             properties:
@@ -3098,6 +3308,104 @@ components:
             description: |-
                 S3 configuration for cloud storage backend.
                  Reference: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/
+        StorageUsage:
+            type: object
+            properties:
+                name:
+                    type: string
+                usedBytes:
+                    type: string
+                quotaBytes:
+                    type: string
+                usedPercentage:
+                    type: integer
+                    format: int32
+                breakdown:
+                    $ref: '#/components/schemas/StorageBreakdown'
+                quotaExceeded:
+                    type: boolean
+        Subscription:
+            type: object
+            properties:
+                productId:
+                    type: string
+                state:
+                    enum:
+                        - SUBSCRIPTION_STATE_UNSPECIFIED
+                        - ACTIVE
+                        - EXPIRED
+                        - GRACE_PERIOD
+                        - BILLING_RETRY
+                        - CANCELLED
+                    type: string
+                    format: enum
+                purchaseDate:
+                    type: string
+                    format: date-time
+                expiresDate:
+                    type: string
+                    format: date-time
+                isTrial:
+                    type: boolean
+                willRenew:
+                    type: boolean
+                originalTransactionId:
+                    type: string
+        SubscriptionHistoryEvent:
+            type: object
+            properties:
+                eventType:
+                    enum:
+                        - EVENT_TYPE_UNSPECIFIED
+                        - PURCHASE
+                        - RENEWAL
+                        - CANCEL
+                        - EXPIRE
+                        - REFUND
+                        - TRIAL_START
+                        - TRIAL_END
+                        - GRACE_PERIOD_START
+                        - GRACE_PERIOD_END
+                    type: string
+                    format: enum
+                eventTime:
+                    type: string
+                    format: date-time
+                productId:
+                    type: string
+                fromStatus:
+                    type: string
+                toStatus:
+                    type: string
+                details:
+                    type: object
+                    additionalProperties:
+                        type: string
+        SubscriptionStatus:
+            type: object
+            properties:
+                name:
+                    type: string
+                isVip:
+                    type: boolean
+                vipType:
+                    enum:
+                        - VIP_TYPE_UNSPECIFIED
+                        - NONE
+                        - TRIAL
+                        - SUBSCRIPTION
+                    type: string
+                    format: enum
+                subscription:
+                    $ref: '#/components/schemas/Subscription'
+                trialInfo:
+                    $ref: '#/components/schemas/TrialInfo'
+                storageQuotaBytes:
+                    type: string
+                storageUsedBytes:
+                    type: string
+                storageExceeded:
+                    type: boolean
         TextRefineRequest:
             type: object
             properties:
@@ -3115,6 +3423,20 @@ components:
                     type: string
                     description: The refined/optimized text.
             description: Response for text refinement.
+        TrialInfo:
+            type: object
+            properties:
+                trialUsed:
+                    type: boolean
+                trialStartDate:
+                    type: string
+                    format: date-time
+                trialEndDate:
+                    type: string
+                    format: date-time
+                daysRemaining:
+                    type: integer
+                    format: int32
         UpsertMemoReactionRequest:
             required:
                 - name
@@ -3347,6 +3669,27 @@ components:
                     description: The last update time of the webhook.
                     format: date-time
             description: UserWebhook represents a webhook owned by a user.
+        ValidateReceiptRequest:
+            required:
+                - parent
+                - receiptData
+            type: object
+            properties:
+                parent:
+                    type: string
+                receiptData:
+                    type: string
+                sandbox:
+                    type: boolean
+        ValidateReceiptResponse:
+            type: object
+            properties:
+                status:
+                    $ref: '#/components/schemas/SubscriptionStatus'
+                valid:
+                    type: boolean
+                errorMessage:
+                    type: string
         VerifyPhoneRequest:
             required:
                 - phoneNumber
@@ -3382,4 +3725,5 @@ tags:
     - name: InstanceService
     - name: MemoService
     - name: ShortcutService
+    - name: SubscriptionService
     - name: UserService
