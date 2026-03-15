@@ -306,7 +306,7 @@ func (s *SubscriptionService) SyncSubscriptionStatus(ctx context.Context, req *v
 		// 如果有产品ID和过期时间，创建订阅记录
 		if req.ProductId != "" && req.ExpiresDate != nil {
 			expiresTs := req.ExpiresDate.AsTime().Unix()
-			_, err = s.store.CreateUserSubscription(ctx, &store.UserSubscription{
+			subscription, err := s.store.CreateUserSubscription(ctx, &store.UserSubscription{
 				UserID:                userID,
 				ProductID:             req.ProductId,
 				Status:                store.SubscriptionStatusActive,
@@ -318,6 +318,15 @@ func (s *SubscriptionService) SyncSubscriptionStatus(ctx context.Context, req *v
 			if err != nil {
 				// 记录错误但不返回，因为VIP状态已经更新
 				fmt.Printf("failed to create subscription record: %v\n", err)
+			} else {
+				// 更新VIP状态的SubscriptionID，以便GetSubscriptionStatus能正确返回有效期
+				_, err = s.store.UpdateUserVIPStatus(ctx, &store.UpdateUserVIPStatus{
+					UserID:         userID,
+					SubscriptionID: &subscription.ID,
+				})
+				if err != nil {
+					fmt.Printf("failed to update VIP status with subscription ID: %v\n", err)
+				}
 			}
 		}
 
