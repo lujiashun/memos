@@ -18,7 +18,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/v1/user_service.proto.
  */
 export const file_api_v1_user_service: GenFile = /*@__PURE__*/
-  fileDesc("ChlhcGkvdjEvdXNlcl9zZXJ2aWNlLnByb3RvEgxtZW1vcy5hcGkudjEi8QMKBFVzZXISEQoEbmFtZRgBIAEoCUID4EEIEioKBHJvbGUYAiABKA4yFy5tZW1vcy5hcGkudjEuVXNlci5Sb2xlQgPgQQISFQoIdXNlcm5hbWUYAyABKAlCA+BBAhISCgVlbWFpbBgEIAEoCUID4EEBEhkKDGRpc3BsYXlfbmFtZRgFIAEoCUID4EEBEhcKCmF2YXRhcl91cmwYBiABKAlCA+BBARIYCgtkZXNjcmlwdGlvbhgHIAEoCUID4EEBEhkKDHBob25lX251bWJlchgIIAEoCUID4EEBEhUKCHBhc3N3b3JkGAkgASgJQgPgQQQSJwoFc3RhdGUYCiABKA4yEy5tZW1vcy5hcGkudjEuU3RhdGVCA+BBAhI0CgtjcmVhdGVfdGltZRgLIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAxI0Cgt1cGRhdGVfdGltZRgMIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAyIxCgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIJCgVBRE1JThACEggKBFVTRVIQAzo36kE0ChFtZW1vcy5hcGkudjEvVXNlchIMdXNlcnMve3VzZXJ9GgRuYW1lKgV1c2VyczIEdXNlciJzChBMaXN0VXNlcnNSZXF1ZXN0EhYKCXBhZ2Vfc2l6ZRgBIAEoBUID4EEBEhcKCnBhZ2VfdG9rZW4YAiABKAlCA+BBARITCgZmaWx0ZXIYAyABKAlCA+BBARIZCgxzaG93X2RlbGV0ZWQYBCABKAhCA+BBASJjChFMaXN0VXNlcnNSZXNwb25zZRIhCgV1c2VycxgBIAMoCzISLm1lbW9zLmFwaS52MS5Vc2VyEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCRISCgp0b3RhbF9zaXplGAMgASgFIm0KDkdldFVzZXJSZXF1ZXN0EicKBG5hbWUYASABKAlCGeBBAvpBEwoRbWVtb3MuYXBpLnYxL1VzZXISMgoJcmVhZF9tYXNrGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0ID4EEBItoBChFDcmVhdGVVc2VyUmVxdWVzdBIoCgR1c2VyGAEgASgLMhIubWVtb3MuYXBpLnYxLlVzZXJCBuBBAuBBBBIUCgd1c2VyX2lkGAIgASgJQgPgQQESGgoNdmFsaWRhdGVfb25seRgDIAEoCEID4EEBEhcKCnJlcXVlc3RfaWQYBCABKAlCA+BBARIfChVzbXNfdmVyaWZpY2F0aW9uX2NvZGUYBSABKAlIABIfChVwaG9uZV92ZXJpZmljYXRpb25faWQYBiABKAlIAEIOCgx2ZXJpZmljYXRpb24ijAEKEVVwZGF0ZVVzZXJSZXF1ZXN0EiUKBHVzZXIYASABKAsyEi5tZW1vcy5hcGkudjEuVXNlckID4EECEjQKC3VwZGF0ZV9tYXNrGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0ID4EECEhoKDWFsbG93X21pc3NpbmcYAyABKAhCA+BBASJQChFEZWxldGVVc2VyUmVxdWVzdBInCgRuYW1lGAEgASgJQhngQQL6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEhIKBWZvcmNlGAIgASgIQgPgQQEi2AMKCVVzZXJTdGF0cxIRCgRuYW1lGAEgASgJQgPgQQgSOwoXbWVtb19kaXNwbGF5X3RpbWVzdGFtcHMYAiADKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEj4KD21lbW9fdHlwZV9zdGF0cxgDIAEoCzIlLm1lbW9zLmFwaS52MS5Vc2VyU3RhdHMuTWVtb1R5cGVTdGF0cxI4Cgl0YWdfY291bnQYBCADKAsyJS5tZW1vcy5hcGkudjEuVXNlclN0YXRzLlRhZ0NvdW50RW50cnkSFAoMcGlubmVkX21lbW9zGAUgAygJEhgKEHRvdGFsX21lbW9fY291bnQYBiABKAUaLwoNVGFnQ291bnRFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAU6AjgBGl8KDU1lbW9UeXBlU3RhdHMSEgoKbGlua19jb3VudBgBIAEoBRISCgpjb2RlX2NvdW50GAIgASgFEhIKCnRvZG9fY291bnQYAyABKAUSEgoKdW5kb19jb3VudBgEIAEoBTo/6kE8ChZtZW1vcy5hcGkudjEvVXNlclN0YXRzEgx1c2Vycy97dXNlcn0qCXVzZXJTdGF0czIJdXNlclN0YXRzIj4KE0dldFVzZXJTdGF0c1JlcXVlc3QSJwoEbmFtZRgBIAEoCUIZ4EEC+kETChFtZW1vcy5hcGkudjEvVXNlciIZChdMaXN0QWxsVXNlclN0YXRzUmVxdWVzdCJCChhMaXN0QWxsVXNlclN0YXRzUmVzcG9uc2USJgoFc3RhdHMYASADKAsyFy5tZW1vcy5hcGkudjEuVXNlclN0YXRzIoIECgtVc2VyU2V0dGluZxIRCgRuYW1lGAEgASgJQgPgQQgSQwoPZ2VuZXJhbF9zZXR0aW5nGAIgASgLMigubWVtb3MuYXBpLnYxLlVzZXJTZXR0aW5nLkdlbmVyYWxTZXR0aW5nSAASRQoQd2ViaG9va3Nfc2V0dGluZxgFIAEoCzIpLm1lbW9zLmFwaS52MS5Vc2VyU2V0dGluZy5XZWJob29rc1NldHRpbmdIABp5Cg5HZW5lcmFsU2V0dGluZxITCgZsb2NhbGUYASABKAlCA+BBARIcCg9tZW1vX3Zpc2liaWxpdHkYAyABKAlCA+BBARISCgV0aGVtZRgEIAEoCUID4EEBEiAKE21lbW9faW5zaWdodF9wcm9tcHQYBSABKAlCA+BBARo+Cg9XZWJob29rc1NldHRpbmcSKwoId2ViaG9va3MYASADKAsyGS5tZW1vcy5hcGkudjEuVXNlcldlYmhvb2siNQoDS2V5EhMKD0tFWV9VTlNQRUNJRklFRBAAEgsKB0dFTkVSQUwQARIMCghXRUJIT09LUxAEOlnqQVYKGG1lbW9zLmFwaS52MS9Vc2VyU2V0dGluZxIfdXNlcnMve3VzZXJ9L3NldHRpbmdzL3tzZXR0aW5nfSoMdXNlclNldHRpbmdzMgt1c2VyU2V0dGluZ0IHCgV2YWx1ZSJHChVHZXRVc2VyU2V0dGluZ1JlcXVlc3QSLgoEbmFtZRgBIAEoCUIg4EEC+kEaChhtZW1vcy5hcGkudjEvVXNlclNldHRpbmcigQEKGFVwZGF0ZVVzZXJTZXR0aW5nUmVxdWVzdBIvCgdzZXR0aW5nGAEgASgLMhkubWVtb3MuYXBpLnYxLlVzZXJTZXR0aW5nQgPgQQISNAoLdXBkYXRlX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrQgPgQQIidQoXTGlzdFVzZXJTZXR0aW5nc1JlcXVlc3QSKQoGcGFyZW50GAEgASgJQhngQQL6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEhYKCXBhZ2Vfc2l6ZRgCIAEoBUID4EEBEhcKCnBhZ2VfdG9rZW4YAyABKAlCA+BBASJ0ChhMaXN0VXNlclNldHRpbmdzUmVzcG9uc2USKwoIc2V0dGluZ3MYASADKAsyGS5tZW1vcy5hcGkudjEuVXNlclNldHRpbmcSFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJEhIKCnRvdGFsX3NpemUYAyABKAUi8gIKE1BlcnNvbmFsQWNjZXNzVG9rZW4SEQoEbmFtZRgBIAEoCUID4EEIEhgKC2Rlc2NyaXB0aW9uGAIgASgJQgPgQQESMwoKY3JlYXRlZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAxIzCgpleHBpcmVzX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEBEjUKDGxhc3RfdXNlZF9hdBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAzqMAepBiAEKIG1lbW9zLmFwaS52MS9QZXJzb25hbEFjY2Vzc1Rva2VuEjl1c2Vycy97dXNlcn0vcGVyc29uYWxBY2Nlc3NUb2tlbnMve3BlcnNvbmFsX2FjY2Vzc190b2tlbn0qFHBlcnNvbmFsQWNjZXNzVG9rZW5zMhNwZXJzb25hbEFjY2Vzc1Rva2VuIn0KH0xpc3RQZXJzb25hbEFjY2Vzc1Rva2Vuc1JlcXVlc3QSKQoGcGFyZW50GAEgASgJQhngQQL6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEhYKCXBhZ2Vfc2l6ZRgCIAEoBUID4EEBEhcKCnBhZ2VfdG9rZW4YAyABKAlCA+BBASKSAQogTGlzdFBlcnNvbmFsQWNjZXNzVG9rZW5zUmVzcG9uc2USQQoWcGVyc29uYWxfYWNjZXNzX3Rva2VucxgBIAMoCzIhLm1lbW9zLmFwaS52MS5QZXJzb25hbEFjY2Vzc1Rva2VuEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCRISCgp0b3RhbF9zaXplGAMgASgFIoUBCiBDcmVhdGVQZXJzb25hbEFjY2Vzc1Rva2VuUmVxdWVzdBIpCgZwYXJlbnQYASABKAlCGeBBAvpBEwoRbWVtb3MuYXBpLnYxL1VzZXISGAoLZGVzY3JpcHRpb24YAiABKAlCA+BBARIcCg9leHBpcmVzX2luX2RheXMYAyABKAVCA+BBASJ0CiFDcmVhdGVQZXJzb25hbEFjY2Vzc1Rva2VuUmVzcG9uc2USQAoVcGVyc29uYWxfYWNjZXNzX3Rva2VuGAEgASgLMiEubWVtb3MuYXBpLnYxLlBlcnNvbmFsQWNjZXNzVG9rZW4SDQoFdG9rZW4YAiABKAkiWgogRGVsZXRlUGVyc29uYWxBY2Nlc3NUb2tlblJlcXVlc3QSNgoEbmFtZRgBIAEoCUIo4EEC+kEiCiBtZW1vcy5hcGkudjEvUGVyc29uYWxBY2Nlc3NUb2tlbiKqAQoLVXNlcldlYmhvb2sSDAoEbmFtZRgBIAEoCRILCgN1cmwYAiABKAkSFAoMZGlzcGxheV9uYW1lGAMgASgJEjQKC2NyZWF0ZV90aW1lGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjQKC3VwZGF0ZV90aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDIi4KF0xpc3RVc2VyV2ViaG9va3NSZXF1ZXN0EhMKBnBhcmVudBgBIAEoCUID4EECIkcKGExpc3RVc2VyV2ViaG9va3NSZXNwb25zZRIrCgh3ZWJob29rcxgBIAMoCzIZLm1lbW9zLmFwaS52MS5Vc2VyV2ViaG9vayJgChhDcmVhdGVVc2VyV2ViaG9va1JlcXVlc3QSEwoGcGFyZW50GAEgASgJQgPgQQISLwoHd2ViaG9vaxgCIAEoCzIZLm1lbW9zLmFwaS52MS5Vc2VyV2ViaG9va0ID4EECInwKGFVwZGF0ZVVzZXJXZWJob29rUmVxdWVzdBIvCgd3ZWJob29rGAEgASgLMhkubWVtb3MuYXBpLnYxLlVzZXJXZWJob29rQgPgQQISLwoLdXBkYXRlX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrIi0KGERlbGV0ZVVzZXJXZWJob29rUmVxdWVzdBIRCgRuYW1lGAEgASgJQgPgQQIiigQKEFVzZXJOb3RpZmljYXRpb24SFAoEbmFtZRgBIAEoCUIG4EED4EEIEikKBnNlbmRlchgCIAEoCUIZ4EED+kETChFtZW1vcy5hcGkudjEvVXNlchI6CgZzdGF0dXMYAyABKA4yJS5tZW1vcy5hcGkudjEuVXNlck5vdGlmaWNhdGlvbi5TdGF0dXNCA+BBARI0CgtjcmVhdGVfdGltZRgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAxI2CgR0eXBlGAUgASgOMiMubWVtb3MuYXBpLnYxLlVzZXJOb3RpZmljYXRpb24uVHlwZUID4EEDEh0KC2FjdGl2aXR5X2lkGAYgASgFQgPgQQFIAIgBASI6CgZTdGF0dXMSFgoSU1RBVFVTX1VOU1BFQ0lGSUVEEAASCgoGVU5SRUFEEAESDAoIQVJDSElWRUQQAiIuCgRUeXBlEhQKEFRZUEVfVU5TUEVDSUZJRUQQABIQCgxNRU1PX0NPTU1FTlQQATpw6kFtCh1tZW1vcy5hcGkudjEvVXNlck5vdGlmaWNhdGlvbhIpdXNlcnMve3VzZXJ9L25vdGlmaWNhdGlvbnMve25vdGlmaWNhdGlvbn0aBG5hbWUqDW5vdGlmaWNhdGlvbnMyDG5vdGlmaWNhdGlvbkIOCgxfYWN0aXZpdHlfaWQijwEKHExpc3RVc2VyTm90aWZpY2F0aW9uc1JlcXVlc3QSKQoGcGFyZW50GAEgASgJQhngQQL6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEhYKCXBhZ2Vfc2l6ZRgCIAEoBUID4EEBEhcKCnBhZ2VfdG9rZW4YAyABKAlCA+BBARITCgZmaWx0ZXIYBCABKAlCA+BBASJvCh1MaXN0VXNlck5vdGlmaWNhdGlvbnNSZXNwb25zZRI1Cg1ub3RpZmljYXRpb25zGAEgAygLMh4ubWVtb3MuYXBpLnYxLlVzZXJOb3RpZmljYXRpb24SFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJIpABCh1VcGRhdGVVc2VyTm90aWZpY2F0aW9uUmVxdWVzdBI5Cgxub3RpZmljYXRpb24YASABKAsyHi5tZW1vcy5hcGkudjEuVXNlck5vdGlmaWNhdGlvbkID4EECEjQKC3VwZGF0ZV9tYXNrGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0ID4EECIlQKHURlbGV0ZVVzZXJOb3RpZmljYXRpb25SZXF1ZXN0EjMKBG5hbWUYASABKAlCJeBBAvpBHwodbWVtb3MuYXBpLnYxL1VzZXJOb3RpZmljYXRpb24ygBcKC1VzZXJTZXJ2aWNlEmMKCUxpc3RVc2VycxIeLm1lbW9zLmFwaS52MS5MaXN0VXNlcnNSZXF1ZXN0Gh8ubWVtb3MuYXBpLnYxLkxpc3RVc2Vyc1Jlc3BvbnNlIhWC0+STAg8SDS9hcGkvdjEvdXNlcnMSYgoHR2V0VXNlchIcLm1lbW9zLmFwaS52MS5HZXRVc2VyUmVxdWVzdBoSLm1lbW9zLmFwaS52MS5Vc2VyIiXaQQRuYW1lgtPkkwIYEhYvYXBpL3YxL3tuYW1lPXVzZXJzLyp9EmIKCkNyZWF0ZVVzZXISHy5tZW1vcy5hcGkudjEuQ3JlYXRlVXNlclJlcXVlc3QaEi5tZW1vcy5hcGkudjEuVXNlciIf2kEEdXNlcoLT5JMCEjoBKiINL2FwaS92MS91c2VycxJ/CgpVcGRhdGVVc2VyEh8ubWVtb3MuYXBpLnYxLlVwZGF0ZVVzZXJSZXF1ZXN0GhIubWVtb3MuYXBpLnYxLlVzZXIiPNpBEHVzZXIsdXBkYXRlX21hc2uC0+STAiM6BHVzZXIyGy9hcGkvdjEve3VzZXIubmFtZT11c2Vycy8qfRJsCgpEZWxldGVVc2VyEh8ubWVtb3MuYXBpLnYxLkRlbGV0ZVVzZXJSZXF1ZXN0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5IiXaQQRuYW1lgtPkkwIYKhYvYXBpL3YxL3tuYW1lPXVzZXJzLyp9En4KEExpc3RBbGxVc2VyU3RhdHMSJS5tZW1vcy5hcGkudjEuTGlzdEFsbFVzZXJTdGF0c1JlcXVlc3QaJi5tZW1vcy5hcGkudjEuTGlzdEFsbFVzZXJTdGF0c1Jlc3BvbnNlIhuC0+STAhUSEy9hcGkvdjEvdXNlcnM6c3RhdHMSegoMR2V0VXNlclN0YXRzEiEubWVtb3MuYXBpLnYxLkdldFVzZXJTdGF0c1JlcXVlc3QaFy5tZW1vcy5hcGkudjEuVXNlclN0YXRzIi7aQQRuYW1lgtPkkwIhEh8vYXBpL3YxL3tuYW1lPXVzZXJzLyp9OmdldFN0YXRzEoIBCg5HZXRVc2VyU2V0dGluZxIjLm1lbW9zLmFwaS52MS5HZXRVc2VyU2V0dGluZ1JlcXVlc3QaGS5tZW1vcy5hcGkudjEuVXNlclNldHRpbmciMNpBBG5hbWWC0+STAiMSIS9hcGkvdjEve25hbWU9dXNlcnMvKi9zZXR0aW5ncy8qfRKoAQoRVXBkYXRlVXNlclNldHRpbmcSJi5tZW1vcy5hcGkudjEuVXBkYXRlVXNlclNldHRpbmdSZXF1ZXN0GhkubWVtb3MuYXBpLnYxLlVzZXJTZXR0aW5nIlDaQRNzZXR0aW5nLHVwZGF0ZV9tYXNrgtPkkwI0OgdzZXR0aW5nMikvYXBpL3YxL3tzZXR0aW5nLm5hbWU9dXNlcnMvKi9zZXR0aW5ncy8qfRKVAQoQTGlzdFVzZXJTZXR0aW5ncxIlLm1lbW9zLmFwaS52MS5MaXN0VXNlclNldHRpbmdzUmVxdWVzdBomLm1lbW9zLmFwaS52MS5MaXN0VXNlclNldHRpbmdzUmVzcG9uc2UiMtpBBnBhcmVudILT5JMCIxIhL2FwaS92MS97cGFyZW50PXVzZXJzLyp9L3NldHRpbmdzErkBChhMaXN0UGVyc29uYWxBY2Nlc3NUb2tlbnMSLS5tZW1vcy5hcGkudjEuTGlzdFBlcnNvbmFsQWNjZXNzVG9rZW5zUmVxdWVzdBouLm1lbW9zLmFwaS52MS5MaXN0UGVyc29uYWxBY2Nlc3NUb2tlbnNSZXNwb25zZSI+2kEGcGFyZW50gtPkkwIvEi0vYXBpL3YxL3twYXJlbnQ9dXNlcnMvKn0vcGVyc29uYWxBY2Nlc3NUb2tlbnMStgEKGUNyZWF0ZVBlcnNvbmFsQWNjZXNzVG9rZW4SLi5tZW1vcy5hcGkudjEuQ3JlYXRlUGVyc29uYWxBY2Nlc3NUb2tlblJlcXVlc3QaLy5tZW1vcy5hcGkudjEuQ3JlYXRlUGVyc29uYWxBY2Nlc3NUb2tlblJlc3BvbnNlIjiC0+STAjI6ASoiLS9hcGkvdjEve3BhcmVudD11c2Vycy8qfS9wZXJzb25hbEFjY2Vzc1Rva2VucxKhAQoZRGVsZXRlUGVyc29uYWxBY2Nlc3NUb2tlbhIuLm1lbW9zLmFwaS52MS5EZWxldGVQZXJzb25hbEFjY2Vzc1Rva2VuUmVxdWVzdBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSI82kEEbmFtZYLT5JMCLyotL2FwaS92MS97bmFtZT11c2Vycy8qL3BlcnNvbmFsQWNjZXNzVG9rZW5zLyp9EpUBChBMaXN0VXNlcldlYmhvb2tzEiUubWVtb3MuYXBpLnYxLkxpc3RVc2VyV2ViaG9va3NSZXF1ZXN0GiYubWVtb3MuYXBpLnYxLkxpc3RVc2VyV2ViaG9va3NSZXNwb25zZSIy2kEGcGFyZW50gtPkkwIjEiEvYXBpL3YxL3twYXJlbnQ9dXNlcnMvKn0vd2ViaG9va3MSmwEKEUNyZWF0ZVVzZXJXZWJob29rEiYubWVtb3MuYXBpLnYxLkNyZWF0ZVVzZXJXZWJob29rUmVxdWVzdBoZLm1lbW9zLmFwaS52MS5Vc2VyV2ViaG9vayJD2kEOcGFyZW50LHdlYmhvb2uC0+STAiw6B3dlYmhvb2siIS9hcGkvdjEve3BhcmVudD11c2Vycy8qfS93ZWJob29rcxKoAQoRVXBkYXRlVXNlcldlYmhvb2sSJi5tZW1vcy5hcGkudjEuVXBkYXRlVXNlcldlYmhvb2tSZXF1ZXN0GhkubWVtb3MuYXBpLnYxLlVzZXJXZWJob29rIlDaQRN3ZWJob29rLHVwZGF0ZV9tYXNrgtPkkwI0Ogd3ZWJob29rMikvYXBpL3YxL3t3ZWJob29rLm5hbWU9dXNlcnMvKi93ZWJob29rcy8qfRKFAQoRRGVsZXRlVXNlcldlYmhvb2sSJi5tZW1vcy5hcGkudjEuRGVsZXRlVXNlcldlYmhvb2tSZXF1ZXN0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5IjDaQQRuYW1lgtPkkwIjKiEvYXBpL3YxL3tuYW1lPXVzZXJzLyovd2ViaG9va3MvKn0SqQEKFUxpc3RVc2VyTm90aWZpY2F0aW9ucxIqLm1lbW9zLmFwaS52MS5MaXN0VXNlck5vdGlmaWNhdGlvbnNSZXF1ZXN0GisubWVtb3MuYXBpLnYxLkxpc3RVc2VyTm90aWZpY2F0aW9uc1Jlc3BvbnNlIjfaQQZwYXJlbnSC0+STAigSJi9hcGkvdjEve3BhcmVudD11c2Vycy8qfS9ub3RpZmljYXRpb25zEssBChZVcGRhdGVVc2VyTm90aWZpY2F0aW9uEisubWVtb3MuYXBpLnYxLlVwZGF0ZVVzZXJOb3RpZmljYXRpb25SZXF1ZXN0Gh4ubWVtb3MuYXBpLnYxLlVzZXJOb3RpZmljYXRpb24iZNpBGG5vdGlmaWNhdGlvbix1cGRhdGVfbWFza4LT5JMCQzoMbm90aWZpY2F0aW9uMjMvYXBpL3YxL3tub3RpZmljYXRpb24ubmFtZT11c2Vycy8qL25vdGlmaWNhdGlvbnMvKn0SlAEKFkRlbGV0ZVVzZXJOb3RpZmljYXRpb24SKy5tZW1vcy5hcGkudjEuRGVsZXRlVXNlck5vdGlmaWNhdGlvblJlcXVlc3QaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiNdpBBG5hbWWC0+STAigqJi9hcGkvdjEve25hbWU9dXNlcnMvKi9ub3RpZmljYXRpb25zLyp9QqgBChBjb20ubWVtb3MuYXBpLnYxQhBVc2VyU2VydmljZVByb3RvUAFaMGdpdGh1Yi5jb20vdXNlbWVtb3MvbWVtb3MvcHJvdG8vZ2VuL2FwaS92MTthcGl2MaICA01BWKoCDE1lbW9zLkFwaS5WMcoCDE1lbW9zXEFwaVxWMeICGE1lbW9zXEFwaVxWMVxHUEJNZXRhZGF0YeoCDk1lbW9zOjpBcGk6OlYxYgZwcm90bzM", [file_api_v1_common, file_google_api_annotations, file_google_api_client, file_google_api_field_behavior, file_google_api_resource, file_google_protobuf_empty, file_google_protobuf_field_mask, file_google_protobuf_timestamp]);
+  fileDesc("ChlhcGkvdjEvdXNlcl9zZXJ2aWNlLnByb3RvEgxtZW1vcy5hcGkudjEiowQKBFVzZXISEQoEbmFtZRgBIAEoCUID4EEIEioKBHJvbGUYAiABKA4yFy5tZW1vcy5hcGkudjEuVXNlci5Sb2xlQgPgQQISFQoIdXNlcm5hbWUYAyABKAlCA+BBAhISCgVlbWFpbBgEIAEoCUID4EEBEhkKDGRpc3BsYXlfbmFtZRgFIAEoCUID4EEBEhcKCmF2YXRhcl91cmwYBiABKAlCA+BBARIYCgtkZXNjcmlwdGlvbhgHIAEoCUID4EEBEhkKDHBob25lX251bWJlchgIIAEoCUID4EEBEhUKCHBhc3N3b3JkGAkgASgJQgPgQQQSJwoFc3RhdGUYCiABKA4yEy5tZW1vcy5hcGkudjEuU3RhdGVCA+BBAhI0CgtjcmVhdGVfdGltZRgLIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAxI0Cgt1cGRhdGVfdGltZRgMIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCA+BBAxIwCgp2aXBfc3RhdHVzGA0gASgLMhcubWVtb3MuYXBpLnYxLlZpcFN0YXR1c0ID4EEDIjEKBFJvbGUSFAoQUk9MRV9VTlNQRUNJRklFRBAAEgkKBUFETUlOEAISCAoEVVNFUhADOjfqQTQKEW1lbW9zLmFwaS52MS9Vc2VyEgx1c2Vycy97dXNlcn0aBG5hbWUqBXVzZXJzMgR1c2VyIo0DCglWaXBTdGF0dXMSDgoGaXNfdmlwGAEgASgIEjEKCHZpcF90eXBlGAIgASgOMh8ubWVtb3MuYXBpLnYxLlZpcFN0YXR1cy5WaXBUeXBlEjAKDGV4cGlyZXNfZGF0ZRgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASOAoFc3RhdGUYBCABKA4yKS5tZW1vcy5hcGkudjEuVmlwU3RhdHVzLlN1YnNjcmlwdGlvblN0YXRlIkoKB1ZpcFR5cGUSGAoUVklQX1RZUEVfVU5TUEVDSUZJRUQQABIICgROT05FEAESCQoFVFJJQUwQAhIQCgxTVUJTQ1JJUFRJT04QAyKEAQoRU3Vic2NyaXB0aW9uU3RhdGUSIgoeU1VCU0NSSVBUSU9OX1NUQVRFX1VOU1BFQ0lGSUVEEAASCgoGQUNUSVZFEAESCwoHRVhQSVJFRBACEhAKDEdSQUNFX1BFUklPRBADEhEKDUJJTExJTkdfUkVUUlkQBBINCglDQU5DRUxMRUQQBSKKAQoQTGlzdFVzZXJzUmVxdWVzdBIWCglwYWdlX3NpemUYASABKAVCA+BBARIXCgpwYWdlX3Rva2VuGAIgASgJQgPgQQESEwoGZmlsdGVyGAMgASgJQgPgQQESGQoMc2hvd19kZWxldGVkGAQgASgIQgPgQQESFQoIb3JkZXJfYnkYBSABKAlCA+BBASJjChFMaXN0VXNlcnNSZXNwb25zZRIhCgV1c2VycxgBIAMoCzISLm1lbW9zLmFwaS52MS5Vc2VyEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCRISCgp0b3RhbF9zaXplGAMgASgFIm0KDkdldFVzZXJSZXF1ZXN0EicKBG5hbWUYASABKAlCGeBBAvpBEwoRbWVtb3MuYXBpLnYxL1VzZXISMgoJcmVhZF9tYXNrGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0ID4EEBItoBChFDcmVhdGVVc2VyUmVxdWVzdBIoCgR1c2VyGAEgASgLMhIubWVtb3MuYXBpLnYxLlVzZXJCBuBBAuBBBBIUCgd1c2VyX2lkGAIgASgJQgPgQQESGgoNdmFsaWRhdGVfb25seRgDIAEoCEID4EEBEhcKCnJlcXVlc3RfaWQYBCABKAlCA+BBARIfChVzbXNfdmVyaWZpY2F0aW9uX2NvZGUYBSABKAlIABIfChVwaG9uZV92ZXJpZmljYXRpb25faWQYBiABKAlIAEIOCgx2ZXJpZmljYXRpb24ijAEKEVVwZGF0ZVVzZXJSZXF1ZXN0EiUKBHVzZXIYASABKAsyEi5tZW1vcy5hcGkudjEuVXNlckID4EECEjQKC3VwZGF0ZV9tYXNrGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLkZpZWxkTWFza0ID4EECEhoKDWFsbG93X21pc3NpbmcYAyABKAhCA+BBASJQChFEZWxldGVVc2VyUmVxdWVzdBInCgRuYW1lGAEgASgJQhngQQL6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEhIKBWZvcmNlGAIgASgIQgPgQQEiLgoYQmF0Y2hBcmNoaXZlVXNlcnNSZXF1ZXN0EhIKBW5hbWVzGAEgAygJQgPgQQIiSQoZQmF0Y2hBcmNoaXZlVXNlcnNSZXNwb25zZRIWCg5hcmNoaXZlZF9jb3VudBgBIAEoBRIUCgxmYWlsZWRfbmFtZXMYAiADKAkiLgoYQmF0Y2hSZXN0b3JlVXNlcnNSZXF1ZXN0EhIKBW5hbWVzGAEgAygJQgPgQQIiSQoZQmF0Y2hSZXN0b3JlVXNlcnNSZXNwb25zZRIWCg5yZXN0b3JlZF9jb3VudBgBIAEoBRIUCgxmYWlsZWRfbmFtZXMYAiADKAkiQQoXQmF0Y2hEZWxldGVVc2Vyc1JlcXVlc3QSEgoFbmFtZXMYASADKAlCA+BBAhISCgVmb3JjZRgCIAEoCEID4EEBIkcKGEJhdGNoRGVsZXRlVXNlcnNSZXNwb25zZRIVCg1kZWxldGVkX2NvdW50GAEgASgFEhQKDGZhaWxlZF9uYW1lcxgCIAMoCSLYAwoJVXNlclN0YXRzEhEKBG5hbWUYASABKAlCA+BBCBI7ChdtZW1vX2Rpc3BsYXlfdGltZXN0YW1wcxgCIAMoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASPgoPbWVtb190eXBlX3N0YXRzGAMgASgLMiUubWVtb3MuYXBpLnYxLlVzZXJTdGF0cy5NZW1vVHlwZVN0YXRzEjgKCXRhZ19jb3VudBgEIAMoCzIlLm1lbW9zLmFwaS52MS5Vc2VyU3RhdHMuVGFnQ291bnRFbnRyeRIUCgxwaW5uZWRfbWVtb3MYBSADKAkSGAoQdG90YWxfbWVtb19jb3VudBgGIAEoBRovCg1UYWdDb3VudEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoBToCOAEaXwoNTWVtb1R5cGVTdGF0cxISCgpsaW5rX2NvdW50GAEgASgFEhIKCmNvZGVfY291bnQYAiABKAUSEgoKdG9kb19jb3VudBgDIAEoBRISCgp1bmRvX2NvdW50GAQgASgFOj/qQTwKFm1lbW9zLmFwaS52MS9Vc2VyU3RhdHMSDHVzZXJzL3t1c2VyfSoJdXNlclN0YXRzMgl1c2VyU3RhdHMiPgoTR2V0VXNlclN0YXRzUmVxdWVzdBInCgRuYW1lGAEgASgJQhngQQL6QRMKEW1lbW9zLmFwaS52MS9Vc2VyIhkKF0xpc3RBbGxVc2VyU3RhdHNSZXF1ZXN0IkIKGExpc3RBbGxVc2VyU3RhdHNSZXNwb25zZRImCgVzdGF0cxgBIAMoCzIXLm1lbW9zLmFwaS52MS5Vc2VyU3RhdHMiggQKC1VzZXJTZXR0aW5nEhEKBG5hbWUYASABKAlCA+BBCBJDCg9nZW5lcmFsX3NldHRpbmcYAiABKAsyKC5tZW1vcy5hcGkudjEuVXNlclNldHRpbmcuR2VuZXJhbFNldHRpbmdIABJFChB3ZWJob29rc19zZXR0aW5nGAUgASgLMikubWVtb3MuYXBpLnYxLlVzZXJTZXR0aW5nLldlYmhvb2tzU2V0dGluZ0gAGnkKDkdlbmVyYWxTZXR0aW5nEhMKBmxvY2FsZRgBIAEoCUID4EEBEhwKD21lbW9fdmlzaWJpbGl0eRgDIAEoCUID4EEBEhIKBXRoZW1lGAQgASgJQgPgQQESIAoTbWVtb19pbnNpZ2h0X3Byb21wdBgFIAEoCUID4EEBGj4KD1dlYmhvb2tzU2V0dGluZxIrCgh3ZWJob29rcxgBIAMoCzIZLm1lbW9zLmFwaS52MS5Vc2VyV2ViaG9vayI1CgNLZXkSEwoPS0VZX1VOU1BFQ0lGSUVEEAASCwoHR0VORVJBTBABEgwKCFdFQkhPT0tTEAQ6WepBVgoYbWVtb3MuYXBpLnYxL1VzZXJTZXR0aW5nEh91c2Vycy97dXNlcn0vc2V0dGluZ3Mve3NldHRpbmd9Kgx1c2VyU2V0dGluZ3MyC3VzZXJTZXR0aW5nQgcKBXZhbHVlIkcKFUdldFVzZXJTZXR0aW5nUmVxdWVzdBIuCgRuYW1lGAEgASgJQiDgQQL6QRoKGG1lbW9zLmFwaS52MS9Vc2VyU2V0dGluZyKBAQoYVXBkYXRlVXNlclNldHRpbmdSZXF1ZXN0Ei8KB3NldHRpbmcYASABKAsyGS5tZW1vcy5hcGkudjEuVXNlclNldHRpbmdCA+BBAhI0Cgt1cGRhdGVfbWFzaxgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCA+BBAiJ1ChdMaXN0VXNlclNldHRpbmdzUmVxdWVzdBIpCgZwYXJlbnQYASABKAlCGeBBAvpBEwoRbWVtb3MuYXBpLnYxL1VzZXISFgoJcGFnZV9zaXplGAIgASgFQgPgQQESFwoKcGFnZV90b2tlbhgDIAEoCUID4EEBInQKGExpc3RVc2VyU2V0dGluZ3NSZXNwb25zZRIrCghzZXR0aW5ncxgBIAMoCzIZLm1lbW9zLmFwaS52MS5Vc2VyU2V0dGluZxIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkSEgoKdG90YWxfc2l6ZRgDIAEoBSLyAgoTUGVyc29uYWxBY2Nlc3NUb2tlbhIRCgRuYW1lGAEgASgJQgPgQQgSGAoLZGVzY3JpcHRpb24YAiABKAlCA+BBARIzCgpjcmVhdGVkX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjMKCmV4cGlyZXNfYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgPgQQESNQoMbGFzdF91c2VkX2F0GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDOowB6kGIAQogbWVtb3MuYXBpLnYxL1BlcnNvbmFsQWNjZXNzVG9rZW4SOXVzZXJzL3t1c2VyfS9wZXJzb25hbEFjY2Vzc1Rva2Vucy97cGVyc29uYWxfYWNjZXNzX3Rva2VufSoUcGVyc29uYWxBY2Nlc3NUb2tlbnMyE3BlcnNvbmFsQWNjZXNzVG9rZW4ifQofTGlzdFBlcnNvbmFsQWNjZXNzVG9rZW5zUmVxdWVzdBIpCgZwYXJlbnQYASABKAlCGeBBAvpBEwoRbWVtb3MuYXBpLnYxL1VzZXISFgoJcGFnZV9zaXplGAIgASgFQgPgQQESFwoKcGFnZV90b2tlbhgDIAEoCUID4EEBIpIBCiBMaXN0UGVyc29uYWxBY2Nlc3NUb2tlbnNSZXNwb25zZRJBChZwZXJzb25hbF9hY2Nlc3NfdG9rZW5zGAEgAygLMiEubWVtb3MuYXBpLnYxLlBlcnNvbmFsQWNjZXNzVG9rZW4SFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJEhIKCnRvdGFsX3NpemUYAyABKAUihQEKIENyZWF0ZVBlcnNvbmFsQWNjZXNzVG9rZW5SZXF1ZXN0EikKBnBhcmVudBgBIAEoCUIZ4EEC+kETChFtZW1vcy5hcGkudjEvVXNlchIYCgtkZXNjcmlwdGlvbhgCIAEoCUID4EEBEhwKD2V4cGlyZXNfaW5fZGF5cxgDIAEoBUID4EEBInQKIUNyZWF0ZVBlcnNvbmFsQWNjZXNzVG9rZW5SZXNwb25zZRJAChVwZXJzb25hbF9hY2Nlc3NfdG9rZW4YASABKAsyIS5tZW1vcy5hcGkudjEuUGVyc29uYWxBY2Nlc3NUb2tlbhINCgV0b2tlbhgCIAEoCSJaCiBEZWxldGVQZXJzb25hbEFjY2Vzc1Rva2VuUmVxdWVzdBI2CgRuYW1lGAEgASgJQijgQQL6QSIKIG1lbW9zLmFwaS52MS9QZXJzb25hbEFjY2Vzc1Rva2VuIqoBCgtVc2VyV2ViaG9vaxIMCgRuYW1lGAEgASgJEgsKA3VybBgCIAEoCRIUCgxkaXNwbGF5X25hbWUYAyABKAkSNAoLY3JlYXRlX3RpbWUYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgPgQQMSNAoLdXBkYXRlX3RpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgPgQQMiLgoXTGlzdFVzZXJXZWJob29rc1JlcXVlc3QSEwoGcGFyZW50GAEgASgJQgPgQQIiRwoYTGlzdFVzZXJXZWJob29rc1Jlc3BvbnNlEisKCHdlYmhvb2tzGAEgAygLMhkubWVtb3MuYXBpLnYxLlVzZXJXZWJob29rImAKGENyZWF0ZVVzZXJXZWJob29rUmVxdWVzdBITCgZwYXJlbnQYASABKAlCA+BBAhIvCgd3ZWJob29rGAIgASgLMhkubWVtb3MuYXBpLnYxLlVzZXJXZWJob29rQgPgQQIifAoYVXBkYXRlVXNlcldlYmhvb2tSZXF1ZXN0Ei8KB3dlYmhvb2sYASABKAsyGS5tZW1vcy5hcGkudjEuVXNlcldlYmhvb2tCA+BBAhIvCgt1cGRhdGVfbWFzaxgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2siLQoYRGVsZXRlVXNlcldlYmhvb2tSZXF1ZXN0EhEKBG5hbWUYASABKAlCA+BBAiKKBAoQVXNlck5vdGlmaWNhdGlvbhIUCgRuYW1lGAEgASgJQgbgQQPgQQgSKQoGc2VuZGVyGAIgASgJQhngQQP6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEjoKBnN0YXR1cxgDIAEoDjIlLm1lbW9zLmFwaS52MS5Vc2VyTm90aWZpY2F0aW9uLlN0YXR1c0ID4EEBEjQKC2NyZWF0ZV90aW1lGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjYKBHR5cGUYBSABKA4yIy5tZW1vcy5hcGkudjEuVXNlck5vdGlmaWNhdGlvbi5UeXBlQgPgQQMSHQoLYWN0aXZpdHlfaWQYBiABKAVCA+BBAUgAiAEBIjoKBlN0YXR1cxIWChJTVEFUVVNfVU5TUEVDSUZJRUQQABIKCgZVTlJFQUQQARIMCghBUkNISVZFRBACIi4KBFR5cGUSFAoQVFlQRV9VTlNQRUNJRklFRBAAEhAKDE1FTU9fQ09NTUVOVBABOnDqQW0KHW1lbW9zLmFwaS52MS9Vc2VyTm90aWZpY2F0aW9uEil1c2Vycy97dXNlcn0vbm90aWZpY2F0aW9ucy97bm90aWZpY2F0aW9ufRoEbmFtZSoNbm90aWZpY2F0aW9uczIMbm90aWZpY2F0aW9uQg4KDF9hY3Rpdml0eV9pZCKPAQocTGlzdFVzZXJOb3RpZmljYXRpb25zUmVxdWVzdBIpCgZwYXJlbnQYASABKAlCGeBBAvpBEwoRbWVtb3MuYXBpLnYxL1VzZXISFgoJcGFnZV9zaXplGAIgASgFQgPgQQESFwoKcGFnZV90b2tlbhgDIAEoCUID4EEBEhMKBmZpbHRlchgEIAEoCUID4EEBIm8KHUxpc3RVc2VyTm90aWZpY2F0aW9uc1Jlc3BvbnNlEjUKDW5vdGlmaWNhdGlvbnMYASADKAsyHi5tZW1vcy5hcGkudjEuVXNlck5vdGlmaWNhdGlvbhIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkikAEKHVVwZGF0ZVVzZXJOb3RpZmljYXRpb25SZXF1ZXN0EjkKDG5vdGlmaWNhdGlvbhgBIAEoCzIeLm1lbW9zLmFwaS52MS5Vc2VyTm90aWZpY2F0aW9uQgPgQQISNAoLdXBkYXRlX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrQgPgQQIiVAodRGVsZXRlVXNlck5vdGlmaWNhdGlvblJlcXVlc3QSMwoEbmFtZRgBIAEoCUIl4EEC+kEfCh1tZW1vcy5hcGkudjEvVXNlck5vdGlmaWNhdGlvbjKmGgoLVXNlclNlcnZpY2USYwoJTGlzdFVzZXJzEh4ubWVtb3MuYXBpLnYxLkxpc3RVc2Vyc1JlcXVlc3QaHy5tZW1vcy5hcGkudjEuTGlzdFVzZXJzUmVzcG9uc2UiFYLT5JMCDxINL2FwaS92MS91c2VycxJiCgdHZXRVc2VyEhwubWVtb3MuYXBpLnYxLkdldFVzZXJSZXF1ZXN0GhIubWVtb3MuYXBpLnYxLlVzZXIiJdpBBG5hbWWC0+STAhgSFi9hcGkvdjEve25hbWU9dXNlcnMvKn0SYgoKQ3JlYXRlVXNlchIfLm1lbW9zLmFwaS52MS5DcmVhdGVVc2VyUmVxdWVzdBoSLm1lbW9zLmFwaS52MS5Vc2VyIh/aQQR1c2VygtPkkwISOgEqIg0vYXBpL3YxL3VzZXJzEn8KClVwZGF0ZVVzZXISHy5tZW1vcy5hcGkudjEuVXBkYXRlVXNlclJlcXVlc3QaEi5tZW1vcy5hcGkudjEuVXNlciI82kEQdXNlcix1cGRhdGVfbWFza4LT5JMCIzoEdXNlcjIbL2FwaS92MS97dXNlci5uYW1lPXVzZXJzLyp9EmwKCkRlbGV0ZVVzZXISHy5tZW1vcy5hcGkudjEuRGVsZXRlVXNlclJlcXVlc3QaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiJdpBBG5hbWWC0+STAhgqFi9hcGkvdjEve25hbWU9dXNlcnMvKn0SfgoQTGlzdEFsbFVzZXJTdGF0cxIlLm1lbW9zLmFwaS52MS5MaXN0QWxsVXNlclN0YXRzUmVxdWVzdBomLm1lbW9zLmFwaS52MS5MaXN0QWxsVXNlclN0YXRzUmVzcG9uc2UiG4LT5JMCFRITL2FwaS92MS91c2VyczpzdGF0cxJ6CgxHZXRVc2VyU3RhdHMSIS5tZW1vcy5hcGkudjEuR2V0VXNlclN0YXRzUmVxdWVzdBoXLm1lbW9zLmFwaS52MS5Vc2VyU3RhdHMiLtpBBG5hbWWC0+STAiESHy9hcGkvdjEve25hbWU9dXNlcnMvKn06Z2V0U3RhdHMSggEKDkdldFVzZXJTZXR0aW5nEiMubWVtb3MuYXBpLnYxLkdldFVzZXJTZXR0aW5nUmVxdWVzdBoZLm1lbW9zLmFwaS52MS5Vc2VyU2V0dGluZyIw2kEEbmFtZYLT5JMCIxIhL2FwaS92MS97bmFtZT11c2Vycy8qL3NldHRpbmdzLyp9EqgBChFVcGRhdGVVc2VyU2V0dGluZxImLm1lbW9zLmFwaS52MS5VcGRhdGVVc2VyU2V0dGluZ1JlcXVlc3QaGS5tZW1vcy5hcGkudjEuVXNlclNldHRpbmciUNpBE3NldHRpbmcsdXBkYXRlX21hc2uC0+STAjQ6B3NldHRpbmcyKS9hcGkvdjEve3NldHRpbmcubmFtZT11c2Vycy8qL3NldHRpbmdzLyp9EpUBChBMaXN0VXNlclNldHRpbmdzEiUubWVtb3MuYXBpLnYxLkxpc3RVc2VyU2V0dGluZ3NSZXF1ZXN0GiYubWVtb3MuYXBpLnYxLkxpc3RVc2VyU2V0dGluZ3NSZXNwb25zZSIy2kEGcGFyZW50gtPkkwIjEiEvYXBpL3YxL3twYXJlbnQ9dXNlcnMvKn0vc2V0dGluZ3MSuQEKGExpc3RQZXJzb25hbEFjY2Vzc1Rva2VucxItLm1lbW9zLmFwaS52MS5MaXN0UGVyc29uYWxBY2Nlc3NUb2tlbnNSZXF1ZXN0Gi4ubWVtb3MuYXBpLnYxLkxpc3RQZXJzb25hbEFjY2Vzc1Rva2Vuc1Jlc3BvbnNlIj7aQQZwYXJlbnSC0+STAi8SLS9hcGkvdjEve3BhcmVudD11c2Vycy8qfS9wZXJzb25hbEFjY2Vzc1Rva2VucxK2AQoZQ3JlYXRlUGVyc29uYWxBY2Nlc3NUb2tlbhIuLm1lbW9zLmFwaS52MS5DcmVhdGVQZXJzb25hbEFjY2Vzc1Rva2VuUmVxdWVzdBovLm1lbW9zLmFwaS52MS5DcmVhdGVQZXJzb25hbEFjY2Vzc1Rva2VuUmVzcG9uc2UiOILT5JMCMjoBKiItL2FwaS92MS97cGFyZW50PXVzZXJzLyp9L3BlcnNvbmFsQWNjZXNzVG9rZW5zEqEBChlEZWxldGVQZXJzb25hbEFjY2Vzc1Rva2VuEi4ubWVtb3MuYXBpLnYxLkRlbGV0ZVBlcnNvbmFsQWNjZXNzVG9rZW5SZXF1ZXN0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5IjzaQQRuYW1lgtPkkwIvKi0vYXBpL3YxL3tuYW1lPXVzZXJzLyovcGVyc29uYWxBY2Nlc3NUb2tlbnMvKn0SlQEKEExpc3RVc2VyV2ViaG9va3MSJS5tZW1vcy5hcGkudjEuTGlzdFVzZXJXZWJob29rc1JlcXVlc3QaJi5tZW1vcy5hcGkudjEuTGlzdFVzZXJXZWJob29rc1Jlc3BvbnNlIjLaQQZwYXJlbnSC0+STAiMSIS9hcGkvdjEve3BhcmVudD11c2Vycy8qfS93ZWJob29rcxKbAQoRQ3JlYXRlVXNlcldlYmhvb2sSJi5tZW1vcy5hcGkudjEuQ3JlYXRlVXNlcldlYmhvb2tSZXF1ZXN0GhkubWVtb3MuYXBpLnYxLlVzZXJXZWJob29rIkPaQQ5wYXJlbnQsd2ViaG9va4LT5JMCLDoHd2ViaG9vayIhL2FwaS92MS97cGFyZW50PXVzZXJzLyp9L3dlYmhvb2tzEqgBChFVcGRhdGVVc2VyV2ViaG9vaxImLm1lbW9zLmFwaS52MS5VcGRhdGVVc2VyV2ViaG9va1JlcXVlc3QaGS5tZW1vcy5hcGkudjEuVXNlcldlYmhvb2siUNpBE3dlYmhvb2ssdXBkYXRlX21hc2uC0+STAjQ6B3dlYmhvb2syKS9hcGkvdjEve3dlYmhvb2submFtZT11c2Vycy8qL3dlYmhvb2tzLyp9EoUBChFEZWxldGVVc2VyV2ViaG9vaxImLm1lbW9zLmFwaS52MS5EZWxldGVVc2VyV2ViaG9va1JlcXVlc3QaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiMNpBBG5hbWWC0+STAiMqIS9hcGkvdjEve25hbWU9dXNlcnMvKi93ZWJob29rcy8qfRKpAQoVTGlzdFVzZXJOb3RpZmljYXRpb25zEioubWVtb3MuYXBpLnYxLkxpc3RVc2VyTm90aWZpY2F0aW9uc1JlcXVlc3QaKy5tZW1vcy5hcGkudjEuTGlzdFVzZXJOb3RpZmljYXRpb25zUmVzcG9uc2UiN9pBBnBhcmVudILT5JMCKBImL2FwaS92MS97cGFyZW50PXVzZXJzLyp9L25vdGlmaWNhdGlvbnMSywEKFlVwZGF0ZVVzZXJOb3RpZmljYXRpb24SKy5tZW1vcy5hcGkudjEuVXBkYXRlVXNlck5vdGlmaWNhdGlvblJlcXVlc3QaHi5tZW1vcy5hcGkudjEuVXNlck5vdGlmaWNhdGlvbiJk2kEYbm90aWZpY2F0aW9uLHVwZGF0ZV9tYXNrgtPkkwJDOgxub3RpZmljYXRpb24yMy9hcGkvdjEve25vdGlmaWNhdGlvbi5uYW1lPXVzZXJzLyovbm90aWZpY2F0aW9ucy8qfRKUAQoWRGVsZXRlVXNlck5vdGlmaWNhdGlvbhIrLm1lbW9zLmFwaS52MS5EZWxldGVVc2VyTm90aWZpY2F0aW9uUmVxdWVzdBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSI12kEEbmFtZYLT5JMCKComL2FwaS92MS97bmFtZT11c2Vycy8qL25vdGlmaWNhdGlvbnMvKn0SiwEKEUJhdGNoQXJjaGl2ZVVzZXJzEiYubWVtb3MuYXBpLnYxLkJhdGNoQXJjaGl2ZVVzZXJzUmVxdWVzdBonLm1lbW9zLmFwaS52MS5CYXRjaEFyY2hpdmVVc2Vyc1Jlc3BvbnNlIiWC0+STAh86ASoiGi9hcGkvdjEvdXNlcnM6YmF0Y2hBcmNoaXZlEosBChFCYXRjaFJlc3RvcmVVc2VycxImLm1lbW9zLmFwaS52MS5CYXRjaFJlc3RvcmVVc2Vyc1JlcXVlc3QaJy5tZW1vcy5hcGkudjEuQmF0Y2hSZXN0b3JlVXNlcnNSZXNwb25zZSIlgtPkkwIfOgEqIhovYXBpL3YxL3VzZXJzOmJhdGNoUmVzdG9yZRKHAQoQQmF0Y2hEZWxldGVVc2VycxIlLm1lbW9zLmFwaS52MS5CYXRjaERlbGV0ZVVzZXJzUmVxdWVzdBomLm1lbW9zLmFwaS52MS5CYXRjaERlbGV0ZVVzZXJzUmVzcG9uc2UiJILT5JMCHjoBKiIZL2FwaS92MS91c2VyczpiYXRjaERlbGV0ZUKoAQoQY29tLm1lbW9zLmFwaS52MUIQVXNlclNlcnZpY2VQcm90b1ABWjBnaXRodWIuY29tL3VzZW1lbW9zL21lbW9zL3Byb3RvL2dlbi9hcGkvdjE7YXBpdjGiAgNNQViqAgxNZW1vcy5BcGkuVjHKAgxNZW1vc1xBcGlcVjHiAhhNZW1vc1xBcGlcVjFcR1BCTWV0YWRhdGHqAg5NZW1vczo6QXBpOjpWMWIGcHJvdG8z", [file_api_v1_common, file_google_api_annotations, file_google_api_client, file_google_api_field_behavior, file_google_api_resource, file_google_protobuf_empty, file_google_protobuf_field_mask, file_google_protobuf_timestamp]);
 
 /**
  * @generated from message memos.api.v1.User
@@ -108,6 +108,13 @@ export type User = Message<"memos.api.v1.User"> & {
    * @generated from field: google.protobuf.Timestamp update_time = 12;
    */
   updateTime?: Timestamp;
+
+  /**
+   * Output only. VIP status information.
+   *
+   * @generated from field: memos.api.v1.VipStatus vip_status = 13;
+   */
+  vipStatus?: VipStatus;
 };
 
 /**
@@ -150,6 +157,140 @@ export const User_RoleSchema: GenEnum<User_Role> = /*@__PURE__*/
   enumDesc(file_api_v1_user_service, 0, 0);
 
 /**
+ * VipStatus represents the VIP/subscription status of a user.
+ *
+ * @generated from message memos.api.v1.VipStatus
+ */
+export type VipStatus = Message<"memos.api.v1.VipStatus"> & {
+  /**
+   * Whether the user is currently a VIP.
+   *
+   * @generated from field: bool is_vip = 1;
+   */
+  isVip: boolean;
+
+  /**
+   * The type of VIP status.
+   *
+   * @generated from field: memos.api.v1.VipStatus.VipType vip_type = 2;
+   */
+  vipType: VipStatus_VipType;
+
+  /**
+   * The expiration date of the VIP status, if applicable.
+   *
+   * @generated from field: google.protobuf.Timestamp expires_date = 3;
+   */
+  expiresDate?: Timestamp;
+
+  /**
+   * The subscription state.
+   *
+   * @generated from field: memos.api.v1.VipStatus.SubscriptionState state = 4;
+   */
+  state: VipStatus_SubscriptionState;
+};
+
+/**
+ * Describes the message memos.api.v1.VipStatus.
+ * Use `create(VipStatusSchema)` to create a new message.
+ */
+export const VipStatusSchema: GenMessage<VipStatus> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 1);
+
+/**
+ * VIP type enumeration.
+ *
+ * @generated from enum memos.api.v1.VipStatus.VipType
+ */
+export enum VipStatus_VipType {
+  /**
+   * @generated from enum value: VIP_TYPE_UNSPECIFIED = 0;
+   */
+  VIP_TYPE_UNSPECIFIED = 0,
+
+  /**
+   * No VIP status.
+   *
+   * @generated from enum value: NONE = 1;
+   */
+  NONE = 1,
+
+  /**
+   * Trial VIP status.
+   *
+   * @generated from enum value: TRIAL = 2;
+   */
+  TRIAL = 2,
+
+  /**
+   * Paid subscription VIP status.
+   *
+   * @generated from enum value: SUBSCRIPTION = 3;
+   */
+  SUBSCRIPTION = 3,
+}
+
+/**
+ * Describes the enum memos.api.v1.VipStatus.VipType.
+ */
+export const VipStatus_VipTypeSchema: GenEnum<VipStatus_VipType> = /*@__PURE__*/
+  enumDesc(file_api_v1_user_service, 1, 0);
+
+/**
+ * Subscription state enumeration.
+ *
+ * @generated from enum memos.api.v1.VipStatus.SubscriptionState
+ */
+export enum VipStatus_SubscriptionState {
+  /**
+   * @generated from enum value: SUBSCRIPTION_STATE_UNSPECIFIED = 0;
+   */
+  SUBSCRIPTION_STATE_UNSPECIFIED = 0,
+
+  /**
+   * Active subscription.
+   *
+   * @generated from enum value: ACTIVE = 1;
+   */
+  ACTIVE = 1,
+
+  /**
+   * Expired subscription.
+   *
+   * @generated from enum value: EXPIRED = 2;
+   */
+  EXPIRED = 2,
+
+  /**
+   * In grace period.
+   *
+   * @generated from enum value: GRACE_PERIOD = 3;
+   */
+  GRACE_PERIOD = 3,
+
+  /**
+   * Billing retry in progress.
+   *
+   * @generated from enum value: BILLING_RETRY = 4;
+   */
+  BILLING_RETRY = 4,
+
+  /**
+   * Cancelled subscription.
+   *
+   * @generated from enum value: CANCELLED = 5;
+   */
+  CANCELLED = 5,
+}
+
+/**
+ * Describes the enum memos.api.v1.VipStatus.SubscriptionState.
+ */
+export const VipStatus_SubscriptionStateSchema: GenEnum<VipStatus_SubscriptionState> = /*@__PURE__*/
+  enumDesc(file_api_v1_user_service, 1, 1);
+
+/**
  * @generated from message memos.api.v1.ListUsersRequest
  */
 export type ListUsersRequest = Message<"memos.api.v1.ListUsersRequest"> & {
@@ -187,6 +328,16 @@ export type ListUsersRequest = Message<"memos.api.v1.ListUsersRequest"> & {
    * @generated from field: bool show_deleted = 4;
    */
   showDeleted: boolean;
+
+  /**
+   * Optional. A comma-separated list of fields to order by.
+   * Supports: "created_ts", "updated_ts", "username"
+   * Prefix with "-" for descending order.
+   * Example: "-created_ts" (newest first), "username" (alphabetical)
+   *
+   * @generated from field: string order_by = 5;
+   */
+  orderBy: string;
 };
 
 /**
@@ -194,7 +345,7 @@ export type ListUsersRequest = Message<"memos.api.v1.ListUsersRequest"> & {
  * Use `create(ListUsersRequestSchema)` to create a new message.
  */
 export const ListUsersRequestSchema: GenMessage<ListUsersRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 1);
+  messageDesc(file_api_v1_user_service, 2);
 
 /**
  * @generated from message memos.api.v1.ListUsersResponse
@@ -228,7 +379,7 @@ export type ListUsersResponse = Message<"memos.api.v1.ListUsersResponse"> & {
  * Use `create(ListUsersResponseSchema)` to create a new message.
  */
 export const ListUsersResponseSchema: GenMessage<ListUsersResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 2);
+  messageDesc(file_api_v1_user_service, 3);
 
 /**
  * @generated from message memos.api.v1.GetUserRequest
@@ -259,7 +410,7 @@ export type GetUserRequest = Message<"memos.api.v1.GetUserRequest"> & {
  * Use `create(GetUserRequestSchema)` to create a new message.
  */
 export const GetUserRequestSchema: GenMessage<GetUserRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 3);
+  messageDesc(file_api_v1_user_service, 4);
 
 /**
  * @generated from message memos.api.v1.CreateUserRequest
@@ -321,7 +472,7 @@ export type CreateUserRequest = Message<"memos.api.v1.CreateUserRequest"> & {
  * Use `create(CreateUserRequestSchema)` to create a new message.
  */
 export const CreateUserRequestSchema: GenMessage<CreateUserRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 4);
+  messageDesc(file_api_v1_user_service, 5);
 
 /**
  * @generated from message memos.api.v1.UpdateUserRequest
@@ -354,7 +505,7 @@ export type UpdateUserRequest = Message<"memos.api.v1.UpdateUserRequest"> & {
  * Use `create(UpdateUserRequestSchema)` to create a new message.
  */
 export const UpdateUserRequestSchema: GenMessage<UpdateUserRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 5);
+  messageDesc(file_api_v1_user_service, 6);
 
 /**
  * @generated from message memos.api.v1.DeleteUserRequest
@@ -381,7 +532,154 @@ export type DeleteUserRequest = Message<"memos.api.v1.DeleteUserRequest"> & {
  * Use `create(DeleteUserRequestSchema)` to create a new message.
  */
 export const DeleteUserRequestSchema: GenMessage<DeleteUserRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 6);
+  messageDesc(file_api_v1_user_service, 7);
+
+/**
+ * Batch operation messages for bulk user management
+ *
+ * @generated from message memos.api.v1.BatchArchiveUsersRequest
+ */
+export type BatchArchiveUsersRequest = Message<"memos.api.v1.BatchArchiveUsersRequest"> & {
+  /**
+   * Required. The resource names of the users to archive.
+   * Format: users/{user}
+   *
+   * @generated from field: repeated string names = 1;
+   */
+  names: string[];
+};
+
+/**
+ * Describes the message memos.api.v1.BatchArchiveUsersRequest.
+ * Use `create(BatchArchiveUsersRequestSchema)` to create a new message.
+ */
+export const BatchArchiveUsersRequestSchema: GenMessage<BatchArchiveUsersRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 8);
+
+/**
+ * @generated from message memos.api.v1.BatchArchiveUsersResponse
+ */
+export type BatchArchiveUsersResponse = Message<"memos.api.v1.BatchArchiveUsersResponse"> & {
+  /**
+   * The number of users successfully archived.
+   *
+   * @generated from field: int32 archived_count = 1;
+   */
+  archivedCount: number;
+
+  /**
+   * The resource names of users that failed to archive.
+   *
+   * @generated from field: repeated string failed_names = 2;
+   */
+  failedNames: string[];
+};
+
+/**
+ * Describes the message memos.api.v1.BatchArchiveUsersResponse.
+ * Use `create(BatchArchiveUsersResponseSchema)` to create a new message.
+ */
+export const BatchArchiveUsersResponseSchema: GenMessage<BatchArchiveUsersResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 9);
+
+/**
+ * @generated from message memos.api.v1.BatchRestoreUsersRequest
+ */
+export type BatchRestoreUsersRequest = Message<"memos.api.v1.BatchRestoreUsersRequest"> & {
+  /**
+   * Required. The resource names of the users to restore.
+   * Format: users/{user}
+   *
+   * @generated from field: repeated string names = 1;
+   */
+  names: string[];
+};
+
+/**
+ * Describes the message memos.api.v1.BatchRestoreUsersRequest.
+ * Use `create(BatchRestoreUsersRequestSchema)` to create a new message.
+ */
+export const BatchRestoreUsersRequestSchema: GenMessage<BatchRestoreUsersRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 10);
+
+/**
+ * @generated from message memos.api.v1.BatchRestoreUsersResponse
+ */
+export type BatchRestoreUsersResponse = Message<"memos.api.v1.BatchRestoreUsersResponse"> & {
+  /**
+   * The number of users successfully restored.
+   *
+   * @generated from field: int32 restored_count = 1;
+   */
+  restoredCount: number;
+
+  /**
+   * The resource names of users that failed to restore.
+   *
+   * @generated from field: repeated string failed_names = 2;
+   */
+  failedNames: string[];
+};
+
+/**
+ * Describes the message memos.api.v1.BatchRestoreUsersResponse.
+ * Use `create(BatchRestoreUsersResponseSchema)` to create a new message.
+ */
+export const BatchRestoreUsersResponseSchema: GenMessage<BatchRestoreUsersResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 11);
+
+/**
+ * @generated from message memos.api.v1.BatchDeleteUsersRequest
+ */
+export type BatchDeleteUsersRequest = Message<"memos.api.v1.BatchDeleteUsersRequest"> & {
+  /**
+   * Required. The resource names of the users to delete.
+   * Format: users/{user}
+   *
+   * @generated from field: repeated string names = 1;
+   */
+  names: string[];
+
+  /**
+   * Optional. If set to true, the users will be deleted even if they have associated data.
+   *
+   * @generated from field: bool force = 2;
+   */
+  force: boolean;
+};
+
+/**
+ * Describes the message memos.api.v1.BatchDeleteUsersRequest.
+ * Use `create(BatchDeleteUsersRequestSchema)` to create a new message.
+ */
+export const BatchDeleteUsersRequestSchema: GenMessage<BatchDeleteUsersRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 12);
+
+/**
+ * @generated from message memos.api.v1.BatchDeleteUsersResponse
+ */
+export type BatchDeleteUsersResponse = Message<"memos.api.v1.BatchDeleteUsersResponse"> & {
+  /**
+   * The number of users successfully deleted.
+   *
+   * @generated from field: int32 deleted_count = 1;
+   */
+  deletedCount: number;
+
+  /**
+   * The resource names of users that failed to delete.
+   *
+   * @generated from field: repeated string failed_names = 2;
+   */
+  failedNames: string[];
+};
+
+/**
+ * Describes the message memos.api.v1.BatchDeleteUsersResponse.
+ * Use `create(BatchDeleteUsersResponseSchema)` to create a new message.
+ */
+export const BatchDeleteUsersResponseSchema: GenMessage<BatchDeleteUsersResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_user_service, 13);
 
 /**
  * User statistics messages
@@ -438,7 +736,7 @@ export type UserStats = Message<"memos.api.v1.UserStats"> & {
  * Use `create(UserStatsSchema)` to create a new message.
  */
 export const UserStatsSchema: GenMessage<UserStats> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 7);
+  messageDesc(file_api_v1_user_service, 14);
 
 /**
  * Memo type statistics.
@@ -472,7 +770,7 @@ export type UserStats_MemoTypeStats = Message<"memos.api.v1.UserStats.MemoTypeSt
  * Use `create(UserStats_MemoTypeStatsSchema)` to create a new message.
  */
 export const UserStats_MemoTypeStatsSchema: GenMessage<UserStats_MemoTypeStats> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 7, 0);
+  messageDesc(file_api_v1_user_service, 14, 0);
 
 /**
  * @generated from message memos.api.v1.GetUserStatsRequest
@@ -492,7 +790,7 @@ export type GetUserStatsRequest = Message<"memos.api.v1.GetUserStatsRequest"> & 
  * Use `create(GetUserStatsRequestSchema)` to create a new message.
  */
 export const GetUserStatsRequestSchema: GenMessage<GetUserStatsRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 8);
+  messageDesc(file_api_v1_user_service, 15);
 
 /**
  * This endpoint doesn't take any parameters.
@@ -507,7 +805,7 @@ export type ListAllUserStatsRequest = Message<"memos.api.v1.ListAllUserStatsRequ
  * Use `create(ListAllUserStatsRequestSchema)` to create a new message.
  */
 export const ListAllUserStatsRequestSchema: GenMessage<ListAllUserStatsRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 9);
+  messageDesc(file_api_v1_user_service, 16);
 
 /**
  * @generated from message memos.api.v1.ListAllUserStatsResponse
@@ -526,7 +824,7 @@ export type ListAllUserStatsResponse = Message<"memos.api.v1.ListAllUserStatsRes
  * Use `create(ListAllUserStatsResponseSchema)` to create a new message.
  */
 export const ListAllUserStatsResponseSchema: GenMessage<ListAllUserStatsResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 10);
+  messageDesc(file_api_v1_user_service, 17);
 
 /**
  * User settings message
@@ -566,7 +864,7 @@ export type UserSetting = Message<"memos.api.v1.UserSetting"> & {
  * Use `create(UserSettingSchema)` to create a new message.
  */
 export const UserSettingSchema: GenMessage<UserSetting> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 11);
+  messageDesc(file_api_v1_user_service, 18);
 
 /**
  * General user settings configuration.
@@ -610,7 +908,7 @@ export type UserSetting_GeneralSetting = Message<"memos.api.v1.UserSetting.Gener
  * Use `create(UserSetting_GeneralSettingSchema)` to create a new message.
  */
 export const UserSetting_GeneralSettingSchema: GenMessage<UserSetting_GeneralSetting> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 11, 0);
+  messageDesc(file_api_v1_user_service, 18, 0);
 
 /**
  * User webhooks configuration.
@@ -631,7 +929,7 @@ export type UserSetting_WebhooksSetting = Message<"memos.api.v1.UserSetting.Webh
  * Use `create(UserSetting_WebhooksSettingSchema)` to create a new message.
  */
 export const UserSetting_WebhooksSettingSchema: GenMessage<UserSetting_WebhooksSetting> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 11, 1);
+  messageDesc(file_api_v1_user_service, 18, 1);
 
 /**
  * Enumeration of user setting keys.
@@ -663,7 +961,7 @@ export enum UserSetting_Key {
  * Describes the enum memos.api.v1.UserSetting.Key.
  */
 export const UserSetting_KeySchema: GenEnum<UserSetting_Key> = /*@__PURE__*/
-  enumDesc(file_api_v1_user_service, 11, 0);
+  enumDesc(file_api_v1_user_service, 18, 0);
 
 /**
  * @generated from message memos.api.v1.GetUserSettingRequest
@@ -683,7 +981,7 @@ export type GetUserSettingRequest = Message<"memos.api.v1.GetUserSettingRequest"
  * Use `create(GetUserSettingRequestSchema)` to create a new message.
  */
 export const GetUserSettingRequestSchema: GenMessage<GetUserSettingRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 12);
+  messageDesc(file_api_v1_user_service, 19);
 
 /**
  * @generated from message memos.api.v1.UpdateUserSettingRequest
@@ -709,7 +1007,7 @@ export type UpdateUserSettingRequest = Message<"memos.api.v1.UpdateUserSettingRe
  * Use `create(UpdateUserSettingRequestSchema)` to create a new message.
  */
 export const UpdateUserSettingRequestSchema: GenMessage<UpdateUserSettingRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 13);
+  messageDesc(file_api_v1_user_service, 20);
 
 /**
  * Request message for ListUserSettings method.
@@ -749,7 +1047,7 @@ export type ListUserSettingsRequest = Message<"memos.api.v1.ListUserSettingsRequ
  * Use `create(ListUserSettingsRequestSchema)` to create a new message.
  */
 export const ListUserSettingsRequestSchema: GenMessage<ListUserSettingsRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 14);
+  messageDesc(file_api_v1_user_service, 21);
 
 /**
  * Response message for ListUserSettings method.
@@ -785,7 +1083,7 @@ export type ListUserSettingsResponse = Message<"memos.api.v1.ListUserSettingsRes
  * Use `create(ListUserSettingsResponseSchema)` to create a new message.
  */
 export const ListUserSettingsResponseSchema: GenMessage<ListUserSettingsResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 15);
+  messageDesc(file_api_v1_user_service, 22);
 
 /**
  * PersonalAccessToken represents a long-lived token for API/script access.
@@ -836,7 +1134,7 @@ export type PersonalAccessToken = Message<"memos.api.v1.PersonalAccessToken"> & 
  * Use `create(PersonalAccessTokenSchema)` to create a new message.
  */
 export const PersonalAccessTokenSchema: GenMessage<PersonalAccessToken> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 16);
+  messageDesc(file_api_v1_user_service, 23);
 
 /**
  * @generated from message memos.api.v1.ListPersonalAccessTokensRequest
@@ -870,7 +1168,7 @@ export type ListPersonalAccessTokensRequest = Message<"memos.api.v1.ListPersonal
  * Use `create(ListPersonalAccessTokensRequestSchema)` to create a new message.
  */
 export const ListPersonalAccessTokensRequestSchema: GenMessage<ListPersonalAccessTokensRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 17);
+  messageDesc(file_api_v1_user_service, 24);
 
 /**
  * @generated from message memos.api.v1.ListPersonalAccessTokensResponse
@@ -903,7 +1201,7 @@ export type ListPersonalAccessTokensResponse = Message<"memos.api.v1.ListPersona
  * Use `create(ListPersonalAccessTokensResponseSchema)` to create a new message.
  */
 export const ListPersonalAccessTokensResponseSchema: GenMessage<ListPersonalAccessTokensResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 18);
+  messageDesc(file_api_v1_user_service, 25);
 
 /**
  * @generated from message memos.api.v1.CreatePersonalAccessTokenRequest
@@ -937,7 +1235,7 @@ export type CreatePersonalAccessTokenRequest = Message<"memos.api.v1.CreatePerso
  * Use `create(CreatePersonalAccessTokenRequestSchema)` to create a new message.
  */
 export const CreatePersonalAccessTokenRequestSchema: GenMessage<CreatePersonalAccessTokenRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 19);
+  messageDesc(file_api_v1_user_service, 26);
 
 /**
  * @generated from message memos.api.v1.CreatePersonalAccessTokenResponse
@@ -964,7 +1262,7 @@ export type CreatePersonalAccessTokenResponse = Message<"memos.api.v1.CreatePers
  * Use `create(CreatePersonalAccessTokenResponseSchema)` to create a new message.
  */
 export const CreatePersonalAccessTokenResponseSchema: GenMessage<CreatePersonalAccessTokenResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 20);
+  messageDesc(file_api_v1_user_service, 27);
 
 /**
  * @generated from message memos.api.v1.DeletePersonalAccessTokenRequest
@@ -984,7 +1282,7 @@ export type DeletePersonalAccessTokenRequest = Message<"memos.api.v1.DeletePerso
  * Use `create(DeletePersonalAccessTokenRequestSchema)` to create a new message.
  */
 export const DeletePersonalAccessTokenRequestSchema: GenMessage<DeletePersonalAccessTokenRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 21);
+  messageDesc(file_api_v1_user_service, 28);
 
 /**
  * UserWebhook represents a webhook owned by a user.
@@ -1034,7 +1332,7 @@ export type UserWebhook = Message<"memos.api.v1.UserWebhook"> & {
  * Use `create(UserWebhookSchema)` to create a new message.
  */
 export const UserWebhookSchema: GenMessage<UserWebhook> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 22);
+  messageDesc(file_api_v1_user_service, 29);
 
 /**
  * @generated from message memos.api.v1.ListUserWebhooksRequest
@@ -1054,7 +1352,7 @@ export type ListUserWebhooksRequest = Message<"memos.api.v1.ListUserWebhooksRequ
  * Use `create(ListUserWebhooksRequestSchema)` to create a new message.
  */
 export const ListUserWebhooksRequestSchema: GenMessage<ListUserWebhooksRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 23);
+  messageDesc(file_api_v1_user_service, 30);
 
 /**
  * @generated from message memos.api.v1.ListUserWebhooksResponse
@@ -1073,7 +1371,7 @@ export type ListUserWebhooksResponse = Message<"memos.api.v1.ListUserWebhooksRes
  * Use `create(ListUserWebhooksResponseSchema)` to create a new message.
  */
 export const ListUserWebhooksResponseSchema: GenMessage<ListUserWebhooksResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 24);
+  messageDesc(file_api_v1_user_service, 31);
 
 /**
  * @generated from message memos.api.v1.CreateUserWebhookRequest
@@ -1100,7 +1398,7 @@ export type CreateUserWebhookRequest = Message<"memos.api.v1.CreateUserWebhookRe
  * Use `create(CreateUserWebhookRequestSchema)` to create a new message.
  */
 export const CreateUserWebhookRequestSchema: GenMessage<CreateUserWebhookRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 25);
+  messageDesc(file_api_v1_user_service, 32);
 
 /**
  * @generated from message memos.api.v1.UpdateUserWebhookRequest
@@ -1126,7 +1424,7 @@ export type UpdateUserWebhookRequest = Message<"memos.api.v1.UpdateUserWebhookRe
  * Use `create(UpdateUserWebhookRequestSchema)` to create a new message.
  */
 export const UpdateUserWebhookRequestSchema: GenMessage<UpdateUserWebhookRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 26);
+  messageDesc(file_api_v1_user_service, 33);
 
 /**
  * @generated from message memos.api.v1.DeleteUserWebhookRequest
@@ -1146,7 +1444,7 @@ export type DeleteUserWebhookRequest = Message<"memos.api.v1.DeleteUserWebhookRe
  * Use `create(DeleteUserWebhookRequestSchema)` to create a new message.
  */
 export const DeleteUserWebhookRequestSchema: GenMessage<DeleteUserWebhookRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 27);
+  messageDesc(file_api_v1_user_service, 34);
 
 /**
  * @generated from message memos.api.v1.UserNotification
@@ -1202,7 +1500,7 @@ export type UserNotification = Message<"memos.api.v1.UserNotification"> & {
  * Use `create(UserNotificationSchema)` to create a new message.
  */
 export const UserNotificationSchema: GenMessage<UserNotification> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 28);
+  messageDesc(file_api_v1_user_service, 35);
 
 /**
  * @generated from enum memos.api.v1.UserNotification.Status
@@ -1228,7 +1526,7 @@ export enum UserNotification_Status {
  * Describes the enum memos.api.v1.UserNotification.Status.
  */
 export const UserNotification_StatusSchema: GenEnum<UserNotification_Status> = /*@__PURE__*/
-  enumDesc(file_api_v1_user_service, 28, 0);
+  enumDesc(file_api_v1_user_service, 35, 0);
 
 /**
  * @generated from enum memos.api.v1.UserNotification.Type
@@ -1249,7 +1547,7 @@ export enum UserNotification_Type {
  * Describes the enum memos.api.v1.UserNotification.Type.
  */
 export const UserNotification_TypeSchema: GenEnum<UserNotification_Type> = /*@__PURE__*/
-  enumDesc(file_api_v1_user_service, 28, 1);
+  enumDesc(file_api_v1_user_service, 35, 1);
 
 /**
  * @generated from message memos.api.v1.ListUserNotificationsRequest
@@ -1284,7 +1582,7 @@ export type ListUserNotificationsRequest = Message<"memos.api.v1.ListUserNotific
  * Use `create(ListUserNotificationsRequestSchema)` to create a new message.
  */
 export const ListUserNotificationsRequestSchema: GenMessage<ListUserNotificationsRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 29);
+  messageDesc(file_api_v1_user_service, 36);
 
 /**
  * @generated from message memos.api.v1.ListUserNotificationsResponse
@@ -1306,7 +1604,7 @@ export type ListUserNotificationsResponse = Message<"memos.api.v1.ListUserNotifi
  * Use `create(ListUserNotificationsResponseSchema)` to create a new message.
  */
 export const ListUserNotificationsResponseSchema: GenMessage<ListUserNotificationsResponse> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 30);
+  messageDesc(file_api_v1_user_service, 37);
 
 /**
  * @generated from message memos.api.v1.UpdateUserNotificationRequest
@@ -1328,7 +1626,7 @@ export type UpdateUserNotificationRequest = Message<"memos.api.v1.UpdateUserNoti
  * Use `create(UpdateUserNotificationRequestSchema)` to create a new message.
  */
 export const UpdateUserNotificationRequestSchema: GenMessage<UpdateUserNotificationRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 31);
+  messageDesc(file_api_v1_user_service, 38);
 
 /**
  * @generated from message memos.api.v1.DeleteUserNotificationRequest
@@ -1347,7 +1645,7 @@ export type DeleteUserNotificationRequest = Message<"memos.api.v1.DeleteUserNoti
  * Use `create(DeleteUserNotificationRequestSchema)` to create a new message.
  */
 export const DeleteUserNotificationRequestSchema: GenMessage<DeleteUserNotificationRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_user_service, 32);
+  messageDesc(file_api_v1_user_service, 39);
 
 /**
  * @generated from service memos.api.v1.UserService
@@ -1557,6 +1855,36 @@ export const UserService: GenService<{
     methodKind: "unary";
     input: typeof DeleteUserNotificationRequestSchema;
     output: typeof EmptySchema;
+  },
+  /**
+   * BatchArchiveUsers archives multiple users at once.
+   *
+   * @generated from rpc memos.api.v1.UserService.BatchArchiveUsers
+   */
+  batchArchiveUsers: {
+    methodKind: "unary";
+    input: typeof BatchArchiveUsersRequestSchema;
+    output: typeof BatchArchiveUsersResponseSchema;
+  },
+  /**
+   * BatchRestoreUsers restores multiple archived users at once.
+   *
+   * @generated from rpc memos.api.v1.UserService.BatchRestoreUsers
+   */
+  batchRestoreUsers: {
+    methodKind: "unary";
+    input: typeof BatchRestoreUsersRequestSchema;
+    output: typeof BatchRestoreUsersResponseSchema;
+  },
+  /**
+   * BatchDeleteUsers deletes multiple users at once.
+   *
+   * @generated from rpc memos.api.v1.UserService.BatchDeleteUsers
+   */
+  batchDeleteUsers: {
+    methodKind: "unary";
+    input: typeof BatchDeleteUsersRequestSchema;
+    output: typeof BatchDeleteUsersResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_v1_user_service, 0);

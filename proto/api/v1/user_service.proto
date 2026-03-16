@@ -156,6 +156,30 @@ service UserService {
     option (google.api.http) = {delete: "/api/v1/{name=users/*/notifications/*}"};
     option (google.api.method_signature) = "name";
   }
+
+  // BatchArchiveUsers archives multiple users at once.
+  rpc BatchArchiveUsers(BatchArchiveUsersRequest) returns (BatchArchiveUsersResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/users:batchArchive"
+      body: "*"
+    };
+  }
+
+  // BatchRestoreUsers restores multiple archived users at once.
+  rpc BatchRestoreUsers(BatchRestoreUsersRequest) returns (BatchRestoreUsersResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/users:batchRestore"
+      body: "*"
+    };
+  }
+
+  // BatchDeleteUsers deletes multiple users at once.
+  rpc BatchDeleteUsers(BatchDeleteUsersRequest) returns (BatchDeleteUsersResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/users:batchDelete"
+      body: "*"
+    };
+  }
 }
 
 message User {
@@ -204,6 +228,9 @@ message User {
   // Output only. The last update timestamp.
   google.protobuf.Timestamp update_time = 12 [(google.api.field_behavior) = OUTPUT_ONLY];
 
+  // Output only. VIP status information.
+  VipStatus vip_status = 13 [(google.api.field_behavior) = OUTPUT_ONLY];
+
   // User role enumeration.
   enum Role {
     ROLE_UNSPECIFIED = 0;
@@ -211,6 +238,47 @@ message User {
     ADMIN = 2;
     // User role with limited access.
     USER = 3;
+  }
+}
+
+// VipStatus represents the VIP/subscription status of a user.
+message VipStatus {
+  // Whether the user is currently a VIP.
+  bool is_vip = 1;
+
+  // The type of VIP status.
+  VipType vip_type = 2;
+
+  // The expiration date of the VIP status, if applicable.
+  google.protobuf.Timestamp expires_date = 3;
+
+  // The subscription state.
+  SubscriptionState state = 4;
+
+  // VIP type enumeration.
+  enum VipType {
+    VIP_TYPE_UNSPECIFIED = 0;
+    // No VIP status.
+    NONE = 1;
+    // Trial VIP status.
+    TRIAL = 2;
+    // Paid subscription VIP status.
+    SUBSCRIPTION = 3;
+  }
+
+  // Subscription state enumeration.
+  enum SubscriptionState {
+    SUBSCRIPTION_STATE_UNSPECIFIED = 0;
+    // Active subscription.
+    ACTIVE = 1;
+    // Expired subscription.
+    EXPIRED = 2;
+    // In grace period.
+    GRACE_PERIOD = 3;
+    // Billing retry in progress.
+    BILLING_RETRY = 4;
+    // Cancelled subscription.
+    CANCELLED = 5;
   }
 }
 
@@ -233,6 +301,12 @@ message ListUsersRequest {
 
   // Optional. If true, show deleted users in the response.
   bool show_deleted = 4 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional. A comma-separated list of fields to order by.
+  // Supports: "created_ts", "updated_ts", "username"
+  // Prefix with "-" for descending order.
+  // Example: "-created_ts" (newest first), "username" (alphabetical)
+  string order_by = 5 [(google.api.field_behavior) = OPTIONAL];
 }
 
 message ListUsersResponse {
@@ -310,6 +384,52 @@ message DeleteUserRequest {
 
   // Optional. If set to true, the user will be deleted even if they have associated data.
   bool force = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Batch operation messages for bulk user management
+message BatchArchiveUsersRequest {
+  // Required. The resource names of the users to archive.
+  // Format: users/{user}
+  repeated string names = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BatchArchiveUsersResponse {
+  // The number of users successfully archived.
+  int32 archived_count = 1;
+  
+  // The resource names of users that failed to archive.
+  repeated string failed_names = 2;
+}
+
+message BatchRestoreUsersRequest {
+  // Required. The resource names of the users to restore.
+  // Format: users/{user}
+  repeated string names = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message BatchRestoreUsersResponse {
+  // The number of users successfully restored.
+  int32 restored_count = 1;
+  
+  // The resource names of users that failed to restore.
+  repeated string failed_names = 2;
+}
+
+message BatchDeleteUsersRequest {
+  // Required. The resource names of the users to delete.
+  // Format: users/{user}
+  repeated string names = 1 [(google.api.field_behavior) = REQUIRED];
+  
+  // Optional. If set to true, the users will be deleted even if they have associated data.
+  bool force = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message BatchDeleteUsersResponse {
+  // The number of users successfully deleted.
+  int32 deleted_count = 1;
+  
+  // The resource names of users that failed to delete.
+  repeated string failed_names = 2;
 }
 
 // User statistics messages

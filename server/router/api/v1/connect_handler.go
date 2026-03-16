@@ -107,3 +107,30 @@ func (s *ConnectServiceHandler) ResetPassword(ctx context.Context, req *connect.
 	}
 	return connect.NewResponse(resp), nil
 }
+
+// BatchArchiveUsers implements apiv1connect.UserServiceHandler
+func (s *ConnectServiceHandler) BatchArchiveUsers(ctx context.Context, req *connect.Request[v1pb.BatchArchiveUsersRequest]) (*connect.Response[v1pb.BatchArchiveUsersResponse], error) {
+	resp, err := s.APIV1Service.BatchArchiveUsers(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+// BatchRestoreUsers implements apiv1connect.UserServiceHandler
+func (s *ConnectServiceHandler) BatchRestoreUsers(ctx context.Context, req *connect.Request[v1pb.BatchRestoreUsersRequest]) (*connect.Response[v1pb.BatchRestoreUsersResponse], error) {
+	resp, err := s.APIV1Service.BatchRestoreUsers(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+// BatchDeleteUsers implements apiv1connect.UserServiceHandler
+func (s *ConnectServiceHandler) BatchDeleteUsers(ctx context.Context, req *connect.Request[v1pb.BatchDeleteUsersRequest]) (*connect.Response[v1pb.BatchDeleteUsersResponse], error) {
+	resp, err := s.APIV1Service.BatchDeleteUsers(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}

@@ -1,9 +1,9 @@
 import { create } from "@bufbuild/protobuf";
 import { FieldMaskSchema } from "@bufbuild/protobuf/wkt";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authServiceClient, shortcutServiceClient, userServiceClient } from "@/connect";
 import { buildUserSettingName } from "@/helpers/resource-names";
-import { User, UserSetting, UserSetting_GeneralSetting, UserSetting_Key, UserSettingSchema } from "@/types/proto/api/v1/user_service_pb";
+import { ListUsersRequestSchema, type ListUsersRequest, User, UserSetting, UserSetting_GeneralSetting, UserSetting_Key, UserSettingSchema } from "@/types/proto/api/v1/user_service_pb";
 
 // Query keys factory
 export const userKeys = {
@@ -152,6 +152,51 @@ export function useDeleteUser() {
   });
 }
 
+// Hook to batch archive users
+export function useBatchArchiveUsers() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (names: string[]) => {
+      const response = await userServiceClient.batchArchiveUsers({ names });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
+    },
+  });
+}
+
+// Hook to batch restore users
+export function useBatchRestoreUsers() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (names: string[]) => {
+      const response = await userServiceClient.batchRestoreUsers({ names });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
+    },
+  });
+}
+
+// Hook to batch delete users
+export function useBatchDeleteUsers() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (names: string[]) => {
+      const response = await userServiceClient.batchDeleteUsers({ names });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
+    },
+  });
+}
+
 // Hook to fetch user settings
 export function useUserSettings(parent?: string) {
   return useQuery({
@@ -186,7 +231,7 @@ export function useUpdateUserSetting() {
   });
 }
 
-// Hook to list all users
+// Hook to list all users (legacy - loads all users at once)
 export function useListUsers() {
   return useQuery({
     queryKey: userKeys.all,
@@ -194,6 +239,28 @@ export function useListUsers() {
       const { users } = await userServiceClient.listUsers({});
       return users;
     },
+  });
+}
+
+// Hook to list users with pagination (for large user lists)
+export function useInfiniteUsers(request: Partial<ListUsersRequest> = {}, options?: { enabled?: boolean }) {
+  return useInfiniteQuery({
+    queryKey: [...userKeys.all, "infinite", request],
+    queryFn: async ({ pageParam }) => {
+      const req: ListUsersRequest = create(ListUsersRequestSchema, {
+        pageToken: pageParam || "",
+        pageSize: request.pageSize || 50,
+        filter: request.filter || "",
+        showDeleted: request.showDeleted || false,
+      });
+      const response = await userServiceClient.listUsers(req);
+      return response;
+    },
+    initialPageParam: "",
+    getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
+    staleTime: 1000 * 30, // 30 seconds
+    gcTime: 1000 * 60 * 5, // 5 minutes
+    enabled: options?.enabled ?? true,
   });
 }
 

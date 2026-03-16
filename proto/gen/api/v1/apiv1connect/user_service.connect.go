@@ -89,6 +89,15 @@ const (
 	// UserServiceDeleteUserNotificationProcedure is the fully-qualified name of the UserService's
 	// DeleteUserNotification RPC.
 	UserServiceDeleteUserNotificationProcedure = "/memos.api.v1.UserService/DeleteUserNotification"
+	// UserServiceBatchArchiveUsersProcedure is the fully-qualified name of the UserService's
+	// BatchArchiveUsers RPC.
+	UserServiceBatchArchiveUsersProcedure = "/memos.api.v1.UserService/BatchArchiveUsers"
+	// UserServiceBatchRestoreUsersProcedure is the fully-qualified name of the UserService's
+	// BatchRestoreUsers RPC.
+	UserServiceBatchRestoreUsersProcedure = "/memos.api.v1.UserService/BatchRestoreUsers"
+	// UserServiceBatchDeleteUsersProcedure is the fully-qualified name of the UserService's
+	// BatchDeleteUsers RPC.
+	UserServiceBatchDeleteUsersProcedure = "/memos.api.v1.UserService/BatchDeleteUsers"
 )
 
 // UserServiceClient is a client for the memos.api.v1.UserService service.
@@ -138,6 +147,12 @@ type UserServiceClient interface {
 	UpdateUserNotification(context.Context, *connect.Request[v1.UpdateUserNotificationRequest]) (*connect.Response[v1.UserNotification], error)
 	// DeleteUserNotification deletes a notification.
 	DeleteUserNotification(context.Context, *connect.Request[v1.DeleteUserNotificationRequest]) (*connect.Response[emptypb.Empty], error)
+	// BatchArchiveUsers archives multiple users at once.
+	BatchArchiveUsers(context.Context, *connect.Request[v1.BatchArchiveUsersRequest]) (*connect.Response[v1.BatchArchiveUsersResponse], error)
+	// BatchRestoreUsers restores multiple archived users at once.
+	BatchRestoreUsers(context.Context, *connect.Request[v1.BatchRestoreUsersRequest]) (*connect.Response[v1.BatchRestoreUsersResponse], error)
+	// BatchDeleteUsers deletes multiple users at once.
+	BatchDeleteUsers(context.Context, *connect.Request[v1.BatchDeleteUsersRequest]) (*connect.Response[v1.BatchDeleteUsersResponse], error)
 }
 
 // NewUserServiceClient constructs a client for the memos.api.v1.UserService service. By default, it
@@ -271,6 +286,24 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("DeleteUserNotification")),
 			connect.WithClientOptions(opts...),
 		),
+		batchArchiveUsers: connect.NewClient[v1.BatchArchiveUsersRequest, v1.BatchArchiveUsersResponse](
+			httpClient,
+			baseURL+UserServiceBatchArchiveUsersProcedure,
+			connect.WithSchema(userServiceMethods.ByName("BatchArchiveUsers")),
+			connect.WithClientOptions(opts...),
+		),
+		batchRestoreUsers: connect.NewClient[v1.BatchRestoreUsersRequest, v1.BatchRestoreUsersResponse](
+			httpClient,
+			baseURL+UserServiceBatchRestoreUsersProcedure,
+			connect.WithSchema(userServiceMethods.ByName("BatchRestoreUsers")),
+			connect.WithClientOptions(opts...),
+		),
+		batchDeleteUsers: connect.NewClient[v1.BatchDeleteUsersRequest, v1.BatchDeleteUsersResponse](
+			httpClient,
+			baseURL+UserServiceBatchDeleteUsersProcedure,
+			connect.WithSchema(userServiceMethods.ByName("BatchDeleteUsers")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -296,6 +329,9 @@ type userServiceClient struct {
 	listUserNotifications     *connect.Client[v1.ListUserNotificationsRequest, v1.ListUserNotificationsResponse]
 	updateUserNotification    *connect.Client[v1.UpdateUserNotificationRequest, v1.UserNotification]
 	deleteUserNotification    *connect.Client[v1.DeleteUserNotificationRequest, emptypb.Empty]
+	batchArchiveUsers         *connect.Client[v1.BatchArchiveUsersRequest, v1.BatchArchiveUsersResponse]
+	batchRestoreUsers         *connect.Client[v1.BatchRestoreUsersRequest, v1.BatchRestoreUsersResponse]
+	batchDeleteUsers          *connect.Client[v1.BatchDeleteUsersRequest, v1.BatchDeleteUsersResponse]
 }
 
 // ListUsers calls memos.api.v1.UserService.ListUsers.
@@ -398,6 +434,21 @@ func (c *userServiceClient) DeleteUserNotification(ctx context.Context, req *con
 	return c.deleteUserNotification.CallUnary(ctx, req)
 }
 
+// BatchArchiveUsers calls memos.api.v1.UserService.BatchArchiveUsers.
+func (c *userServiceClient) BatchArchiveUsers(ctx context.Context, req *connect.Request[v1.BatchArchiveUsersRequest]) (*connect.Response[v1.BatchArchiveUsersResponse], error) {
+	return c.batchArchiveUsers.CallUnary(ctx, req)
+}
+
+// BatchRestoreUsers calls memos.api.v1.UserService.BatchRestoreUsers.
+func (c *userServiceClient) BatchRestoreUsers(ctx context.Context, req *connect.Request[v1.BatchRestoreUsersRequest]) (*connect.Response[v1.BatchRestoreUsersResponse], error) {
+	return c.batchRestoreUsers.CallUnary(ctx, req)
+}
+
+// BatchDeleteUsers calls memos.api.v1.UserService.BatchDeleteUsers.
+func (c *userServiceClient) BatchDeleteUsers(ctx context.Context, req *connect.Request[v1.BatchDeleteUsersRequest]) (*connect.Response[v1.BatchDeleteUsersResponse], error) {
+	return c.batchDeleteUsers.CallUnary(ctx, req)
+}
+
 // UserServiceHandler is an implementation of the memos.api.v1.UserService service.
 type UserServiceHandler interface {
 	// ListUsers returns a list of users.
@@ -445,6 +496,12 @@ type UserServiceHandler interface {
 	UpdateUserNotification(context.Context, *connect.Request[v1.UpdateUserNotificationRequest]) (*connect.Response[v1.UserNotification], error)
 	// DeleteUserNotification deletes a notification.
 	DeleteUserNotification(context.Context, *connect.Request[v1.DeleteUserNotificationRequest]) (*connect.Response[emptypb.Empty], error)
+	// BatchArchiveUsers archives multiple users at once.
+	BatchArchiveUsers(context.Context, *connect.Request[v1.BatchArchiveUsersRequest]) (*connect.Response[v1.BatchArchiveUsersResponse], error)
+	// BatchRestoreUsers restores multiple archived users at once.
+	BatchRestoreUsers(context.Context, *connect.Request[v1.BatchRestoreUsersRequest]) (*connect.Response[v1.BatchRestoreUsersResponse], error)
+	// BatchDeleteUsers deletes multiple users at once.
+	BatchDeleteUsers(context.Context, *connect.Request[v1.BatchDeleteUsersRequest]) (*connect.Response[v1.BatchDeleteUsersResponse], error)
 }
 
 // NewUserServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -574,6 +631,24 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("DeleteUserNotification")),
 		connect.WithHandlerOptions(opts...),
 	)
+	userServiceBatchArchiveUsersHandler := connect.NewUnaryHandler(
+		UserServiceBatchArchiveUsersProcedure,
+		svc.BatchArchiveUsers,
+		connect.WithSchema(userServiceMethods.ByName("BatchArchiveUsers")),
+		connect.WithHandlerOptions(opts...),
+	)
+	userServiceBatchRestoreUsersHandler := connect.NewUnaryHandler(
+		UserServiceBatchRestoreUsersProcedure,
+		svc.BatchRestoreUsers,
+		connect.WithSchema(userServiceMethods.ByName("BatchRestoreUsers")),
+		connect.WithHandlerOptions(opts...),
+	)
+	userServiceBatchDeleteUsersHandler := connect.NewUnaryHandler(
+		UserServiceBatchDeleteUsersProcedure,
+		svc.BatchDeleteUsers,
+		connect.WithSchema(userServiceMethods.ByName("BatchDeleteUsers")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case UserServiceListUsersProcedure:
@@ -616,6 +691,12 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 			userServiceUpdateUserNotificationHandler.ServeHTTP(w, r)
 		case UserServiceDeleteUserNotificationProcedure:
 			userServiceDeleteUserNotificationHandler.ServeHTTP(w, r)
+		case UserServiceBatchArchiveUsersProcedure:
+			userServiceBatchArchiveUsersHandler.ServeHTTP(w, r)
+		case UserServiceBatchRestoreUsersProcedure:
+			userServiceBatchRestoreUsersHandler.ServeHTTP(w, r)
+		case UserServiceBatchDeleteUsersProcedure:
+			userServiceBatchDeleteUsersHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -703,4 +784,16 @@ func (UnimplementedUserServiceHandler) UpdateUserNotification(context.Context, *
 
 func (UnimplementedUserServiceHandler) DeleteUserNotification(context.Context, *connect.Request[v1.DeleteUserNotificationRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.UserService.DeleteUserNotification is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) BatchArchiveUsers(context.Context, *connect.Request[v1.BatchArchiveUsersRequest]) (*connect.Response[v1.BatchArchiveUsersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.UserService.BatchArchiveUsers is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) BatchRestoreUsers(context.Context, *connect.Request[v1.BatchRestoreUsersRequest]) (*connect.Response[v1.BatchRestoreUsersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.UserService.BatchRestoreUsers is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) BatchDeleteUsers(context.Context, *connect.Request[v1.BatchDeleteUsersRequest]) (*connect.Response[v1.BatchDeleteUsersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.UserService.BatchDeleteUsers is not implemented"))
 }

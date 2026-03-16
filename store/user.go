@@ -86,6 +86,14 @@ type FindUser struct {
 
 	// The maximum number of users to return.
 	Limit *int
+
+	// Cursor-based pagination fields
+	// CursorCreatedTs is the created_ts of the last user from previous page
+	CursorCreatedTs *int64
+	// CursorID is the ID of the last user from previous page (for tie-breaking)
+	CursorID *int32
+	// OrderBy specifies the sort order, e.g., "created_ts DESC" or "username ASC"
+	OrderBy *string
 }
 
 type DeleteUser struct {

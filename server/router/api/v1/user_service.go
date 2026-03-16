@@ -3,7 +3,9 @@ package v1
 import (
 	"context"
 	"crypto/rand"
+	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -43,30 +45,102 @@ func (s *APIV1Service) ListUsers(ctx context.Context, request *v1pb.ListUsersReq
 
 	userFind := &store.FindUser{}
 
+	// Parse filter for advanced filtering (role, state, search)
 	if request.Filter != "" {
-		username, err := extractUsernameFromFilter(request.Filter)
+		filters, err := parseUserFilter(request.Filter)
 		if err != nil {
 			return nil, status.Errorf(codes.InvalidArgument, "invalid filter: %v", err)
 		}
-		if username != "" {
-			userFind.Username = &username
+		
+		// Apply username search
+		if filters.Username != "" {
+			userFind.Username = &filters.Username
+		}
+		
+		// Apply role filter
+		if filters.Role != "" {
+			role := store.Role(filters.Role)
+			userFind.Role = &role
+		}
+		
+		// Apply row status filter (archived/normal)
+		if filters.State != "" {
+			var rowStatus store.RowStatus
+			switch filters.State {
+			case "ARCHIVED":
+				rowStatus = store.Archived
+				userFind.RowStatus = &rowStatus
+			case "NORMAL":
+				rowStatus = store.Normal
+				userFind.RowStatus = &rowStatus
+			}
+		}
+		
+		// Apply search query (searches username, email, nickname)
+		if filters.Search != "" {
+			userFind.Filters = []string{filters.Search}
 		}
 	}
+
+	// Set page size with default and max limits
+	pageSize := int(request.PageSize)
+	if pageSize <= 0 {
+		pageSize = 50 // default
+	}
+	if pageSize > 200 {
+		pageSize = 200 // max limit
+	}
+	userFind.Limit = &pageSize
+
+	// Parse page token for cursor-based pagination
+	if request.PageToken != "" {
+		cursor, err := decodePageToken(request.PageToken)
+		if err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid page token: %v", err)
+		}
+		userFind.CursorCreatedTs = &cursor.LastCreatedTs
+		userFind.CursorID = &cursor.LastID
+	}
+
+	// Set ordering
+	orderBy := parseOrderBy(request.OrderBy)
+	userFind.OrderBy = &orderBy
 
 	users, err := s.Store.ListUsers(ctx, userFind)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to list users: %v", err)
 	}
 
-	// TODO: Implement proper ordering, and pagination
-	// For now, return all users with basic structure
 	response := &v1pb.ListUsersResponse{
 		Users:     []*v1pb.User{},
-		TotalSize: int32(len(users)),
+		TotalSize: int32(len(users)), // Note: This is the page size, not total count
 	}
+
 	for _, user := range users {
-		response.Users = append(response.Users, convertUserFromStore(user))
+		userpb := convertUserFromStore(user)
+		
+		// Fetch and populate VIP status
+		vipStatus, err := s.Store.GetUserVIPStatus(ctx, user.ID)
+		if err == nil && vipStatus != nil {
+			userpb.VipStatus = convertVIPStatusFromStore(vipStatus)
+		}
+		
+		response.Users = append(response.Users, userpb)
 	}
+
+	// Generate next page token if we have a full page
+	if len(users) == pageSize && len(users) > 0 {
+		lastUser := users[len(users)-1]
+		nextToken, err := encodePageToken(PageToken{
+			LastCreatedTs: lastUser.CreatedTs,
+			LastID:        lastUser.ID,
+		})
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to encode page token: %v", err)
+		}
+		response.NextPageToken = nextToken
+	}
+
 	return response, nil
 }
 
@@ -1032,6 +1106,56 @@ func extractImageInfo(dataURI string) (string, string, error) {
 	return imageType, base64Data, nil
 }
 
+// convertVIPStatusFromStore converts store VIP status to API VIP status.
+func convertVIPStatusFromStore(vipStatus *store.UserVIPStatus) *v1pb.VipStatus {
+	if vipStatus == nil {
+		return nil
+	}
+
+	pbStatus := &v1pb.VipStatus{
+		IsVip:   vipStatus.IsVIP,
+		VipType: convertVipTypeFromStore(vipStatus.VipType),
+	}
+
+	// Get subscription details if available
+	if vipStatus.SubscriptionID != nil && *vipStatus.SubscriptionID > 0 {
+		// Note: We can't access the subscription here without context and store
+		// For now, we'll set the state based on IsVIP flag
+		if vipStatus.IsVIP {
+			pbStatus.State = v1pb.VipStatus_ACTIVE
+		} else {
+			pbStatus.State = v1pb.VipStatus_EXPIRED
+		}
+	} else if vipStatus.VipType == store.VipTypeTrial {
+		// Trial status
+		if vipStatus.IsVIP && vipStatus.TrialEndTs != nil {
+			pbStatus.State = v1pb.VipStatus_ACTIVE
+			pbStatus.ExpiresDate = timestamppb.New(time.Unix(*vipStatus.TrialEndTs, 0))
+		} else {
+			pbStatus.State = v1pb.VipStatus_EXPIRED
+		}
+	} else {
+		// No subscription
+		pbStatus.State = v1pb.VipStatus_EXPIRED
+	}
+
+	return pbStatus
+}
+
+// convertVipTypeFromStore converts store VIP type to API VIP type.
+func convertVipTypeFromStore(vipType store.VipType) v1pb.VipStatus_VipType {
+	switch vipType {
+	case store.VipTypeNone:
+		return v1pb.VipStatus_NONE
+	case store.VipTypeTrial:
+		return v1pb.VipStatus_TRIAL
+	case store.VipTypeSubscription:
+		return v1pb.VipStatus_SUBSCRIPTION
+	default:
+		return v1pb.VipStatus_NONE
+	}
+}
+
 // Helper functions for user settings
 
 // ExtractUserIDAndSettingKeyFromName extracts user ID and setting key from resource name.
@@ -1510,4 +1634,266 @@ func ExtractNotificationIDFromName(name string) (int32, error) {
 	}
 
 	return int32(id), nil
+}
+
+// PageToken represents the cursor for pagination
+type PageToken struct {
+	LastCreatedTs int64 `json:"last_created_ts"`
+	LastID        int32 `json:"last_id"`
+}
+
+// encodePageToken encodes a PageToken to a base64 string
+func encodePageToken(token PageToken) (string, error) {
+	jsonBytes, err := json.Marshal(token)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(jsonBytes), nil
+}
+
+// decodePageToken decodes a base64 string to a PageToken
+func decodePageToken(tokenStr string) (PageToken, error) {
+	var token PageToken
+	jsonBytes, err := base64.StdEncoding.DecodeString(tokenStr)
+	if err != nil {
+		return token, err
+	}
+	err = json.Unmarshal(jsonBytes, &token)
+	return token, err
+}
+
+// UserFilter represents parsed filter criteria for user listing
+type UserFilter struct {
+	Username string
+	Role     string
+	State    string
+	Search   string
+}
+
+// parseUserFilter parses a filter string into UserFilter
+// Supports formats:
+//   - "username == 'john'"
+//   - "role == 'ADMIN'"
+//   - "state == 'NORMAL'"
+//   - "search == 'query'" (searches username, email, nickname)
+//   - Combined: "role == 'ADMIN' && state == 'NORMAL'"
+func parseUserFilter(filterStr string) (UserFilter, error) {
+	var filter UserFilter
+	filterStr = strings.TrimSpace(filterStr)
+
+	if filterStr == "" {
+		return filter, nil
+	}
+
+	// Simple parsing for common patterns
+	// Check for role filter
+	if strings.Contains(filterStr, "role == '") {
+		start := strings.Index(filterStr, "role == '") + len("role == '")
+		end := strings.Index(filterStr[start:], "'")
+		if end > 0 {
+			filter.Role = filterStr[start : start+end]
+		}
+	}
+
+	// Check for state filter
+	if strings.Contains(filterStr, "state == '") {
+		start := strings.Index(filterStr, "state == '") + len("state == '")
+		end := strings.Index(filterStr[start:], "'")
+		if end > 0 {
+			filter.State = filterStr[start : start+end]
+		}
+	}
+
+	// Check for username filter
+	if strings.Contains(filterStr, "username == '") {
+		start := strings.Index(filterStr, "username == '") + len("username == '")
+		end := strings.Index(filterStr[start:], "'")
+		if end > 0 {
+			filter.Username = filterStr[start : start+end]
+		}
+	}
+
+	// Check for search filter (general search)
+	if strings.Contains(filterStr, "search == '") {
+		start := strings.Index(filterStr, "search == '") + len("search == '")
+		end := strings.Index(filterStr[start:], "'")
+		if end > 0 {
+			filter.Search = filterStr[start : start+end]
+		}
+	}
+
+	// Check for username.contains() pattern
+	if strings.Contains(filterStr, "username.contains(") {
+		start := strings.Index(filterStr, "username.contains(") + len("username.contains(")
+		// Skip quote
+		if filterStr[start] == '"' || filterStr[start] == '\'' {
+			start++
+		}
+		end := strings.Index(filterStr[start:], "\"")
+		if end < 0 {
+			end = strings.Index(filterStr[start:], "'")
+		}
+		if end > 0 {
+			filter.Username = filterStr[start : start+end]
+		}
+	}
+
+	return filter, nil
+}
+
+// parseOrderBy parses the order_by parameter and returns a SQL ORDER BY clause
+// Supports: "created_ts", "updated_ts", "username"
+// Prefix with "-" for descending order
+// Examples:
+//   - "created_ts" -> "created_ts ASC, id ASC"
+//   - "-created_ts" -> "created_ts DESC, id DESC"
+//   - "username" -> "username ASC, id ASC"
+func parseOrderBy(orderBy string) string {
+	if orderBy == "" {
+		return "created_ts DESC, id DESC"
+	}
+
+	direction := "ASC"
+	field := orderBy
+
+	// Check for descending prefix
+	if strings.HasPrefix(orderBy, "-") {
+		direction = "DESC"
+		field = orderBy[1:]
+	}
+
+	// Validate and map field names
+	switch field {
+	case "created_ts":
+		return fmt.Sprintf("created_ts %s, id %s", direction, direction)
+	case "updated_ts":
+		return fmt.Sprintf("updated_ts %s, id %s", direction, direction)
+	case "username":
+		return fmt.Sprintf("username %s, id %s", direction, direction)
+	default:
+		// Default to created_ts DESC for invalid fields
+		return "created_ts DESC, id DESC"
+	}
+}
+
+// BatchArchiveUsers archives multiple users at once.
+func (s *APIV1Service) BatchArchiveUsers(ctx context.Context, request *v1pb.BatchArchiveUsersRequest) (*v1pb.BatchArchiveUsersResponse, error) {
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user: %v", err)
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	if currentUser.Role != store.RoleAdmin {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied")
+	}
+
+	response := &v1pb.BatchArchiveUsersResponse{
+		ArchivedCount: 0,
+		FailedNames:   []string{},
+	}
+
+	for _, name := range request.Names {
+		userID, err := ExtractUserIDFromName(name)
+		if err != nil {
+			response.FailedNames = append(response.FailedNames, name)
+			continue
+		}
+
+		_, err = s.Store.UpdateUser(ctx, &store.UpdateUser{
+			ID:        userID,
+			RowStatus: storePtr(store.Archived),
+		})
+		if err != nil {
+			response.FailedNames = append(response.FailedNames, name)
+			continue
+		}
+
+		response.ArchivedCount++
+	}
+
+	return response, nil
+}
+
+// BatchRestoreUsers restores multiple archived users at once.
+func (s *APIV1Service) BatchRestoreUsers(ctx context.Context, request *v1pb.BatchRestoreUsersRequest) (*v1pb.BatchRestoreUsersResponse, error) {
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user: %v", err)
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	if currentUser.Role != store.RoleAdmin {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied")
+	}
+
+	response := &v1pb.BatchRestoreUsersResponse{
+		RestoredCount: 0,
+		FailedNames:   []string{},
+	}
+
+	for _, name := range request.Names {
+		userID, err := ExtractUserIDFromName(name)
+		if err != nil {
+			response.FailedNames = append(response.FailedNames, name)
+			continue
+		}
+
+		_, err = s.Store.UpdateUser(ctx, &store.UpdateUser{
+			ID:        userID,
+			RowStatus: storePtr(store.Normal),
+		})
+		if err != nil {
+			response.FailedNames = append(response.FailedNames, name)
+			continue
+		}
+
+		response.RestoredCount++
+	}
+
+	return response, nil
+}
+
+// BatchDeleteUsers deletes multiple users at once.
+func (s *APIV1Service) BatchDeleteUsers(ctx context.Context, request *v1pb.BatchDeleteUsersRequest) (*v1pb.BatchDeleteUsersResponse, error) {
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user: %v", err)
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	if currentUser.Role != store.RoleAdmin {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied")
+	}
+
+	response := &v1pb.BatchDeleteUsersResponse{
+		DeletedCount: 0,
+		FailedNames:  []string{},
+	}
+
+	for _, name := range request.Names {
+		userID, err := ExtractUserIDFromName(name)
+		if err != nil {
+			response.FailedNames = append(response.FailedNames, name)
+			continue
+		}
+
+		err = s.Store.DeleteUser(ctx, &store.DeleteUser{ID: userID})
+		if err != nil {
+			response.FailedNames = append(response.FailedNames, name)
+			continue
+		}
+
+		response.DeletedCount++
+	}
+
+	return response, nil
+}
+
+// storePtr returns a pointer to a store value
+func storePtr[T any](v T) *T {
+	return &v
 }

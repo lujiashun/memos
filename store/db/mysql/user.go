@@ -104,7 +104,25 @@ func (d *DB) ListUsers(ctx context.Context, find *store.FindUser) ([]*store.User
 		where, args = append(where, "`nickname` = ?"), append(args, *v)
 	}
 
-	orderBy := []string{"`created_ts` DESC", "`row_status` DESC"}
+	// Determine order by clause
+	orderBy := []string{"`created_ts` DESC", "`id` DESC"}
+	if find.OrderBy != nil && *find.OrderBy != "" {
+		orderBy = []string{*find.OrderBy}
+	}
+
+	// Cursor-based pagination: add cursor condition
+	if find.CursorCreatedTs != nil && find.CursorID != nil {
+		// For DESC order on created_ts
+		if len(orderBy) > 0 && strings.Contains(orderBy[0], "created_ts DESC") {
+			where = append(where, "(`created_ts` < FROM_UNIXTIME(?) OR (`created_ts` = FROM_UNIXTIME(?) AND `id` < ?))")
+			args = append(args, *find.CursorCreatedTs, *find.CursorCreatedTs, *find.CursorID)
+		} else if len(orderBy) > 0 && strings.Contains(orderBy[0], "created_ts ASC") {
+			// For ASC order on created_ts
+			where = append(where, "(`created_ts` > FROM_UNIXTIME(?) OR (`created_ts` = FROM_UNIXTIME(?) AND `id` > ?))")
+			args = append(args, *find.CursorCreatedTs, *find.CursorCreatedTs, *find.CursorID)
+		}
+	}
+
 	query := "SELECT `id`, `username`, `role`, `email`, `nickname`, `password_hash`, `avatar_url`, `description`, UNIX_TIMESTAMP(`created_ts`), UNIX_TIMESTAMP(`updated_ts`), `row_status` FROM `user` WHERE " + strings.Join(where, " AND ") + " ORDER BY " + strings.Join(orderBy, ", ")
 	if v := find.Limit; v != nil {
 		query += fmt.Sprintf(" LIMIT %d", *v)

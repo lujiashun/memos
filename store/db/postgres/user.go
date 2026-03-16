@@ -107,7 +107,25 @@ func (d *DB) ListUsers(ctx context.Context, find *store.FindUser) ([]*store.User
 		where, args = append(where, "nickname = "+placeholder(len(args)+1)), append(args, *v)
 	}
 
-	orderBy := []string{"created_ts DESC", "row_status DESC"}
+	// Determine order by clause
+	orderBy := []string{"created_ts DESC", "id DESC"}
+	if find.OrderBy != nil && *find.OrderBy != "" {
+		orderBy = []string{*find.OrderBy}
+	}
+
+	// Cursor-based pagination: add cursor condition
+	if find.CursorCreatedTs != nil && find.CursorID != nil {
+		// For DESC order on created_ts
+		if len(orderBy) > 0 && strings.Contains(orderBy[0], "created_ts DESC") {
+			where = append(where, "(created_ts < "+placeholder(len(args)+1)+" OR (created_ts = "+placeholder(len(args)+2)+" AND id < "+placeholder(len(args)+3)+"))")
+			args = append(args, *find.CursorCreatedTs, *find.CursorCreatedTs, *find.CursorID)
+		} else if len(orderBy) > 0 && strings.Contains(orderBy[0], "created_ts ASC") {
+			// For ASC order on created_ts
+			where = append(where, "(created_ts > "+placeholder(len(args)+1)+" OR (created_ts = "+placeholder(len(args)+2)+" AND id > "+placeholder(len(args)+3)+"))")
+			args = append(args, *find.CursorCreatedTs, *find.CursorCreatedTs, *find.CursorID)
+		}
+	}
+
 	query := `
 		SELECT 
 			id,

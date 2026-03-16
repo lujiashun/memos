@@ -40,6 +40,9 @@ const (
 	UserService_ListUserNotifications_FullMethodName     = "/memos.api.v1.UserService/ListUserNotifications"
 	UserService_UpdateUserNotification_FullMethodName    = "/memos.api.v1.UserService/UpdateUserNotification"
 	UserService_DeleteUserNotification_FullMethodName    = "/memos.api.v1.UserService/DeleteUserNotification"
+	UserService_BatchArchiveUsers_FullMethodName         = "/memos.api.v1.UserService/BatchArchiveUsers"
+	UserService_BatchRestoreUsers_FullMethodName         = "/memos.api.v1.UserService/BatchRestoreUsers"
+	UserService_BatchDeleteUsers_FullMethodName          = "/memos.api.v1.UserService/BatchDeleteUsers"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -91,6 +94,12 @@ type UserServiceClient interface {
 	UpdateUserNotification(ctx context.Context, in *UpdateUserNotificationRequest, opts ...grpc.CallOption) (*UserNotification, error)
 	// DeleteUserNotification deletes a notification.
 	DeleteUserNotification(ctx context.Context, in *DeleteUserNotificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// BatchArchiveUsers archives multiple users at once.
+	BatchArchiveUsers(ctx context.Context, in *BatchArchiveUsersRequest, opts ...grpc.CallOption) (*BatchArchiveUsersResponse, error)
+	// BatchRestoreUsers restores multiple archived users at once.
+	BatchRestoreUsers(ctx context.Context, in *BatchRestoreUsersRequest, opts ...grpc.CallOption) (*BatchRestoreUsersResponse, error)
+	// BatchDeleteUsers deletes multiple users at once.
+	BatchDeleteUsers(ctx context.Context, in *BatchDeleteUsersRequest, opts ...grpc.CallOption) (*BatchDeleteUsersResponse, error)
 }
 
 type userServiceClient struct {
@@ -301,6 +310,36 @@ func (c *userServiceClient) DeleteUserNotification(ctx context.Context, in *Dele
 	return out, nil
 }
 
+func (c *userServiceClient) BatchArchiveUsers(ctx context.Context, in *BatchArchiveUsersRequest, opts ...grpc.CallOption) (*BatchArchiveUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchArchiveUsersResponse)
+	err := c.cc.Invoke(ctx, UserService_BatchArchiveUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) BatchRestoreUsers(ctx context.Context, in *BatchRestoreUsersRequest, opts ...grpc.CallOption) (*BatchRestoreUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchRestoreUsersResponse)
+	err := c.cc.Invoke(ctx, UserService_BatchRestoreUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) BatchDeleteUsers(ctx context.Context, in *BatchDeleteUsersRequest, opts ...grpc.CallOption) (*BatchDeleteUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchDeleteUsersResponse)
+	err := c.cc.Invoke(ctx, UserService_BatchDeleteUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -350,6 +389,12 @@ type UserServiceServer interface {
 	UpdateUserNotification(context.Context, *UpdateUserNotificationRequest) (*UserNotification, error)
 	// DeleteUserNotification deletes a notification.
 	DeleteUserNotification(context.Context, *DeleteUserNotificationRequest) (*emptypb.Empty, error)
+	// BatchArchiveUsers archives multiple users at once.
+	BatchArchiveUsers(context.Context, *BatchArchiveUsersRequest) (*BatchArchiveUsersResponse, error)
+	// BatchRestoreUsers restores multiple archived users at once.
+	BatchRestoreUsers(context.Context, *BatchRestoreUsersRequest) (*BatchRestoreUsersResponse, error)
+	// BatchDeleteUsers deletes multiple users at once.
+	BatchDeleteUsers(context.Context, *BatchDeleteUsersRequest) (*BatchDeleteUsersResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -419,6 +464,15 @@ func (UnimplementedUserServiceServer) UpdateUserNotification(context.Context, *U
 }
 func (UnimplementedUserServiceServer) DeleteUserNotification(context.Context, *DeleteUserNotificationRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteUserNotification not implemented")
+}
+func (UnimplementedUserServiceServer) BatchArchiveUsers(context.Context, *BatchArchiveUsersRequest) (*BatchArchiveUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchArchiveUsers not implemented")
+}
+func (UnimplementedUserServiceServer) BatchRestoreUsers(context.Context, *BatchRestoreUsersRequest) (*BatchRestoreUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchRestoreUsers not implemented")
+}
+func (UnimplementedUserServiceServer) BatchDeleteUsers(context.Context, *BatchDeleteUsersRequest) (*BatchDeleteUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchDeleteUsers not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -801,6 +855,60 @@ func _UserService_DeleteUserNotification_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_BatchArchiveUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchArchiveUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).BatchArchiveUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_BatchArchiveUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).BatchArchiveUsers(ctx, req.(*BatchArchiveUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_BatchRestoreUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchRestoreUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).BatchRestoreUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_BatchRestoreUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).BatchRestoreUsers(ctx, req.(*BatchRestoreUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_BatchDeleteUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDeleteUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).BatchDeleteUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_BatchDeleteUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).BatchDeleteUsers(ctx, req.(*BatchDeleteUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -887,6 +995,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUserNotification",
 			Handler:    _UserService_DeleteUserNotification_Handler,
+		},
+		{
+			MethodName: "BatchArchiveUsers",
+			Handler:    _UserService_BatchArchiveUsers_Handler,
+		},
+		{
+			MethodName: "BatchRestoreUsers",
+			Handler:    _UserService_BatchRestoreUsers_Handler,
+		},
+		{
+			MethodName: "BatchDeleteUsers",
+			Handler:    _UserService_BatchDeleteUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

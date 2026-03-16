@@ -1263,6 +1263,15 @@ paths:
                   description: Optional. If true, show deleted users in the response.
                   schema:
                     type: boolean
+                - name: orderBy
+                  in: query
+                  description: |-
+                    Optional. A comma-separated list of fields to order by.
+                     Supports: "created_ts", "updated_ts", "username"
+                     Prefix with "-" for descending order.
+                     Example: "-created_ts" (newest first), "username" (alphabetical)
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -2233,6 +2242,81 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/users:batchArchive:
+        post:
+            tags:
+                - UserService
+            description: BatchArchiveUsers archives multiple users at once.
+            operationId: UserService_BatchArchiveUsers
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BatchArchiveUsersRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BatchArchiveUsersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users:batchDelete:
+        post:
+            tags:
+                - UserService
+            description: BatchDeleteUsers deletes multiple users at once.
+            operationId: UserService_BatchDeleteUsers
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BatchDeleteUsersRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BatchDeleteUsersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users:batchRestore:
+        post:
+            tags:
+                - UserService
+            description: BatchRestoreUsers restores multiple archived users at once.
+            operationId: UserService_BatchRestoreUsers
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BatchRestoreUsersRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BatchRestoreUsersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users:stats:
         get:
             tags:
@@ -2357,6 +2441,82 @@ components:
                     description: |-
                         Optional. The related memo. Refer to `Memo.name`.
                          Format: memos/{memo}
+        BatchArchiveUsersRequest:
+            required:
+                - names
+            type: object
+            properties:
+                names:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Required. The resource names of the users to archive.
+                         Format: users/{user}
+            description: Batch operation messages for bulk user management
+        BatchArchiveUsersResponse:
+            type: object
+            properties:
+                archivedCount:
+                    type: integer
+                    description: The number of users successfully archived.
+                    format: int32
+                failedNames:
+                    type: array
+                    items:
+                        type: string
+                    description: The resource names of users that failed to archive.
+        BatchDeleteUsersRequest:
+            required:
+                - names
+            type: object
+            properties:
+                names:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Required. The resource names of the users to delete.
+                         Format: users/{user}
+                force:
+                    type: boolean
+                    description: Optional. If set to true, the users will be deleted even if they have associated data.
+        BatchDeleteUsersResponse:
+            type: object
+            properties:
+                deletedCount:
+                    type: integer
+                    description: The number of users successfully deleted.
+                    format: int32
+                failedNames:
+                    type: array
+                    items:
+                        type: string
+                    description: The resource names of users that failed to delete.
+        BatchRestoreUsersRequest:
+            required:
+                - names
+            type: object
+            properties:
+                names:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Required. The resource names of the users to restore.
+                         Format: users/{user}
+        BatchRestoreUsersResponse:
+            type: object
+            properties:
+                restoredCount:
+                    type: integer
+                    description: The number of users successfully restored.
+                    format: int32
+                failedNames:
+                    type: array
+                    items:
+                        type: string
+                    description: The resource names of users that failed to restore.
         CreatePersonalAccessTokenRequest:
             required:
                 - parent
@@ -3558,6 +3718,11 @@ components:
                     type: string
                     description: Output only. The last update timestamp.
                     format: date-time
+                vipStatus:
+                    readOnly: true
+                    allOf:
+                        - $ref: '#/components/schemas/VipStatus'
+                    description: Output only. VIP status information.
         UserNotification:
             type: object
             properties:
@@ -3763,6 +3928,37 @@ components:
                 verificationId:
                     type: string
             description: VerifyPhoneResponse 验证手机号响应
+        VipStatus:
+            type: object
+            properties:
+                isVip:
+                    type: boolean
+                    description: Whether the user is currently a VIP.
+                vipType:
+                    enum:
+                        - VIP_TYPE_UNSPECIFIED
+                        - NONE
+                        - TRIAL
+                        - SUBSCRIPTION
+                    type: string
+                    description: The type of VIP status.
+                    format: enum
+                expiresDate:
+                    type: string
+                    description: The expiration date of the VIP status, if applicable.
+                    format: date-time
+                state:
+                    enum:
+                        - SUBSCRIPTION_STATE_UNSPECIFIED
+                        - ACTIVE
+                        - EXPIRED
+                        - GRACE_PERIOD
+                        - BILLING_RETRY
+                        - CANCELLED
+                    type: string
+                    description: The subscription state.
+                    format: enum
+            description: VipStatus represents the VIP/subscription status of a user.
 tags:
     - name: ActivityService
     - name: AttachmentService
