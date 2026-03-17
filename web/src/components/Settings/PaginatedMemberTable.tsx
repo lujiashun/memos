@@ -6,14 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslate } from "@/utils/i18n";
-import { Loader2, Search, ChevronRight, Filter, X, Crown, Gift, AlertCircle, ArrowUpDown, ArrowUp, ArrowDown, Archive, Trash2, RotateCcw, Check, Pencil } from "lucide-react";
+import { Loader2, Search, ChevronRight, Filter, X, Crown, Gift, AlertCircle, ArrowUpDown, ArrowUp, ArrowDown, Archive, Trash2, RotateCcw, Check, Pencil, Calendar, ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
+import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from "date-fns";
 import toast from "react-hot-toast";
 import { create } from "@bufbuild/protobuf";
 import { FieldMaskSchema } from "@bufbuild/protobuf/wkt";
 import { userServiceClient } from "@/connect";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 interface PaginatedMemberTableProps {
   onEdit: (user: User) => void;
@@ -47,11 +50,86 @@ type StateFilter = "ALL" | "NORMAL" | "ARCHIVED";
 type VipFilter = "ALL" | "VIP" | "TRIAL" | "NONE";
 type SortField = "created_ts" | "updated_ts" | "username";
 type SortDirection = "asc" | "desc";
+type DateRange = "ALL" | "TODAY" | "YESTERDAY" | "LAST_7_DAYS" | "LAST_30_DAYS" | "THIS_MONTH" | "LAST_MONTH" | "CUSTOM";
+type VipExpiryRange = "ALL" | "EXPIRED" | "EXPIRING_7_DAYS" | "EXPIRING_30_DAYS" | "VALID" | "CUSTOM";
 
 interface SortConfig {
   field: SortField;
   direction: SortDirection;
 }
+
+interface DateRangeConfig {
+  type: DateRange;
+  startDate?: Date;
+  endDate?: Date;
+}
+
+interface VipExpiryConfig {
+  type: VipExpiryRange;
+  startDate?: Date;
+  endDate?: Date;
+}
+
+// Filter template
+interface FilterTemplate {
+  id: string;
+  name: string;
+  filters: {
+    role: RoleFilter;
+    state: StateFilter;
+    vip: VipFilter;
+    dateRange: DateRangeConfig;
+    vipExpiry: VipExpiryConfig;
+  };
+}
+
+// Predefined filter templates
+const DEFAULT_TEMPLATES: FilterTemplate[] = [
+  {
+    id: "recent-users",
+    name: "Recent Registrations",
+    filters: {
+      role: "ALL",
+      state: "NORMAL",
+      vip: "ALL",
+      dateRange: { type: "LAST_7_DAYS" },
+      vipExpiry: { type: "ALL" },
+    },
+  },
+  {
+    id: "expiring-vip",
+    name: "VIP Expiring Soon",
+    filters: {
+      role: "ALL",
+      state: "NORMAL",
+      vip: "VIP",
+      dateRange: { type: "ALL" },
+      vipExpiry: { type: "EXPIRING_30_DAYS" },
+    },
+  },
+  {
+    id: "expired-vip",
+    name: "Expired VIP",
+    filters: {
+      role: "ALL",
+      state: "ALL",
+      vip: "ALL",
+      dateRange: { type: "ALL" },
+      vipExpiry: { type: "EXPIRED" },
+    },
+  },
+  {
+    id: "trial-users",
+    name: "Trial Users",
+    filters: {
+      role: "ALL",
+      state: "NORMAL",
+      vip: "TRIAL",
+      dateRange: { type: "ALL" },
+      vipExpiry: { type: "ALL" },
+    },
+  },
+];
 
 // Editable cell component
 interface EditableCellProps {
@@ -218,6 +296,340 @@ function DataCell({ width, children, className = "" }: DataCellProps) {
   );
 }
 
+// Date range picker component
+interface DateRangePickerProps {
+  value: DateRangeConfig;
+  onChange: (value: DateRangeConfig) => void;
+  label: string;
+}
+
+function DateRangePicker({ value, onChange, label }: DateRangePickerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getDateRangeText = () => {
+    switch (value.type) {
+      case "ALL": return "All time";
+      case "TODAY": return "Today";
+      case "YESTERDAY": return "Yesterday";
+      case "LAST_7_DAYS": return "Last 7 days";
+      case "LAST_30_DAYS": return "Last 30 days";
+      case "THIS_MONTH": return "This month";
+      case "LAST_MONTH": return "Last month";
+      case "CUSTOM":
+        if (value.startDate && value.endDate) {
+          return `${format(value.startDate, "MMM d")} - ${format(value.endDate, "MMM d")}`;
+        }
+        return "Custom range";
+      default: return "Select range";
+    }
+  };
+
+  const handleSelect = (type: DateRange) => {
+    const now = new Date();
+    let config: DateRangeConfig = { type };
+
+    switch (type) {
+      case "TODAY":
+        config = { type, startDate: startOfDay(now), endDate: endOfDay(now) };
+        break;
+      case "YESTERDAY":
+        const yesterday = subDays(now, 1);
+        config = { type, startDate: startOfDay(yesterday), endDate: endOfDay(yesterday) };
+        break;
+      case "LAST_7_DAYS":
+        config = { type, startDate: startOfDay(subDays(now, 6)), endDate: endOfDay(now) };
+        break;
+      case "LAST_30_DAYS":
+        config = { type, startDate: startOfDay(subDays(now, 29)), endDate: endOfDay(now) };
+        break;
+      case "THIS_MONTH":
+        config = { type, startDate: startOfDay(new Date(now.getFullYear(), now.getMonth(), 1)), endDate: endOfDay(now) };
+        break;
+      case "LAST_MONTH":
+        config = { type, startDate: startOfDay(new Date(now.getFullYear(), now.getMonth() - 1, 1)), endDate: endOfDay(new Date(now.getFullYear(), now.getMonth(), 0)) };
+        break;
+    }
+
+    onChange(config);
+    if (type !== "CUSTOM") setIsOpen(false);
+  };
+
+  return (
+    <div className="space-y-2">
+      <label className="text-sm font-medium">{label}</label>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="w-full justify-between text-left font-normal">
+            <span className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              {getDateRangeText()}
+            </span>
+            <ChevronDown className="w-4 h-4 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <div className="p-2 space-y-1">
+            {[
+              { value: "ALL", label: "All time" },
+              { value: "TODAY", label: "Today" },
+              { value: "YESTERDAY", label: "Yesterday" },
+              { value: "LAST_7_DAYS", label: "Last 7 days" },
+              { value: "LAST_30_DAYS", label: "Last 30 days" },
+              { value: "THIS_MONTH", label: "This month" },
+              { value: "LAST_MONTH", label: "Last month" },
+              { value: "CUSTOM", label: "Custom range" },
+            ].map((option) => (
+              <Button
+                key={option.value}
+                variant={value.type === option.value ? "secondary" : "ghost"}
+                className="w-full justify-start"
+                onClick={() => handleSelect(option.value as DateRange)}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </div>
+          {value.type === "CUSTOM" && (
+            <div className="p-2 border-t">
+              <CalendarComponent
+                mode="range"
+                selected={{
+                  from: value.startDate,
+                  to: value.endDate,
+                }}
+                onSelect={(range) => {
+                  onChange({
+                    type: "CUSTOM",
+                    startDate: range?.from,
+                    endDate: range?.to,
+                  });
+                  if (range?.from && range?.to) setIsOpen(false);
+                }}
+                numberOfMonths={2}
+              />
+            </div>
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+// Filter sidebar component
+interface FilterSidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  roleFilter: RoleFilter;
+  setRoleFilter: (v: RoleFilter) => void;
+  stateFilter: StateFilter;
+  setStateFilter: (v: StateFilter) => void;
+  vipFilter: VipFilter;
+  setVipFilter: (v: VipFilter) => void;
+  dateRange: DateRangeConfig;
+  setDateRange: (v: DateRangeConfig) => void;
+  vipExpiry: VipExpiryConfig;
+  setVipExpiry: (v: VipExpiryConfig) => void;
+  onApplyTemplate: (template: FilterTemplate) => void;
+  hasActiveFilters: boolean;
+  onClearFilters: () => void;
+}
+
+function FilterSidebar({
+  isOpen,
+  onClose,
+  roleFilter,
+  setRoleFilter,
+  stateFilter,
+  setStateFilter,
+  vipFilter,
+  setVipFilter,
+  dateRange,
+  setDateRange,
+  vipExpiry,
+  setVipExpiry,
+  onApplyTemplate,
+  hasActiveFilters,
+  onClearFilters,
+}: FilterSidebarProps) {
+  const [activeTab, setActiveTab] = useState<"filters" | "templates">("filters");
+
+  return (
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
+      )}
+      
+      {/* Sidebar */}
+      <div className={cn(
+        "fixed right-0 top-0 h-full w-80 bg-background border-l shadow-lg z-50 transform transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "translate-x-full"
+      )}>
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b">
+            <h2 className="text-lg font-semibold">Filters</h2>
+            <div className="flex items-center gap-2">
+              {hasActiveFilters && (
+                <Button variant="ghost" size="sm" onClick={onClearFilters}>
+                  Clear all
+                </Button>
+              )}
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex border-b">
+            <button
+              className={cn(
+                "flex-1 py-2 text-sm font-medium transition-colors",
+                activeTab === "filters" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"
+              )}
+              onClick={() => setActiveTab("filters")}
+            >
+              Filters
+            </button>
+            <button
+              className={cn(
+                "flex-1 py-2 text-sm font-medium transition-colors",
+                activeTab === "templates" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"
+              )}
+              onClick={() => setActiveTab("templates")}
+            >
+              Templates
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-4">
+            {activeTab === "filters" ? (
+              <div className="space-y-6">
+                {/* Quick Templates */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Quick Apply</label>
+                  <div className="flex flex-wrap gap-2">
+                    {DEFAULT_TEMPLATES.slice(0, 3).map((template) => (
+                      <Badge
+                        key={template.id}
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-primary/20"
+                        onClick={() => onApplyTemplate(template)}
+                      >
+                        {template.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Role Filter */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Role</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["ALL", "ADMIN", "USER"] as RoleFilter[]).map((role) => (
+                      <Button
+                        key={role}
+                        variant={roleFilter === role ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setRoleFilter(role)}
+                      >
+                        {role === "ALL" ? "All" : role}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* State Filter */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">State</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["ALL", "NORMAL", "ARCHIVED"] as StateFilter[]).map((state) => (
+                      <Button
+                        key={state}
+                        variant={stateFilter === state ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setStateFilter(state)}
+                      >
+                        {state === "ALL" ? "All" : state === "NORMAL" ? "Normal" : "Archived"}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* VIP Filter */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">VIP Status</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(["ALL", "VIP", "TRIAL", "NONE"] as VipFilter[]).map((vip) => (
+                      <Button
+                        key={vip}
+                        variant={vipFilter === vip ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setVipFilter(vip)}
+                        className="justify-start"
+                      >
+                        {vip === "ALL" ? "All" : vip === "NONE" ? "Non-VIP" : vip}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Registration Date */}
+                <DateRangePicker
+                  label="Registration Date"
+                  value={dateRange}
+                  onChange={setDateRange}
+                />
+
+                {/* VIP Expiry */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">VIP Expiry</label>
+                  <div className="space-y-2">
+                    {[
+                      { value: "ALL", label: "All" },
+                      { value: "EXPIRED", label: "Expired" },
+                      { value: "EXPIRING_7_DAYS", label: "Expiring in 7 days" },
+                      { value: "EXPIRING_30_DAYS", label: "Expiring in 30 days" },
+                      { value: "VALID", label: "Valid" },
+                    ].map((option) => (
+                      <Button
+                        key={option.value}
+                        variant={vipExpiry.type === option.value ? "secondary" : "ghost"}
+                        className="w-full justify-start"
+                        size="sm"
+                        onClick={() => setVipExpiry({ type: option.value as VipExpiryRange })}
+                      >
+                        {option.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {DEFAULT_TEMPLATES.map((template) => (
+                  <div
+                    key={template.id}
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-muted transition-colors"
+                    onClick={() => onApplyTemplate(template)}
+                  >
+                    <div className="font-medium">{template.name}</div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      Role: {template.filters.role}, State: {template.filters.state}, VIP: {template.filters.vip}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function PaginatedMemberTable({
   onEdit,
   onArchive,
@@ -232,6 +644,9 @@ export default function PaginatedMemberTable({
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
   const [stateFilter, setStateFilter] = useState<StateFilter>("ALL");
   const [vipFilter, setVipFilter] = useState<VipFilter>("ALL");
+  const [dateRange, setDateRange] = useState<DateRangeConfig>({ type: "ALL" });
+  const [vipExpiry, setVipExpiry] = useState<VipExpiryConfig>({ type: "ALL" });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ field: "created_ts", direction: "desc" });
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -239,6 +654,13 @@ export default function PaginatedMemberTable({
 
   // Column widths state
   const [columnWidths, setColumnWidths] = useState(DEFAULT_COLUMN_WIDTHS);
+
+  // Helper function to extract user ID from name (format: "users/{id}")
+  const getUserId = useCallback((user: User): string => {
+    if (!user.name) return "-";
+    const parts = user.name.split("/");
+    return parts[parts.length - 1] || "-";
+  }, []);
 
   const batchArchiveUsers = useBatchArchiveUsers();
   const batchRestoreUsers = useBatchRestoreUsers();
@@ -254,25 +676,24 @@ export default function PaginatedMemberTable({
   // Clear selection when filters change
   useEffect(() => {
     setSelectedUsers(new Set());
-  }, [debouncedSearch, roleFilter, stateFilter, vipFilter, sortConfig]);
+  }, [debouncedSearch, roleFilter, stateFilter, vipFilter, dateRange, vipExpiry, sortConfig]);
 
   const filter = useMemo(() => {
     const filters: string[] = [];
-    
-    if (debouncedSearch.trim()) {
-      filters.push(`search == '${debouncedSearch}'`);
-    }
-    
+
+    // Note: Search is now done on the frontend for better UX
+    // Backend filter only handles role and state
+
     if (roleFilter !== "ALL") {
       filters.push(`role == '${roleFilter}'`);
     }
-    
+
     if (stateFilter !== "ALL") {
       filters.push(`state == '${stateFilter}'`);
     }
-    
+
     return filters.join(" && ");
-  }, [debouncedSearch, roleFilter, stateFilter]);
+  }, [roleFilter, stateFilter]);
 
   const orderBy = useMemo(() => {
     const prefix = sortConfig.direction === "desc" ? "-" : "";
@@ -288,27 +709,83 @@ export default function PaginatedMemberTable({
     { enabled: true }
   );
 
+  // Filter users based on search query, date range and VIP expiry
   const allUsers = useMemo(() => {
-    const users = data?.pages.flatMap((page) => page.users) || [];
-    
-    if (vipFilter === "ALL") return users;
-    
-    return users.filter((user) => {
-      const vipStatus = user.vipStatus;
-      if (!vipStatus) return vipFilter === "NONE";
-      
-      switch (vipFilter) {
-        case "VIP":
-          return vipStatus.isVip && vipStatus.vipType === 3;
-        case "TRIAL":
-          return vipStatus.vipType === 2;
-        case "NONE":
-          return !vipStatus.isVip || vipStatus.vipType === 1;
-        default:
-          return true;
-      }
-    });
-  }, [data, vipFilter]);
+    let users = data?.pages.flatMap((page) => page.users) || [];
+
+    // Search filter (ID, username, phone)
+    if (debouncedSearch.trim()) {
+      const searchLower = debouncedSearch.toLowerCase();
+      users = users.filter((user) => {
+        const userId = getUserId(user);
+        const username = user.username?.toLowerCase() || "";
+        const phone = user.phoneNumber?.toLowerCase() || "";
+
+        return (
+          userId.includes(searchLower) ||
+          username.includes(searchLower) ||
+          phone.includes(searchLower)
+        );
+      });
+    }
+
+    // VIP type filter
+    if (vipFilter !== "ALL") {
+      users = users.filter((user) => {
+        const vipStatus = user.vipStatus;
+        if (!vipStatus) return vipFilter === "NONE";
+
+        switch (vipFilter) {
+          case "VIP":
+            return vipStatus.isVip && vipStatus.vipType === 3;
+          case "TRIAL":
+            return vipStatus.vipType === 2;
+          case "NONE":
+            return !vipStatus.isVip || vipStatus.vipType === 1;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Date range filter
+    if (dateRange.type !== "ALL" && dateRange.startDate && dateRange.endDate) {
+      users = users.filter((user) => {
+        if (!user.createTime) return false;
+        const createdDate = new Date(Number(user.createTime.seconds) * 1000);
+        return createdDate >= dateRange.startDate! && createdDate <= dateRange.endDate!;
+      });
+    }
+
+    // VIP expiry filter
+    if (vipExpiry.type !== "ALL") {
+      const now = new Date();
+      users = users.filter((user) => {
+        const vipStatus = user.vipStatus;
+        if (!vipStatus || !vipStatus.isVip) return vipExpiry.type === "ALL";
+
+        const expiresDate = vipStatus.expiresDate ? new Date(Number(vipStatus.expiresDate.seconds) * 1000) : null;
+        if (!expiresDate) return vipExpiry.type === "ALL";
+
+        switch (vipExpiry.type) {
+          case "EXPIRED":
+            return expiresDate < now;
+          case "EXPIRING_7_DAYS":
+            const days7 = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            return expiresDate >= now && expiresDate <= days7;
+          case "EXPIRING_30_DAYS":
+            const days30 = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+            return expiresDate >= now && expiresDate <= days30;
+          case "VALID":
+            return expiresDate > now;
+          default:
+            return true;
+        }
+      });
+    }
+
+    return users;
+  }, [data, debouncedSearch, vipFilter, dateRange, vipExpiry]);
 
   const selectableUsers = useMemo(() => {
     return allUsers.filter(user => user.name !== currentUserName);
@@ -471,13 +948,6 @@ export default function PaginatedMemberTable({
     );
   };
 
-  // Extract user ID from name (format: "users/{id}")
-  const getUserId = (user: User): string => {
-    if (!user.name) return "-";
-    const parts = user.name.split("/");
-    return parts[parts.length - 1] || "-";
-  };
-
   const formatVIPStatus = (user: User) => {
     const vipStatus = user.vipStatus;
     
@@ -523,8 +993,6 @@ export default function PaginatedMemberTable({
     if (!vipStatus || !vipStatus.isVip) {
       return null;
     }
-    // For trial users, use trial_end_ts from database (not exposed in API yet)
-    // For subscription users, use expires_date
     if (vipStatus.expiresDate) {
       return new Date(Number(vipStatus.expiresDate.seconds) * 1000);
     }
@@ -536,11 +1004,57 @@ export default function PaginatedMemberTable({
     setRoleFilter("ALL");
     setStateFilter("ALL");
     setVipFilter("ALL");
+    setDateRange({ type: "ALL" });
+    setVipExpiry({ type: "ALL" });
     setSortConfig({ field: "created_ts", direction: "desc" });
   };
 
-  const hasActiveFilters = searchQuery || roleFilter !== "ALL" || stateFilter !== "ALL" || vipFilter !== "ALL";
+  const applyTemplate = (template: FilterTemplate) => {
+    setRoleFilter(template.filters.role);
+    setStateFilter(template.filters.state);
+    setVipFilter(template.filters.vip);
+    setDateRange(template.filters.dateRange);
+    setVipExpiry(template.filters.vipExpiry);
+    setIsFilterOpen(false);
+  };
+
+  const hasActiveFilters = searchQuery || 
+    roleFilter !== "ALL" || 
+    stateFilter !== "ALL" || 
+    vipFilter !== "ALL" ||
+    dateRange.type !== "ALL" ||
+    vipExpiry.type !== "ALL";
+
   const hasSelection = selectedUsers.size > 0;
+
+  // Active filter tags
+  const activeFilterTags = useMemo(() => {
+    const tags: { label: string; onRemove: () => void }[] = [];
+    
+    if (searchQuery) {
+      tags.push({ label: `Search: ${searchQuery}`, onRemove: () => setSearchQuery("") });
+    }
+    if (roleFilter !== "ALL") {
+      tags.push({ label: `Role: ${roleFilter}`, onRemove: () => setRoleFilter("ALL") });
+    }
+    if (stateFilter !== "ALL") {
+      tags.push({ label: `State: ${stateFilter}`, onRemove: () => setStateFilter("ALL") });
+    }
+    if (vipFilter !== "ALL") {
+      tags.push({ label: `VIP: ${vipFilter}`, onRemove: () => setVipFilter("ALL") });
+    }
+    if (dateRange.type !== "ALL") {
+      const rangeText = dateRange.type === "CUSTOM" && dateRange.startDate && dateRange.endDate
+        ? `${format(dateRange.startDate, "MMM d")} - ${format(dateRange.endDate, "MMM d")}`
+        : dateRange.type.replace(/_/g, " ");
+      tags.push({ label: `Registered: ${rangeText}`, onRemove: () => setDateRange({ type: "ALL" }) });
+    }
+    if (vipExpiry.type !== "ALL") {
+      tags.push({ label: `VIP Expiry: ${vipExpiry.type.replace(/_/g, " ")}`, onRemove: () => setVipExpiry({ type: "ALL" }) });
+    }
+    
+    return tags;
+  }, [searchQuery, roleFilter, stateFilter, vipFilter, dateRange, vipExpiry]);
 
   if (isLoading) {
     return (
@@ -554,58 +1068,47 @@ export default function PaginatedMemberTable({
     <div className="space-y-4">
       {/* Search and Filter Bar */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="relative flex-1 min-w-[300px] max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search username, email..."
+            placeholder="Search by ID, username, phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
+          {debouncedSearch && allUsers.length === 0 && hasNextPage && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="h-6 text-xs"
+              >
+                {isFetchingNextPage ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  "Load more to search"
+                )}
+              </Button>
+            </div>
+          )}
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="w-4 h-4" />
-              Role: {roleFilter === "ALL" ? "All" : roleFilter}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setRoleFilter("ALL")}>All Roles</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setRoleFilter("ADMIN")}>Admin</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setRoleFilter("USER")}>User</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="w-4 h-4" />
-              State: {stateFilter === "ALL" ? "All" : stateFilter}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setStateFilter("ALL")}>All States</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setStateFilter("NORMAL")}>Normal</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setStateFilter("ARCHIVED")}>Archived</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Crown className="w-4 h-4" />
-              VIP: {vipFilter === "ALL" ? "All" : vipFilter}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setVipFilter("ALL")}>All VIP Status</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setVipFilter("VIP")}>VIP (Paid)</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setVipFilter("TRIAL")}>Trial</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setVipFilter("NONE")}>Non-VIP</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant={hasActiveFilters ? "default" : "outline"}
+          size="sm"
+          onClick={() => setIsFilterOpen(true)}
+          className="gap-2"
+        >
+          <Filter className="w-4 h-4" />
+          Filters
+          {activeFilterTags.length > 0 && (
+            <Badge variant="secondary" className="ml-1">
+              {activeFilterTags.length}
+            </Badge>
+          )}
+        </Button>
 
         {hasActiveFilters && (
           <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
@@ -615,7 +1118,12 @@ export default function PaginatedMemberTable({
         )}
 
         <div className="ml-auto text-sm text-muted-foreground">
-          {allUsers.length > 0 && (
+          {debouncedSearch ? (
+            <span>
+              Found {allUsers.length} results
+              {hasNextPage && " (more data available)"}
+            </span>
+          ) : (
             <span>
               {allUsers.length} members
               {hasNextPage && "+"}
@@ -624,33 +1132,15 @@ export default function PaginatedMemberTable({
         </div>
       </div>
 
-      {/* Active Filters Display */}
-      {hasActiveFilters && (
+      {/* Active Filter Tags */}
+      {activeFilterTags.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {searchQuery && (
-            <Badge variant="secondary" className="gap-1">
-              Search: {searchQuery}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => setSearchQuery("")} />
+          {activeFilterTags.map((tag, index) => (
+            <Badge key={index} variant="secondary" className="gap-1">
+              {tag.label}
+              <X className="w-3 h-3 cursor-pointer" onClick={tag.onRemove} />
             </Badge>
-          )}
-          {roleFilter !== "ALL" && (
-            <Badge variant="secondary" className="gap-1">
-              Role: {roleFilter}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => setRoleFilter("ALL")} />
-            </Badge>
-          )}
-          {stateFilter !== "ALL" && (
-            <Badge variant="secondary" className="gap-1">
-              State: {stateFilter}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => setStateFilter("ALL")} />
-            </Badge>
-          )}
-          {vipFilter !== "ALL" && (
-            <Badge variant="secondary" className="gap-1">
-              VIP: {vipFilter}
-              <X className="w-3 h-3 cursor-pointer" onClick={() => setVipFilter("ALL")} />
-            </Badge>
-          )}
+          ))}
         </div>
       )}
 
@@ -809,7 +1299,6 @@ export default function PaginatedMemberTable({
                       />
                     )}
                   </div>
-                  {/* Username - editable */}
                   <DataCell width={columnWidths.userId} className="text-muted-foreground text-xs">
                     {getUserId(user)}
                   </DataCell>
@@ -822,7 +1311,6 @@ export default function PaginatedMemberTable({
                   <DataCell width={columnWidths.role}>
                     {formatRole(user.role)}
                   </DataCell>
-                  {/* Nickname - editable */}
                   <EditableCell
                     width={columnWidths.nickname}
                     value={user.displayName || ""}
@@ -830,7 +1318,6 @@ export default function PaginatedMemberTable({
                     className="text-muted-foreground"
                     placeholder="-"
                   />
-                  {/* Phone - editable */}
                   <EditableCell
                     width={columnWidths.phone}
                     value={user.phoneNumber || ""}
@@ -942,6 +1429,25 @@ export default function PaginatedMemberTable({
           </Button>
         </div>
       </div>
+
+      {/* Filter Sidebar */}
+      <FilterSidebar
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        roleFilter={roleFilter}
+        setRoleFilter={setRoleFilter}
+        stateFilter={stateFilter}
+        setStateFilter={setStateFilter}
+        vipFilter={vipFilter}
+        setVipFilter={setVipFilter}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+        vipExpiry={vipExpiry}
+        setVipExpiry={setVipExpiry}
+        onApplyTemplate={applyTemplate}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearFilters}
+      />
     </div>
   );
 }
